@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
@@ -18,7 +18,8 @@ import { PageHeaderModule } from '../shared';
         LayoutRoutingModule,
         TranslateModule,
         NgbDropdownModule,
-        PageHeaderModule
+        PageHeaderModule,
+        NgbModule
     ],
     declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent, ReservationComponent, InventoryComponent]
 })
