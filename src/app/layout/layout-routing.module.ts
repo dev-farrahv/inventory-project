@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { AddProductsComponent } from './add-products/add-products.component';
+import { ReservationComponent } from './reservation/reservation.component';
+import { InventoryComponent } from './inventory/inventory.component';
 
 const routes: Routes = [
     {
@@ -18,8 +20,16 @@ const routes: Routes = [
             { path: 'components', loadChildren: () => import('./bs-component/bs-component.module').then(m => m.BsComponentModule) },
             { path: 'blank-page', loadChildren: () => import('./blank-page/blank-page.module').then(m => m.BlankPageModule) },
             {
-            path: 'add-products',
-            component: AddProductsComponent
+                path: 'add-products',
+                component: AddProductsComponent
+            },
+            {
+                path: 'reservations',
+                component: ReservationComponent
+            },
+            {
+                path: 'inventory',
+                component: InventoryComponent
             },
         ]
     }
@@ -29,4 +39,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class LayoutRoutingModule {}
+export class LayoutRoutingModule { }

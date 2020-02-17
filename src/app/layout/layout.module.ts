@@ -8,14 +8,18 @@ import { LayoutComponent } from './layout.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { AddProductsComponent } from './add-products/add-products.component';
+import { ReservationComponent } from './reservation/reservation.component';
+import { InventoryComponent } from './inventory/inventory.component';
+import { PageHeaderModule } from '../shared';
 
 @NgModule({
     imports: [
         CommonModule,
         LayoutRoutingModule,
         TranslateModule,
-        NgbDropdownModule
+        NgbDropdownModule,
+        PageHeaderModule
     ],
-    declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent]
+    declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent, ReservationComponent, InventoryComponent]
 })
-export class LayoutModule {}
+export class LayoutModule { }
