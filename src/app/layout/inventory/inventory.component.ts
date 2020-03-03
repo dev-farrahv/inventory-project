@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   animations: [routerTransition()]
 })
 export class InventoryComponent implements OnInit {
-
+  productList: any[] = [];
   closeResult: string;
   constructor(private modalService: NgbModal, public router: Router) { }
 
@@ -33,6 +33,7 @@ export class InventoryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.productList = [ , , , , , , , , , , ,];
   }
 
 
