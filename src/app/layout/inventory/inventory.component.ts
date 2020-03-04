@@ -14,13 +14,15 @@ import { Product, ProductService } from 'src/app/shared/services/product.service
 export class InventoryComponent implements OnInit {
   reservationList: Reservation[];
   reservation: Reservation = {  
-    qty: "",
+    qty: 0,
     name: "",
     email: "",
     contactNumber: "",
     address: "",
     referenceNumber: "",
-    totalWeight: ""
+    totalWeight: 0,
+    totalPrice: 0,
+    product: null
   };
 
   productList: Product[];
@@ -28,36 +30,27 @@ export class InventoryComponent implements OnInit {
   product: Product = {  
     name: "",
     serialNumber: "",
-    qty: "",
+    qty: 0,
     color: "",
-    price: "",
+    price: 0,
     currency: "",
     remarks: "",
     otherDescription: "",
     itemCode: "",
     image: "",
-    weight: "",
+    weight: 0,
   };
 
-  //productList: any[] = [];
   closeResult: string;
   constructor(private modalService: NgbModal, public router: Router, private reservationService: ReservationService, private productService: ProductService) { }
 
-  open(content, productId) {
-    this.productService.getProduct(productId).subscribe(res => {
-      this.modalProduct = res;
-      console.log(this.modalProduct);
-    });
+  open(content, product) {
+    this.modalProduct = product;
 
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-
-    this.reservationService.getreservations().subscribe(res => {
-      this.reservationList = res;
-      console.log(this.reservationList);
     });
   }
 
@@ -71,12 +64,11 @@ export class InventoryComponent implements OnInit {
     }
   }
 
+  close() {
+    this.modalService.dismissAll();
+  }
+
   ngOnInit() {
-    //this.productList = [ , , , , , , , , , , ,];
-    // this.reservationService.getproducts().subscribe(res => {
-    //   this.productList = res;
-    //   console.log(this.productList);
-    // });
     this.productService.getproducts().subscribe(res => {
       this.productList = res;
       console.log(this.productList);
@@ -84,11 +76,25 @@ export class InventoryComponent implements OnInit {
   }
 
   saveReservation(){
-    console.log('heyyy');
-    this.reservation.referenceNumber = "202003040009";
-    this.reservation.totalWeight = "12";
+    if (this.modalProduct.qty <= 0) {
+      return;
+    }
+
+    if (this.modalProduct.price <= 0) {
+      return;
+    }
+
+    if (this.modalProduct.weight <= 0) {
+      return;
+    }
+    
+    this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
+    this.reservation.totalWeight = this.modalProduct.weight * this.modalProduct.qty;
+    this.reservation.totalPrice = this.modalProduct.price * this.modalProduct.qty;
+    this.reservation.product = this.modalProduct;
     this.reservationService.addReservation(this.reservation).then(() => {
       console.log('success');
+      this.close();
     });
   }
 

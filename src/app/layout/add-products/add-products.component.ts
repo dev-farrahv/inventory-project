@@ -19,15 +19,15 @@ export class AddProductsComponent implements OnInit {
   product: Product = {  
     name: "",
     serialNumber: "",
-    qty: "",
+    qty: 0,
     color: "",
-    price: "",
+    price: 0,
     currency: "",
     remarks: "",
     otherDescription: "",
     itemCode: "",
     image: "assets/images/empty.png",
-    weight: "",
+    weight: 0,
   };
 
   constructor(private productService: ProductService, public router: Router, private spinner: NgxSpinnerService) { }

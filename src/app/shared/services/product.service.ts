@@ -9,15 +9,15 @@ export interface Product {
   id?: string;
   name: string;
   serialNumber: string;
-  qty: string;
+  qty: number;
   color: string;
-  price: string;
+  price: number;
   currency: string;
   remarks: string;
   otherDescription: string;
   itemCode: string;
   image: string;
-  weight: string;
+  weight: number;
 }
 
 @Injectable({

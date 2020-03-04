@@ -79,7 +79,7 @@
         <div class="card-footer">
           <button
             class="btn btn-info btn-sm float-right"
-            (click)="open(content, item.id)"
+            (click)="open(content, item)"
           >
             Reserve
           </button>
@@ -122,15 +122,16 @@
         <fieldset> 
           <label>Weight: <span class="text-muted"> {{ modalProduct?.weight }} Kg. </span> </label>
         </fieldset>
-        <fieldset>
-          <label>Quantity:</label>
-          <input class="form-control" type="number" [(ngModel)]="reservation.name" />
-        </fieldset>
+       
       </div>
     </div>
+    <fieldset>
+      <label>Quantity:</label>
+      <input class="form-control" type="number" [(ngModel)]="reservation.qty" />
+    </fieldset>
     <fieldset class="form-group">
       <label>Name</label>
-      <input class="form-control" [(ngModel)]="reservation.qty" />
+      <input class="form-control" [(ngModel)]="reservation.name" />
     </fieldset>
     <fieldset class="form-group">
       <label>Email</label>

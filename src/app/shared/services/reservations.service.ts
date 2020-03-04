@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Product } from './product.service';
 
 export interface Reservation {
   id?: string;
-  qty: string;
+  qty: number;
   name: string;
   email: string;
   contactNumber: string;
   address: string;
   referenceNumber: string;
-  totalWeight: string;
+  totalWeight: number;
+  totalPrice: number;
+  product: Product;
 }
 @Injectable({
   providedIn: 'root'
