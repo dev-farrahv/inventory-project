@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap, finalize } from 'rxjs/operators';
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
+
 
 export interface Product {
   id?: string;
@@ -23,11 +25,27 @@ export interface Product {
 })
 
 export class ProductService {
+  
   private productsCollection: AngularFirestoreCollection<Product>;
  
   private products: Observable<Product[]>;  
 
-  constructor(db: AngularFirestore) {
+   // Upload Task 
+   task: AngularFireUploadTask;
+ 
+   // Progress in percentage
+   percentage: Observable<number>;
+  
+   // Snapshot of uploading file
+   snapshot: Observable<any>;
+  
+   // Uploaded File URL
+   UploadedFileURL: Observable<string>;
+  
+   //Uploaded Image List
+   images: Observable<any[]>;
+  
+  constructor(db: AngularFirestore, private storage: AngularFireStorage, private database: AngularFirestore) {
     this.productsCollection = db.collection<Product>('products');
  
     this.products = this.productsCollection.snapshotChanges().pipe(
@@ -60,4 +78,35 @@ export class ProductService {
   removeProduct(id) {
     return this.productsCollection.doc(id).delete();
   }
+
+  uploadFile(event: FileList) {
+    
+    return new Promise<string>((res, reject) => {
+      // The File object
+      const file = event.item(0)
+
+      // Validation for Images Only
+      if (file.type.split('/')[0] !== 'image') { 
+      console.error('unsupported file type :( ')
+        reject();
+      }
+
+      // The storage path
+      const path = `freakyStorage/${new Date().getTime()}_${file.name}`;
+
+      // Totally optional metadata
+      const customMetadata = { app: 'Freaky Image Upload Demo' };
+
+      //File reference
+      const fileRef = this.storage.ref(path);
+
+      // The main task
+      this.storage.upload(path, file, { customMetadata }).then(async result => {
+        const url = await result.ref.getDownloadURL();
+        res(url)
+      });
+    })
+  }
+  
+
 }
