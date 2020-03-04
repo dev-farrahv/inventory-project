@@ -163,14 +163,34 @@
       <i class="fa fa-fw fa-dashboard"></i>&nbsp;
       <span>{{ 'Dashboard' | translate }}</span>
     </a>
-    <a
-      [routerLink]="['/inventory']"
-      [routerLinkActive]="['router-link-active']"
-      class="list-group-item"
-    >
-      <i class="fa fa-list" aria-hidden="true"></i>&nbsp;
-      <span>{{ 'Product List' | translate }}</span>
-    </a>
+
+    <div class="nested-menu">
+        <a class="list-group-item" (click)="addExpandClass('profile')">
+            <span><i class="fa fa-shopping-cart"></i>&nbsp; Products</span>
+        </a>
+        <li class="nested" [class.expand]="showMenu === 'profile'">
+            <ul class="submenu">
+                <li>
+                    <a 
+                    [routerLink]="['/inventory']"
+                    [routerLinkActive]="['router-link-active']"
+                    
+                    >
+                        <span> Product List</span>
+                    </a>
+                </li>
+                <li>
+                    <a 
+                    [routerLink]="['/add-products']"
+                    [routerLinkActive]="['router-link-active']"
+                    >
+                        <span> Add Product</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </div>
+
     <a
       [routerLink]="['/reservations']"
       [routerLinkActive]="['router-link-active']"

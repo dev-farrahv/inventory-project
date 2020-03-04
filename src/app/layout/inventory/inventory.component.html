@@ -1,19 +1,13 @@
 <div [@routerTransition]>
   <h2>Products</h2>
-  <div class="form-control mb-3 d-flex justify-content-between ">
-    <div class="mt-1">
-      <i class="fa fa-search mr-2" aria-hidden="true"></i>
-      <input type="text" class="border-0" placeholder="Search..." />
+  <div class="form-control mb-3 ">
+    <div class="mt-1  d-flex justify-content-between">
+      <i class="fa fa-search mr-2 mt-1" aria-hidden="true"></i>
+      <input type="text" class="border-0 w-100" placeholder="Search..." />
     </div>
-    <button
-      class="btn btn-primary btn-sm"
-      (click)="router.navigate(['/add-products'])"
-    >
-      Add
-    </button>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="col-xs-12 col-sm-6 col-md-6" *ngFor="let item of productList">
       <div class="card mb-3">
         <div class="card-header d-flex justify-content-between">
           <span>Gucci</span>
@@ -44,7 +38,19 @@
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
                     <label
-                      >Color: <span class="text-muted"> Black </span></label
+                      >Weight: <span class="text-muted"> 12kg </span></label
+                    >
+                  </fieldset>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <label>Color: <span class="text-muted">Black</span></label>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                  <fieldset class="form-group">
+                    <label
+                      >Item Code: <span class="text-muted"> 010123 </span></label
                     >
                   </fieldset>
                 </div>
@@ -80,146 +86,6 @@
             class="btn btn-info btn-sm float-right"
             (click)="open(content)"
           >
-            Reserve
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <span>Gucci</span>
-          <span>P20</span>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-xl-4 col-lg-12 col-md-12 mb-3">
-              <img
-                class="img-thumbnail w-100"
-                src="assets/images/handbag.jpg"
-                alt=""
-              />
-            </div>
-            <div class="col-xl-8 col-lg-12 col-md-12">
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Serial Number</span> <br />
-                    <span class="text-muted">12312412</span>
-                  </p>
-                </fieldset>
-              </div>
-              <div class="row">
-                <div class="col-xl-6 col-lg-6">
-                  <label>Quantity: <span class="text-muted">1</span></label>
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                  <fieldset class="form-group">
-                    <label
-                      >Color: <span class="text-muted"> Black </span></label
-                    >
-                  </fieldset>
-                </div>
-              </div>
-
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Remarks</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
-                  </p>
-                </fieldset>
-              </div>
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Other Description</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
-                  </p>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <button class="btn btn-info btn-sm float-right" (click)="randomize()">
-            Reserve
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <span>Gucci</span>
-          <span>P20</span>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-xl-4 col-lg-12 col-md-12 mb-3">
-              <img
-                class="img-thumbnail w-100"
-                src="assets/images/handbag.jpg"
-                alt=""
-              />
-            </div>
-            <div class="col-xl-8 col-lg-12 col-md-12">
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Serial Number</span> <br />
-                    <span class="text-muted">12312412</span>
-                  </p>
-                </fieldset>
-              </div>
-              <div class="row">
-                <div class="col-xl-6 col-lg-6">
-                  <label>Quantity: <span class="text-muted">1</span></label>
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                  <fieldset class="form-group">
-                    <label
-                      >Color: <span class="text-muted"> Black </span></label
-                    >
-                  </fieldset>
-                </div>
-              </div>
-
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Remarks</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
-                  </p>
-                </fieldset>
-              </div>
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Other Description</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
-                  </p>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <button class="btn btn-info btn-sm float-right" (click)="randomize()">
             Reserve
           </button>
         </div>

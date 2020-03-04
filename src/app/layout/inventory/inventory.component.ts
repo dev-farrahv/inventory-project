@@ -20,6 +20,7 @@ export class InventoryComponent implements OnInit {
     address: "",
   };
 
+  productList: any[] = [];
   closeResult: string;
   constructor(private modalService: NgbModal, public router: Router, private reservationService: ReservationService) { }
 
@@ -47,6 +48,7 @@ export class InventoryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.productList = [ , , , , , , , , , , ,];
     // this.reservationService.getproducts().subscribe(res => {
     //   this.productList = res;
     //   console.log(this.productList);
