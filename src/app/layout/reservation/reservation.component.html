@@ -38,9 +38,9 @@
           <td> {{ item.name }} </td>
           <td> {{ item.address }} </td>
           <td> {{ item.qty }} </td>
-          <td> {{ item.price }} </td>
+          <td> {{ item.product.currency }} {{ item.price }}</td>
           <td> {{ item.totalWeight }} </td>
-          <td> {{ item.totalPrice }} </td>
+          <td> {{ item.product.currency }} {{ item.totalPrice }} </td>
           <td>Pending</td>
           <td>
             <button class="btn bg-transparent">
