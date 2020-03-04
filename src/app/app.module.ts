@@ -8,11 +8,12 @@ import { LanguageTranslationModule } from './shared/modules/language-translation
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
-
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 @NgModule({
     imports: [
@@ -23,7 +24,9 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
         LanguageTranslationModule,
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebase),
-        AngularFirestoreModule
+        AngularFirestoreModule,
+        AngularFireStorageModule,
+        NgxSpinnerModule
     ],
     declarations: [AppComponent],
     providers: [AuthGuard],

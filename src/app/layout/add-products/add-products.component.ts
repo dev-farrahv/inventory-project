@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { Product, ProductService } from 'src/app/shared/services/product.service';
+import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -11,7 +13,9 @@ import { Product, ProductService } from 'src/app/shared/services/product.service
 })
 export class AddProductsComponent implements OnInit {
 
-  productList: Product[];
+  fileData: File = null;
+  previewUrl: any = null;
+  fileUpload: FileList = null;
   product: Product = {  
     name: "",
     serialNumber: "",
@@ -22,28 +26,49 @@ export class AddProductsComponent implements OnInit {
     remarks: "",
     otherDescription: "",
     itemCode: "",
-    image: "",
+    image: "assets/images/empty.png",
     weight: "",
   };
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService, public router: Router, private spinner: NgxSpinnerService) { }
  
   ngOnInit() {
-    this.productService.getproducts().subscribe(res => {
-      this.productList = res;
-      console.log(this.productList);
-    });
   }
  
   remove(item) {
     this.productService.removeProduct(item.id);
   }
 
-  saveProduct(){
-    console.log('heyyy');
+  async saveProduct(){
+   if (this.fileData) {
+      this.spinner.show();
+      this.product.image = await this.productService.uploadFile(this.fileUpload);
+      this.spinner.hide();
+   }
+
     this.productService.addProduct(this.product).then(() => {
-      console.log('success');
+      this.router.navigate(['/inventory']);
     });
+  }
+
+  fileProgress(fileInput: any) {
+    this.fileData = <File>fileInput.target.files[0];
+    this.fileUpload = <FileList>fileInput.target.files;
+    this.preview();
+  }
+  
+  preview() {
+    // Show preview 
+    const mimeType = this.fileData.type;
+    if (mimeType.match(/image\/*/) == null) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(this.fileData);
+    reader.onload = (_event) => {
+      this.previewUrl = reader.result;
+    };
   }
 
 }

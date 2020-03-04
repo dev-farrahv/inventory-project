@@ -12,6 +12,7 @@ import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { FormsModule } from '@angular/forms';
         NgbDropdownModule,
         PageHeaderModule,
         NgbModule,
-        FormsModule
+        FormsModule,
+        NgxSpinnerModule
     ],
     declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent, ReservationComponent, InventoryComponent]
 })
