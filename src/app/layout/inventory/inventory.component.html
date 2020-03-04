@@ -10,49 +10,50 @@
     <div class="col-xs-12 col-sm-6 col-md-6" *ngFor="let item of productList">
       <div class="card mb-3">
         <div class="card-header d-flex justify-content-between">
-          <span>Gucci</span>
-          <span>P20</span>
+          <span>{{ item.name }}</span>
+          <span>P {{ item.price }}</span>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col-xl-4 col-lg-12 col-md-12 mb-3">
               <img
                 class="img-thumbnail w-100"
-                src="assets/images/handbag.jpg"
+                [src]="item.image"
                 alt=""
               />
             </div>
             <div class="col-xl-8 col-lg-12 col-md-12">
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Serial Number</span> <br />
-                    <span class="text-muted">12312412</span>
-                  </p>
-                </fieldset>
-              </div>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
-                  <label>Quantity: <span class="text-muted">1</span></label>
+                  <fieldset class="form-group">
+                    <p>
+                      <span>Serial Number</span> <br />
+                      <span class="text-muted">{{ item.serialNumber }}</span>
+                    </p>
+                  </fieldset>
                 </div>
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <label
-                      >Weight: <span class="text-muted"> 12kg </span></label
-                    >
+                    <p>
+                      <span>Item Code</span> <br />
+                      <span class="text-muted">{{ item.itemCode }}</span>
+                    </p>
                   </fieldset>
                 </div>
               </div>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
-                  <label>Color: <span class="text-muted">Black</span></label>
+                  <label>Quantity: <span class="text-muted">{{ item.qty }}</span></label>
                 </div>
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <label
-                      >Item Code: <span class="text-muted"> 010123 </span></label
-                    >
+                    <label>Weight: <span class="text-muted"> {{ item.weight }} </span></label>
                   </fieldset>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                  <label>Color: <span class="text-muted">{{ item.color }}</span></label>
                 </div>
               </div>
 
@@ -60,10 +61,7 @@
                 <fieldset class="form-group">
                   <p>
                     <span>Remarks</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
+                    <span class="text-muted"> {{ item.remarks }}</span>
                   </p>
                 </fieldset>
               </div>
@@ -71,10 +69,7 @@
                 <fieldset class="form-group">
                   <p>
                     <span>Other Description</span> <br />
-                    <span class="text-muted"
-                      >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Unde, fugiat.</span
-                    >
+                    <span class="text-muted">{{ item.otherDescription }}</span>
                   </p>
                 </fieldset>
               </div>
@@ -84,7 +79,7 @@
         <div class="card-footer">
           <button
             class="btn btn-info btn-sm float-right"
-            (click)="open(content)"
+            (click)="open(content, item.id)"
           >
             Reserve
           </button>
@@ -98,7 +93,7 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header bg-light">
-    <h4 class="modal-title">Gucci</h4>
+    <h4 class="modal-title">{{ modalProduct?.name }}</h4>
     <button
       type="button"
       class="close"
@@ -113,7 +108,7 @@
       <div class="col-xl-5 col-lg-12 col-md-12 mb-3">
         <img
           class="img-thumbnail w-100"
-          src="assets/images/handbag.jpg"
+          [src]="modalProduct?.image"
           alt=""
         />
       </div>
@@ -121,14 +116,11 @@
         <fieldset class="form-group">
           <p>
             <span>Description</span> <br />
-            <span class="text-muted">
-              Lorem ipsum dolor sit amet consectetur adipisicing.</span
-            >
+            <span class="text-muted"> {{ modalProduct?.otherDescription }} </span>
           </p>
         </fieldset>
-        <fieldset>
-          <label>weight:</label>
-          <input class="form-control" type="number" />
+        <fieldset> 
+          <label>Weight: <span class="text-muted"> {{ modalProduct?.weight }} Kg. </span> </label>
         </fieldset>
         <fieldset>
           <label>Quantity:</label>
@@ -151,11 +143,7 @@
     <fieldset class="form-group">
       <label>Address</label>
       <textarea class="form-control" cols="30" rows="2" [(ngModel)]="reservation.address"></textarea>
-    </fieldset>
-    <fieldset class="form-group">
-      <label>Total weight</label>
-      <input class="form-control" [(ngModel)]="reservation.totalweight"/>
-    </fieldset>    
+    </fieldset> 
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">

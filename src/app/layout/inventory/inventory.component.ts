@@ -3,6 +3,7 @@ import { routerTransition } from 'src/app/router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
+import { Product, ProductService } from 'src/app/shared/services/product.service';
 
 @Component({
   selector: 'app-inventory',
@@ -18,13 +19,36 @@ export class InventoryComponent implements OnInit {
     email: "",
     contactNumber: "",
     address: "",
+    referenceNumber: "",
+    totalWeight: ""
   };
 
-  productList: any[] = [];
-  closeResult: string;
-  constructor(private modalService: NgbModal, public router: Router, private reservationService: ReservationService) { }
+  productList: Product[];
+  modalProduct: Product;
+  product: Product = {  
+    name: "",
+    serialNumber: "",
+    qty: "",
+    color: "",
+    price: "",
+    currency: "",
+    remarks: "",
+    otherDescription: "",
+    itemCode: "",
+    image: "",
+    weight: "",
+  };
 
-  open(content) {
+  //productList: any[] = [];
+  closeResult: string;
+  constructor(private modalService: NgbModal, public router: Router, private reservationService: ReservationService, private productService: ProductService) { }
+
+  open(content, productId) {
+    this.productService.getProduct(productId).subscribe(res => {
+      this.modalProduct = res;
+      console.log(this.modalProduct);
+    });
+
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -48,15 +72,21 @@ export class InventoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productList = [ , , , , , , , , , , ,];
+    //this.productList = [ , , , , , , , , , , ,];
     // this.reservationService.getproducts().subscribe(res => {
     //   this.productList = res;
     //   console.log(this.productList);
     // });
+    this.productService.getproducts().subscribe(res => {
+      this.productList = res;
+      console.log(this.productList);
+    });
   }
 
   saveReservation(){
     console.log('heyyy');
+    this.reservation.referenceNumber = "202003040009";
+    this.reservation.totalWeight = "12";
     this.reservationService.addReservation(this.reservation).then(() => {
       console.log('success');
     });

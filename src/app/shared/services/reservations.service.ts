@@ -10,6 +10,8 @@ export interface Reservation {
   email: string;
   contactNumber: string;
   address: string;
+  referenceNumber: string;
+  totalWeight: string;
 }
 @Injectable({
   providedIn: 'root'
