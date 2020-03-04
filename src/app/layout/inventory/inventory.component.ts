@@ -21,6 +21,7 @@ export class InventoryComponent implements OnInit {
     address: "",
     referenceNumber: "",
     totalWeight: 0,
+    price: 0,
     totalPrice: 0,
     product: null
   };
@@ -89,11 +90,17 @@ export class InventoryComponent implements OnInit {
     }
     
     this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
-    this.reservation.totalWeight = this.modalProduct.weight * this.modalProduct.qty;
-    this.reservation.totalPrice = this.modalProduct.price * this.modalProduct.qty;
+    this.reservation.price = this.modalProduct.price;
+    console.log(this.modalProduct.weight);
+    console.log(this.modalProduct.price);
+    
+    this.reservation.totalWeight = this.modalProduct.weight * this.reservation.qty;
+    this.reservation.totalPrice = this.reservation.price * this.reservation.qty;
     this.reservation.product = this.modalProduct;
     this.reservationService.addReservation(this.reservation).then(() => {
       console.log('success');
+      this.modalProduct.qty -= this.reservation.qty;
+      this.productService.updateProduct(this.modalProduct);
       this.close();
     });
   }

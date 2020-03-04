@@ -13,6 +13,7 @@ export interface Reservation {
   address: string;
   referenceNumber: string;
   totalWeight: number;
+  price: number;
   totalPrice: number;
   product: Product;
 }

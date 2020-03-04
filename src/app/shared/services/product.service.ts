@@ -67,8 +67,8 @@ export class ProductService {
     return this.productsCollection.doc<Product>(id).valueChanges();
   }
  
-  updateProduct(product: Product, id: string) {
-    return this.productsCollection.doc(id).update(product);
+  updateProduct(product: Product) {
+    return this.productsCollection.doc(product.id).update(product);
   }
  
   addProduct(product: Product) {

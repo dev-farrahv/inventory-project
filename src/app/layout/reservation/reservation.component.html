@@ -20,21 +20,27 @@
       <thead>
         <tr>
           <th>#</th>
+          <th>Reference Number</th>
           <th>Name</th>
           <th>Address</th>
-          <th>Reference Number</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+          <th>Total Weight</th>
+          <th>Total Amount</th>
           <th>Status</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of reservationList; let i = index">
-          <th scope="row"> {{ i }} </th>
-          <td> {{ item.name }} </td>
-          <td>
-            {{ item.address }}
-          </td>
+          <th scope="row"> {{ i + 1 }} </th>
           <td> {{ item.referenceNumber }} </td>
+          <td> {{ item.name }} </td>
+          <td> {{ item.address }} </td>
+          <td> {{ item.qty }} </td>
+          <td> {{ item.price }} </td>
+          <td> {{ item.totalWeight }} </td>
+          <td> {{ item.totalPrice }} </td>
           <td>Pending</td>
           <td>
             <button class="btn bg-transparent">

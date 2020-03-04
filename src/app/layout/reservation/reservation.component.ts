@@ -10,13 +10,16 @@ import { Reservation, ReservationService } from 'src/app/shared/services/reserva
 export class ReservationComponent implements OnInit {
   reservationList: Reservation[];
   reservation: Reservation = {  
-    qty: "",
+    qty: 0,
     name: "",
     email: "",
     contactNumber: "",
     address: "",
     referenceNumber: "",
-    totalWeight: ""
+    totalWeight: 0,
+    price: 0,
+    product: null,
+    totalPrice: 0,
   };
 
   constructor(private reservationService: ReservationService) { }
