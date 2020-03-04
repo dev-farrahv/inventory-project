@@ -11,6 +11,7 @@ import { AddProductsComponent } from './add-products/add-products.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PageHeaderModule } from '../shared';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { PageHeaderModule } from '../shared';
         TranslateModule,
         NgbDropdownModule,
         PageHeaderModule,
-        NgbModule
+        NgbModule,
+        FormsModule
     ],
     declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent, ReservationComponent, InventoryComponent]
 })

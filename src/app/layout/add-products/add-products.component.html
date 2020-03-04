@@ -18,19 +18,25 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
               <fieldset class="form-group">
                 <label>Product name</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.name"/>
+              </fieldset>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3">
+              <fieldset class="form-group">
+                <label>Item Code</label>
+                <input class="form-control" [(ngModel)]="product.itemCode"/>
               </fieldset>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
               <fieldset class="form-group">
                 <label>Serial Number</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.serialNumber"/>
               </fieldset>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
               <fieldset class="form-group">
                 <label>QTY.</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.qty"/>
               </fieldset>
             </div>
           </div>
@@ -39,19 +45,25 @@
             <div class="col-xl-3 col-lg-6">
               <fieldset class="form-group">
                 <label>Color</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.color"/>
               </fieldset>
             </div>
             <div class="col-xl-3 col-lg-6">
               <fieldset class="form-group">
                 <label>Price</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.price"/>
               </fieldset>
             </div>
             <div class="col-xl-3 col-lg-6">
               <fieldset class="form-group">
                 <label>Currency</label>
-                <input class="form-control" />
+                <input class="form-control" [(ngModel)]="product.currency"/>
+              </fieldset>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+              <fieldset class="form-group">
+                <label>Weight</label>
+                <input class="form-control" [(ngModel)]="product.weight"/>
               </fieldset>
             </div>
           </div>
@@ -60,13 +72,13 @@
             <div class="col-xl-4 col-lg-6">
               <fieldset class="form-group">
                 <label>Remarks</label>
-                <textarea class="form-control" rows="4" cols="3"></textarea>
+                <textarea class="form-control" rows="4" cols="3" [(ngModel)]="product.remarks"></textarea>
               </fieldset>
             </div>
             <div class="col-xl-4 col-lg-6">
               <fieldset class="form-group">
                 <label>Other Description</label>
-                <textarea class="form-control" rows="4" cols="3"></textarea>
+                <textarea class="form-control" rows="4" cols="3" [(ngModel)]="product.otherDescription"></textarea>
               </fieldset>
             </div>
           </div>
@@ -74,7 +86,7 @@
       </div>
     </div>
     <div class="card-footer text-right">
-      <button class="btn btn-info btn-sm" (click)="randomize()">Save</button>
+      <button class="btn btn-info btn-sm" (click)="saveProduct()">Save</button>
     </div>
   </div>
 </div>
