@@ -32,4 +32,4 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     providers: [AuthGuard],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout.component';
 import { AddProductsComponent } from './add-products/add-products.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 
 const routes: Routes = [
     {
@@ -22,6 +23,10 @@ const routes: Routes = [
             {
                 path: 'add-products',
                 component: AddProductsComponent
+            },
+            {
+                path: 'view-reservation',
+                component: ViewReservationComponent
             },
             {
                 path: 'reservations',

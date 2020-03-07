@@ -1,42 +1,61 @@
 <div>
   <div class="card mb-3">
     <div class="card-header">
-      Add Product
+      Reservation
+      <div class="float-right">
+        {{ reservation.status }}
+      </div>
     </div>
     <div class="card-body">
       <div class="row">
+        <div class="col-xl-6 col-lg-6">
+          <fieldset class="form-group">
+            <label>Name</label>
+            <input
+              disabled
+              class="form-control"
+              [(ngModel)]="reservation.name"
+            />
+          </fieldset>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <fieldset class="form-group">
+            <label>Ref. #</label>
+            <input
+              disabled
+              class="form-control"
+              [(ngModel)]="reservation.referenceNumber"
+            />
+          </fieldset>
+        </div>
+      </div>
+      <div class="">
+        <fieldset class="form-group">
+          <label> Address</label>
+          <textarea
+            disabled
+            class="form-control"
+            rows="2"
+            cols="3"
+            [(ngModel)]="reservation.address"
+          ></textarea>
+        </fieldset>
+      </div>
+      <hr />
+      <div class="row">
         <div class="col-sm-5 col-md-4 col-lg-3 mb-2 text-center">
-          <img
-            class="img-thumbnail w-100 mb-2"
-            src="assets/images/empty.png"
-            alt=""
-            *ngIf="!previewUrl"
-          />
-          <img
-            [src]="previewUrl"
-            alt=""
-            class="img-thumbnail w-100 mb-2"
-            *ngIf="previewUrl"
-          />
-          <button class="btn btn-primary btn-sm" (click)="uploadInput.click()">
-            Upload
-          </button>
-
-          <input
-            type="file"
-            name="image"
-            [(ngModel)]="file"
-            (change)="fileProgress($event)"
-            hidden
-            #uploadInput
-          />
+          <img [src]="product?.image" alt="" class="img-thumbnail w-100 mb-2" />
         </div>
         <div class="col-sm-7 col-md-8 col-lg-9">
           <div class="row">
             <div class="col-md-6 col-lg-6 col-xl-6">
               <fieldset class="form-group">
                 <label>Product name</label>
-                <input class="form-control" [(ngModel)]="product.name" />
+                <input
+                  disabled
+                  class="form-control"
+                  [(ngModel)]="product.name"
+                />
               </fieldset>
             </div>
           </div>
@@ -44,16 +63,22 @@
           <div class="row">
             <div class="col-md-6 col-lg-6 col-xl-6">
               <fieldset class="form-group">
-                <label>Item Code</label>
-                <input class="form-control" [(ngModel)]="product.itemCode" />
-              </fieldset>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-6">
-              <fieldset class="form-group">
                 <label>Serial Number</label>
                 <input
+                  disabled
                   class="form-control"
                   [(ngModel)]="product.serialNumber"
+                />
+              </fieldset>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-xl-6">
+              <fieldset class="form-group">
+                <label>Item Code</label>
+                <input
+                  disabled
+                  class="form-control"
+                  [(ngModel)]="product.itemCode"
                 />
               </fieldset>
             </div>
@@ -63,13 +88,18 @@
             <div class="col-xl-6 col-lg-6">
               <fieldset class="form-group">
                 <label>Color</label>
-                <input class="form-control" [(ngModel)]="product.color" />
+                <input
+                  disabled
+                  class="form-control"
+                  [(ngModel)]="product.color"
+                />
               </fieldset>
             </div>
             <div class="col-xl-6 col-lg-6">
               <fieldset class="form-group">
                 <label>Price</label>
                 <input
+                  disabled
                   class="form-control"
                   [(ngModel)]="product.price"
                   type="number"
@@ -83,6 +113,7 @@
               <fieldset class="form-group">
                 <label>Remarks</label>
                 <textarea
+                  disabled
                   class="form-control"
                   rows="4"
                   cols="3"
@@ -94,6 +125,7 @@
               <fieldset class="form-group">
                 <label>Other Description</label>
                 <textarea
+                  disabled
                   class="form-control"
                   rows="4"
                   cols="3"
@@ -106,7 +138,12 @@
       </div>
     </div>
     <div class="card-footer text-right">
-      <button class="btn btn-info btn-sm" (click)="saveProduct()">Save</button>
+      <select [(ngModel)]="reservation.status" (change)="updateStatus()">
+        <option value="Pending">Pending</option>
+        <option value="For Shipment">For Shipment</option>
+        <option value="Completed">Completed</option>
+        <option value="Canceled">Canceled</option>
+      </select>
     </div>
   </div>
 </div>

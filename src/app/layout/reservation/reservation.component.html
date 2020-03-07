@@ -23,25 +23,22 @@
           <th>Reference Number</th>
           <th>Name</th>
           <th>Address</th>
-          <th>Quantity</th>
           <th>Amount</th>
-          <th>Total Weight</th>
-          <th>Total Amount</th>
           <th>Status</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of reservationList; let i = index">
-          <th scope="row"> {{ i + 1 }} </th>
-          <td> {{ item.referenceNumber }} </td>
-          <td> {{ item.name }} </td>
-          <td> {{ item.address }} </td>
-          <td> {{ item.qty }} </td>
-          <td> {{ item.product.currency }} {{ item.price }}</td>
-          <td> {{ item.totalWeight }} </td>
-          <td> {{ item.product.currency }} {{ item.totalPrice }} </td>
-          <td>Pending</td>
+        <tr
+          *ngFor="let item of reservationList; let i = index"
+          (click)="router.navigate(['/view-reservation', { id: item.id }])"
+        >
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ item.referenceNumber }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.address }}</td>
+          <td>Php {{ item.price }}</td>
+          <td>{{ item.status }}</td>
           <td>
             <button class="btn bg-transparent">
               <i class="fa fa-ellipsis-v" aria-hidden="true"></i>

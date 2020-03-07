@@ -165,30 +165,29 @@
     </a>
 
     <div class="nested-menu">
-        <a class="list-group-item" (click)="addExpandClass('profile')">
-            <span><i class="fa fa-shopping-cart"></i>&nbsp; Products</span>
-        </a>
-        <li class="nested" [class.expand]="showMenu === 'profile'">
-            <ul class="submenu">
-                <li>
-                    <a 
-                    [routerLink]="['/inventory']"
-                    [routerLinkActive]="['router-link-active']"
-                    
-                    >
-                        <span> Product List</span>
-                    </a>
-                </li>
-                <li>
-                    <a 
-                    [routerLink]="['/add-products']"
-                    [routerLinkActive]="['router-link-active']"
-                    >
-                        <span> Add Product</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+      <a class="list-group-item" (click)="addExpandClass('profile')">
+        <span><i class="fa fa-shopping-cart"></i>&nbsp; Products</span>
+      </a>
+      <li class="nested" [class.expand]="showMenu === 'profile'">
+        <ul class="submenu">
+          <li>
+            <a
+              [routerLink]="['/inventory']"
+              [routerLinkActive]="['router-link-active']"
+            >
+              <span> Product List</span>
+            </a>
+          </li>
+          <li>
+            <a
+              [routerLink]="['/add-products']"
+              [routerLinkActive]="['router-link-active']"
+            >
+              <span> Add Product</span>
+            </a>
+          </li>
+        </ul>
+      </li>
     </div>
 
     <a
@@ -200,7 +199,7 @@
       <span>{{ 'Reservations' | translate }}</span>
     </a>
   </div>
-  <div
+  <!-- <div
     class="toggle-button"
     [ngClass]="{ collapsed: collapsed }"
     (click)="toggleCollapsed()"
@@ -208,5 +207,8 @@
     <i class="fa fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i
     >&nbsp;
     <span>{{ 'Collapse Sidebar' | translate }}</span>
+  </div> -->
+  <div class="toggle-button" [ngClass]="{ collapsed: collapsed }">
+    <i class="fa fa-fw fa-angle-double-{{ collapsed ? 'right' : 'left' }}"></i>
   </div>
 </nav>

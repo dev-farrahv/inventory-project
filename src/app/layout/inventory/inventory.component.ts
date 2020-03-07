@@ -13,7 +13,7 @@ import { Product, ProductService } from 'src/app/shared/services/product.service
 })
 export class InventoryComponent implements OnInit {
   reservationList: Reservation[];
-  reservation: Reservation = {  
+  reservation: Reservation = {
     qty: 0,
     name: "",
     email: "",
@@ -28,7 +28,7 @@ export class InventoryComponent implements OnInit {
 
   productList: Product[];
   modalProduct: Product;
-  product: Product = {  
+  product: Product = {
     name: "",
     serialNumber: "",
     qty: 0,
@@ -76,7 +76,7 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  saveReservation(){
+  saveReservation() {
     if (this.modalProduct.qty <= 0) {
       return;
     }
@@ -88,15 +88,16 @@ export class InventoryComponent implements OnInit {
     if (this.modalProduct.weight <= 0) {
       return;
     }
-    
+
     this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
     this.reservation.price = this.modalProduct.price;
     console.log(this.modalProduct.weight);
     console.log(this.modalProduct.price);
-    
+
     this.reservation.totalWeight = this.modalProduct.weight * this.reservation.qty;
     this.reservation.totalPrice = this.reservation.price * this.reservation.qty;
     this.reservation.product = this.modalProduct;
+    this.reservation.status = 'Pending';
     this.reservationService.addReservation(this.reservation).then(() => {
       console.log('success');
       this.modalProduct.qty -= this.reservation.qty;

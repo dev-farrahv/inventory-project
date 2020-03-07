@@ -13,6 +13,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 
 @NgModule({
     imports: [
@@ -25,6 +26,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
         FormsModule,
         NgxSpinnerModule
     ],
-    declarations: [LayoutComponent, SidebarComponent, HeaderComponent, AddProductsComponent, ReservationComponent, InventoryComponent]
+    declarations: [
+        LayoutComponent,
+        SidebarComponent,
+        HeaderComponent,
+        AddProductsComponent,
+        ReservationComponent,
+        InventoryComponent,
+        ViewReservationComponent]
 })
 export class LayoutModule { }
