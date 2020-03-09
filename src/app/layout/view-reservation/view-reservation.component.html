@@ -3,7 +3,10 @@
     <div class="card-header">
       Reservation
       <div class="float-right">
-        {{ reservation.status }}
+        <button class="btn btn-primary btn-sm" (click)="printPdf(reservation)">
+          Print
+        </button>
+        <!-- {{ reservation.status }} -->
       </div>
     </div>
     <div class="card-body">

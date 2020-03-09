@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { routerTransition } from '../router.animations';
 
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -9,6 +10,8 @@ import { routerTransition } from '../router.animations';
     animations: [routerTransition()]
 })
 export class LoginComponent implements OnInit {
+    username: string;
+    password: string;
     constructor(
       public router: Router
     ) {}
@@ -16,6 +19,11 @@ export class LoginComponent implements OnInit {
     ngOnInit() {}
 
     onLoggedin() {
-        localStorage.setItem('isLoggedin', 'true');
+        console.log(this.username);
+        console.log(this.password);
+        if(this.username == 'admin' && this.password == 'admin'){
+            this.router.navigate(['/dashboard']);
+        }
+        //localStorage.setItem('isLoggedin', 'true');
     }
 }

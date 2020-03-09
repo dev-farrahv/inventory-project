@@ -14,6 +14,7 @@ import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,
         AngularFireStorageModule,
+        FormsModule,
         NgxSpinnerModule
     ],
     declarations: [AppComponent],
