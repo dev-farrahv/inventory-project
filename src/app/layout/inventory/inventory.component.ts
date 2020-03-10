@@ -77,17 +77,6 @@ export class InventoryComponent implements OnInit {
   }
 
   saveReservation() {
-    if (this.modalProduct.qty <= 0) {
-      return;
-    }
-
-    if (this.modalProduct.price <= 0) {
-      return;
-    }
-
-    if (this.modalProduct.weight <= 0) {
-      return;
-    }
 
     this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
     this.reservation.price = this.modalProduct.price;
