@@ -14,4 +14,4 @@ import { FormsModule } from '@angular/forms';
         LoginRoutingModule],
     declarations: [LoginComponent]
 })
-export class LoginModule {}
+export class LoginModule { }

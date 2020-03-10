@@ -1,4 +1,4 @@
-<div [@routerTransition]>
+<div [@routerTransition] class="main">
   <h2>Products</h2>
   <div class="form-control mb-3 ">
     <div class="mt-1  d-flex justify-content-between">
@@ -9,8 +9,8 @@
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-6" *ngFor="let item of productList">
       <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <span>{{ item.name }}</span>
+        <div class="card-header d-flex justify-content-between bg-pink">
+          <span>Product Name: {{ item.name }}</span>
           <span>Php {{ item.price }}</span>
         </div>
         <div class="card-body">
@@ -66,9 +66,9 @@
             </div>
           </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer bg-transparent">
           <button
-            class="btn btn-info btn-sm float-right"
+            class="btn bg-dark-pink text-white btn-sm float-right"
             (click)="open(content, item)"
           >
             Reserve
@@ -82,8 +82,8 @@
 <!-- Reserve Modal -->
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header bg-light">
-    <h4 class="modal-title">{{ modalProduct?.name }}</h4>
+  <div class="modal-header bg-pink">
+    <h4 class="modal-title">2nd</h4>
     <button
       type="button"
       class="close"
@@ -101,17 +101,19 @@
       <div class="col-xl-7 col-lg-12 col-md-12">
         <fieldset class="form-group">
           <p>
+            <span>Product Name</span> <br />
+            <span class="text-muted">
+              {{ modalProduct?.name }}
+            </span>
+          </p>
+        </fieldset>
+        <fieldset class="form-group">
+          <p>
             <span>Description</span> <br />
             <span class="text-muted">
               {{ modalProduct?.otherDescription }}
             </span>
           </p>
-        </fieldset>
-        <fieldset>
-          <label
-            >Weight:
-            <span class="text-muted"> {{ modalProduct?.weight }} Kg. </span>
-          </label>
         </fieldset>
       </div>
     </div>
@@ -145,7 +147,11 @@
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">
       Cancel
     </button>
-    <button type="button" class="btn btn-primary" (click)="saveReservation()">
+    <button
+      type="button"
+      class="btn bg-dark-pink text-white"
+      (click)="saveReservation()"
+    >
       Reserve
     </button>
   </div>

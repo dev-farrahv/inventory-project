@@ -1,12 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
-@import "bootstrap/bootstrap";
-@import "spinner";
-@import "utils";
-@import "rtl";
-@import "responsive";
+@import 'bootstrap/bootstrap';
+@import 'spinner';
+@import 'utils';
+@import 'rtl';
+@import 'responsive';
 
 @media print {
     .breadcrumb {
         display: none !important;
     }
+}
+
+/* You can add global styles to this file, and also import other style files */
+// @import '~ngx-toastr/toastr';
+
+body {
+    font-family: 'Squada One', cursive;
+}
+
+*:focus,
+*:active {
+    outline: none;
+}
+
+.main {
+    height: calc(100vh - 30px);
+    overflow: auto;
+}
+
+.main:after {
+    content: '';
+    background: url(../assets/images/bg-pink.jpg) no-repeat center bottom;
+    background-size: cover;
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.landing {
+    content: '';
+    background: url(../assets/images/bg-pink.jpg) no-repeat center bottom;
+    background-size: cover;
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.bg-pink {
+    background-color: rgba(255, 192, 203, 0.473) !important;
+}
+
+.bg-dark-pink {
+    background-color: #d8576ab4 !important;
+}
+
+.side-nav-active {
+    background-color: rgba(255, 192, 203, 0.473) !important;
+    color: white;
+    -webkit-box-shadow: 10px 10px 26px -16px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 26px -16px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 26px -16px rgba(0, 0, 0, 0.75);
+    border-radius: 5px;
+}
+
+.side-nav-btn {
+    cursor: pointer;
+}
+
+.side-nav-btn:hover {
+    background-color: rgba(255, 192, 203, 0.274);
 }

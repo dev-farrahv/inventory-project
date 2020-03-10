@@ -1,29 +1,20 @@
-<div [@routerTransition]>
+<div [@routerTransition] class="main">
   <h2>Reservations</h2>
-
-  <div class="card mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <div>
-        <i class="fa fa-search mr-2" aria-hidden="true"></i>
-        <input type="text" class="px-2 search-input" placeholder="Search..." />
-      </div>
-      <div>
-        <select class="form-control">
-          <option>Pending</option>
-          <option>For Shipment</option>
-          <option>Completed</option>
-          <option>Cancel</option>
-        </select>
-      </div>
+  <div class="p-2 d-flex justify-content-between bg-transparent border-0">
+    <div>
+      <i class="fa fa-search mr-2" aria-hidden="true"></i>
+      <input type="text" class="px-2 search-input" placeholder="Search..." />
     </div>
+  </div>
+  <div class="card mb-3 bg-transparent">
     <table class="card-body table table-hover">
-      <thead>
+      <thead class="bg-pink">
         <tr>
           <th>#</th>
           <th>Reference Number</th>
           <th>Name</th>
-          <th>Address</th>
-          <th>Amount</th>
+          <th class="sm-hidden">Address</th>
+          <th class="sm-hidden">Amount</th>
           <th>Status</th>
           <th></th>
         </tr>
@@ -33,11 +24,11 @@
           *ngFor="let item of reservationList; let i = index"
           (click)="router.navigate(['/view-reservation', { id: item.id }])"
         >
-          <th scope="row">{{ i + 1 }}</th>
+          <th>{{ i + 1 }}</th>
           <td>{{ item.referenceNumber }}</td>
           <td>{{ item.name }}</td>
-          <td>{{ item.address }}</td>
-          <td>Php {{ item.price }}</td>
+          <td class="sm-hidden">{{ item.address }}</td>
+          <td class="sm-hidden">Php {{ item.price }}</td>
           <td>{{ item.status }}</td>
           <td>
             <button class="btn bg-transparent">

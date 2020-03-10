@@ -15,6 +15,8 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 
 @NgModule({
     imports: [
@@ -28,10 +30,10 @@ import { FormsModule } from '@angular/forms';
         AngularFirestoreModule,
         AngularFireStorageModule,
         FormsModule,
-        NgxSpinnerModule
+        NgxSpinnerModule,
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard],
+    providers: [AuthGuard, AngularFireAuth],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

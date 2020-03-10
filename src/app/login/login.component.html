@@ -1,20 +1,35 @@
-<div class="login-page" [@routerTransition]>
-    <div class="row justify-content-md-center">
-        <div class="col-md-4">
-            <img src="assets/images/logo.png" width="150px" class="user-avatar" />
-            <h1>2nd Bags/Luggage, Clothes and accessories</h1>
-                <div class="form-content">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-underline input-lg"  [(ngModel)]="username" placeholder="{{ 'Email' | translate }}">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg"  [(ngModel)]="password" placeholder="{{ 'Password' | translate }}">
-                    </div>
-                </div>
-                <a class="btn rounded-btn" (click)="onLoggedin()">{{ 'Log in' | translate }}</a>
-                &nbsp; 
-                <a class="btn rounded-btn" [routerLink]="['/signup']">{{ 'Register' | translate }}</a>
-        </div>
+<div class="landing"></div>
+<div class="login-main">
+  <div class="login-card p-3 bg-white">
+    <div>
+      <img src="assets/images/company_logo.jpg" alt="" class="w-100 logo" />
     </div>
+    <div>
+      <input
+        type="text"
+        class="form-control bg-dark-pink text-light my-2"
+        placeholder="Email"
+        [(ngModel)]="email"
+      />
+    </div>
+    <div>
+      <input
+        type="password"
+        class="form-control bg-dark-pink text-light my-2"
+        [(ngModel)]="password"
+        placeholder="Password"
+      />
+    </div>
+    <hr />
+    <button
+      class="w-100 btn btn-sm bg-dark-pink text-light mb-2"
+      (click)="onLoggedin()"
+      [disabled]="loading"
+    >
+      {{ !loading ? 'Login' : 'Loading...' }}
+    </button>
+    <div class="alert alert-warning fade show" role="alert" *ngIf="errorMsg">
+      <strong>{{ errorMsg }}</strong>
+    </div>
+  </div>
 </div>
