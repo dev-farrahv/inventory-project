@@ -14,7 +14,7 @@ import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
-import { ToastrModule } from 'ngx-toastr';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
     imports: [
@@ -26,6 +26,7 @@ import { ToastrModule } from 'ngx-toastr';
         NgbModule,
         FormsModule,
         NgxSpinnerModule,
+        Ng2SearchPipeModule
     ],
     declarations: [
         LayoutComponent,

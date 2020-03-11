@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ToastrService } from 'ngx-toastr';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -25,25 +26,12 @@ export class ViewReservationComponent implements OnInit {
     totalPrice: 0,
   };
 
-  // product: Product = {
-  //   name: "",
-  //   serialNumber: "",
-  //   qty: 0,
-  //   color: "",
-  //   price: 0,
-  //   currency: "",
-  //   remarks: "",
-  //   otherDescription: "",
-  //   itemCode: "",
-  //   image: "assets/images/empty.png",
-  //   weight: 0,
-  // };
-
   constructor(
     public router: Router,
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private toastr: ToastrService
   ) {
     this.route.params.subscribe(params => {
       if (!params.id) {
@@ -63,7 +51,9 @@ export class ViewReservationComponent implements OnInit {
   }
 
   updateStatus() {
-    this.reservationService.updateReservation(this.reservation);
+    this.reservationService.updateReservation(this.reservation).then(() => {
+      this.toastr.success('Status updated!');
+    });
   }
 
   getBase64ImageFromURL(url) {

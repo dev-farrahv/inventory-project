@@ -4,7 +4,12 @@
     <div class="form-control mr-2">
       <div class="align-items-center d-flex justify-content-between">
         <i class="fa fa-search mr-2" aria-hidden="true"></i>
-        <input type="text" class="border-0 w-100" placeholder="Search..." />
+        <input
+          type="text"
+          class="border-0 w-100"
+          placeholder="Search..."
+          [(ngModel)]="search"
+        />
       </div>
     </div>
     <div>
@@ -18,7 +23,10 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6 " *ngFor="let item of productList">
+    <div
+      class="col-xs-12 col-sm-6 col-md-6 "
+      *ngFor="let item of productList | filter: search"
+    >
       <div
         class="card mb-3 cursor"
         (click)="item.isSelected = !item.isSelected"

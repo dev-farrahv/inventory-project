@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   animations: [routerTransition()]
 })
 export class ReservationComponent implements OnInit {
+  search = '';
   reservationList: Reservation[];
 
   constructor(private reservationService: ReservationService, public router: Router) { }

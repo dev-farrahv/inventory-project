@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   animations: [routerTransition()]
 })
 export class InventoryComponent implements OnInit {
+  search = '';
   reservationList: Reservation[];
   reservation: Reservation = {
     qty: 0,
