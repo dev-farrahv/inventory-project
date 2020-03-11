@@ -1,87 +1,92 @@
 <div class="main">
   <div class="px-3 d-flex justify-content-between">
     <h2>Reservations</h2>
-    <div class="d-flex">
-      <div>
-        <button
-          class="btn bg-dark-pink text-white"
-          (click)="printPdf(reservation)"
-        >
-          <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
-        </button>
-      </div>
+    <div class="d-flex p-2">
+      <select
+        [(ngModel)]="reservation.status"
+        (change)="updateStatus()"
+        class="text-dark w-100 bg-transparent mx-2"
+      >
+        <option value="Pending">Pending</option>
+        <option value="For Shipment">For Shipment</option>
+        <option value="Completed">Completed</option>
+        <option value="Canceled">Canceled</option>
+      </select>
+      <button
+        class="btn bg-dark-pink text-white"
+        (click)="printPdf(reservation)"
+      >
+        <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
+      </button>
     </div>
   </div>
   <hr />
   <div class="p-3">
     <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Name</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.name"
+          />
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Ref. #</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.referenceNumber"
+          />
+        </fieldset>
+      </div>
+    </div>
+    <div class="">
+      <fieldset class="form-group">
+        <label> Address</label>
+        <textarea
+          class="form-control bg-transparent"
+          rows="2"
+          cols="3"
+          [(ngModel)]="reservation.address"
+        ></textarea>
+      </fieldset>
+    </div>
+    <hr />
+
+    <div
+      class="row mb-2 custom-border rounded px-2 pt-3"
+      *ngFor="let product of reservation.products"
+    >
       <div class="col-sm-5 col-md-4 col-lg-3 mb-2 text-center">
         <img
           [src]="product?.image"
           alt=""
           class="img-thumbnail w-100 mb-2 product-image"
         />
-        <fieldset class="form-group">
-          <select
-            [(ngModel)]="reservation.status"
-            (change)="updateStatus()"
-            class="text-dark form-control w-100 bg-pink"
-          >
-            <option value="Pending">Pending</option>
-            <option value="For Shipment">For Shipment</option>
-            <option value="Completed">Completed</option>
-            <option value="Canceled">Canceled</option>
-          </select>
-        </fieldset>
       </div>
       <div class="col-sm-7 col-md-8 col-lg-9">
-        <div class="row">
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Name</label>
-              <input
-                readonly
-                class="form-control bg-pink"
-                [(ngModel)]="reservation.name"
-              />
-            </fieldset>
-          </div>
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Ref. #</label>
-              <input
-                readonly
-                class="form-control bg-pink"
-                [(ngModel)]="reservation.referenceNumber"
-              />
-            </fieldset>
-          </div>
-        </div>
-        <div class="">
+        <div>
           <fieldset class="form-group">
-            <label> Address</label>
-            <textarea
-              readonly
-              class="form-control bg-pink"
-              rows="2"
-              cols="3"
-              [(ngModel)]="reservation.address"
-            ></textarea>
+            <label>Product name</label>
+            <input
+              class="form-control bg-transparent"
+              [(ngModel)]="product.name"
+            />
           </fieldset>
         </div>
-        <hr />
 
-        <div class="row">
-          <div class="col-md-6 col-lg-6 col-xl-6">
-            <fieldset class="form-group">
-              <label>Product name</label>
-              <input
-                readonly
-                class="form-control bg-pink"
-                [(ngModel)]="product.name"
-              />
-            </fieldset>
-          </div>
+        <div>
+          <fieldset class="form-group">
+            <label>Description</label>
+            <textarea
+              class="form-control bg-transparent"
+              rows="4"
+              cols="3"
+              [(ngModel)]="product.otherDescription"
+            ></textarea>
+          </fieldset>
         </div>
 
         <div class="row">
@@ -89,8 +94,7 @@
             <fieldset class="form-group">
               <label>Serial Number</label>
               <input
-                readonly
-                class="form-control bg-pink"
+                class="form-control bg-transparent"
                 [(ngModel)]="product.serialNumber"
               />
             </fieldset>
@@ -100,8 +104,7 @@
             <fieldset class="form-group">
               <label>Item Code</label>
               <input
-                readonly
-                class="form-control bg-pink"
+                class="form-control bg-transparent"
                 [(ngModel)]="product.itemCode"
               />
             </fieldset>
@@ -113,8 +116,7 @@
             <fieldset class="form-group">
               <label>Color</label>
               <input
-                readonly
-                class="form-control bg-pink"
+                class="form-control bg-transparent"
                 [(ngModel)]="product.color"
               />
             </fieldset>
@@ -123,8 +125,7 @@
             <fieldset class="form-group">
               <label>Price</label>
               <input
-                readonly
-                class="form-control bg-pink"
+                class="form-control bg-transparent"
                 [(ngModel)]="product.price"
                 type="number"
               />
@@ -137,28 +138,17 @@
             <fieldset class="form-group">
               <label>Remarks</label>
               <textarea
-                readonly
-                class="form-control bg-pink"
+                class="form-control bg-transparent"
                 rows="4"
                 cols="3"
                 [(ngModel)]="product.remarks"
               ></textarea>
             </fieldset>
           </div>
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Other Description</label>
-              <textarea
-                readonly
-                class="form-control bg-pink"
-                rows="4"
-                cols="3"
-                [(ngModel)]="product.otherDescription"
-              ></textarea>
-            </fieldset>
-          </div>
+          <div class="col-xl-6 col-lg-6"></div>
         </div>
       </div>
+      <hr />
     </div>
   </div>
 </div>

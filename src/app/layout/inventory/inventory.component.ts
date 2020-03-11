@@ -16,32 +16,16 @@ export class InventoryComponent implements OnInit {
   reservationList: Reservation[];
   reservation: Reservation = {
     qty: 0,
-    name: "",
-    email: "",
-    contactNumber: "",
-    address: "",
-    referenceNumber: "",
-    totalWeight: 0,
-    price: 0,
+    name: '',
+    email: '',
+    contactNumber: '',
+    address: '',
+    referenceNumber: '',
     totalPrice: 0,
-    product: null
+    products: []
   };
 
   productList: Product[];
-  modalProduct: Product;
-  product: Product = {
-    name: "",
-    serialNumber: "",
-    qty: 0,
-    color: "",
-    price: 0,
-    currency: "",
-    remarks: "",
-    otherDescription: "",
-    itemCode: "",
-    image: "",
-    weight: 0,
-  };
 
   closeResult: string;
   loading = false;
@@ -54,9 +38,10 @@ export class InventoryComponent implements OnInit {
     private toastr: ToastrService
   ) { }
 
-  open(content, product) {
-    this.modalProduct = product;
-
+  open(content) {
+    if (!this.productList.some(item => item.isSelected)) {
+      return this.toastr.warning('Please select atleast one item!');
+    }
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -87,21 +72,26 @@ export class InventoryComponent implements OnInit {
 
   saveReservation() {
     this.loading = true;
-    this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
-    this.reservation.price = this.modalProduct.price;
-    this.reservation.totalWeight = this.modalProduct.weight * this.reservation.qty;
-    this.reservation.totalPrice = this.reservation.price * this.reservation.qty;
-    this.reservation.product = this.modalProduct;
+
+    const totalPrice = this.productList.reduce((total, product) => {
+      const price = product.price * product.qty;
+      return total + price;
+    }, 0);
+
+    this.reservation.referenceNumber = 'RN-2020' + (Math.random() * 1000000).toFixed();
+    this.reservation.totalPrice = totalPrice;
+    this.reservation.products = this.productList.filter(item => item.isSelected);
     this.reservation.status = 'Pending';
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
       console.log('success');
-      this.modalProduct.qty -= this.reservation.qty;
-      this.productService.updateProduct(this.modalProduct);
       this.close();
       this.loading = false;
     });
   }
 
+  getSelectedProduct() {
+    return this.productList.filter(item => item.isSelected);
+  }
 
 }

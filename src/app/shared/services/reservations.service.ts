@@ -12,10 +12,8 @@ export interface Reservation {
   contactNumber: string;
   address: string;
   referenceNumber: string;
-  totalWeight: number;
-  price: number;
   totalPrice: number;
-  product: Product;
+  products: Product[];
   status?: string;
 }
 @Injectable({

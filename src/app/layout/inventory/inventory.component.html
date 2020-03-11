@@ -1,24 +1,52 @@
 <div [@routerTransition] class="main">
   <h2>Products</h2>
-  <div class="form-control mb-3 ">
-    <div class="mt-1  d-flex justify-content-between">
-      <i class="fa fa-search mr-2 mt-1" aria-hidden="true"></i>
-      <input type="text" class="border-0 w-100" placeholder="Search..." />
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="form-control mr-2">
+      <div class="align-items-center d-flex justify-content-between">
+        <i class="fa fa-search mr-2" aria-hidden="true"></i>
+        <input type="text" class="border-0 w-100" placeholder="Search..." />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn bg-dark-pink text-white btn-sm p-2"
+        (click)="open(content)"
+      >
+        Reserve Selected
+      </button>
     </div>
   </div>
+
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6" *ngFor="let item of productList">
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between bg-pink">
-          <span>Product Name: {{ item.name }}</span>
-          <span>Php {{ item.price }}</span>
-        </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 " *ngFor="let item of productList">
+      <div
+        class="card mb-3 cursor"
+        (click)="item.isSelected = !item.isSelected"
+      >
         <div class="card-body">
           <div class="row">
-            <div class="col-xl-4 col-lg-12 col-md-12 mb-3">
+            <div class="col-xl-4 col-lg-12 col-md-12 mb-3 relative">
               <img class="img-thumbnail w-100" [src]="item.image" alt="" />
+              <i
+                class="fa fa-check-square-o check text-success"
+                aria-hidden="true"
+                *ngIf="item.isSelected"
+              ></i>
+              <i
+                class="fa fa-square-o check text-success"
+                aria-hidden="true"
+                *ngIf="!item.isSelected"
+              ></i>
             </div>
             <div class="col-xl-8 col-lg-12 col-md-12">
+              <div>
+                <fieldset class="form-group">
+                  <p>
+                    <span>Product Name</span> <br />
+                    <span class="text-muted"> {{ item.name }}</span>
+                  </p>
+                </fieldset>
+              </div>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
@@ -40,10 +68,20 @@
 
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
-                  <label
-                    >Color:
-                    <span class="text-muted">{{ item.color }}</span></label
-                  >
+                  <fieldset class="form-group">
+                    <p>
+                      <span>Color</span> <br />
+                      <span class="text-muted">{{ item.color }}</span>
+                    </p>
+                  </fieldset>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                  <fieldset class="form-group">
+                    <p>
+                      <span>Price</span> <br />
+                      <span class="text-muted">{{ item.price }}</span>
+                    </p>
+                  </fieldset>
                 </div>
               </div>
 
@@ -55,6 +93,7 @@
                   </p>
                 </fieldset>
               </div>
+
               <div>
                 <fieldset class="form-group">
                   <p>
@@ -66,14 +105,6 @@
             </div>
           </div>
         </div>
-        <div class="card-footer bg-transparent">
-          <button
-            class="btn bg-dark-pink text-white btn-sm float-right"
-            (click)="open(content, item)"
-          >
-            Reserve
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -83,7 +114,7 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header bg-pink">
-    <h4 class="modal-title">2nd</h4>
+    <h4 class="modal-title">2Nd Reservation</h4>
     <button
       type="button"
       class="close"
@@ -94,29 +125,6 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="row">
-      <div class="col-xl-5 col-lg-12 col-md-12 mb-3">
-        <img class="img-thumbnail w-100" [src]="modalProduct?.image" alt="" />
-      </div>
-      <div class="col-xl-7 col-lg-12 col-md-12">
-        <fieldset class="form-group">
-          <p>
-            <span>Product Name</span> <br />
-            <span class="text-muted">
-              {{ modalProduct?.name }}
-            </span>
-          </p>
-        </fieldset>
-        <fieldset class="form-group">
-          <p>
-            <span>Description</span> <br />
-            <span class="text-muted">
-              {{ modalProduct?.otherDescription }}
-            </span>
-          </p>
-        </fieldset>
-      </div>
-    </div>
     <fieldset class="form-group">
       <label>Name</label>
       <input class="form-control" [(ngModel)]="reservation.name" />
@@ -137,6 +145,35 @@
         rows="2"
         [(ngModel)]="reservation.address"
       ></textarea>
+    </fieldset>
+    <hr />
+    <h3 class="text-center">Product List</h3>
+    <hr />
+    <fieldset class="form-group ">
+      <div class="d-flex" *ngFor="let item of getSelectedProduct()">
+        <div class="w-25">
+          <img class="img-thumbnail" [src]="item.image" alt="" />
+        </div>
+        <div class="w-75 px-3">
+          <fieldset class="form-group">
+            <p class="mb-0">
+              <span>Product Name</span> <br />
+              <span class="text-muted">
+                {{ item.name }}
+              </span>
+            </p>
+          </fieldset>
+          <fieldset class="form-group">
+            <p class="mb-0">
+              <span>Price</span> <br />
+              <span class="text-muted">
+                {{ item.price }}
+              </span>
+            </p>
+          </fieldset>
+        </div>
+        <hr />
+      </div>
     </fieldset>
   </div>
   <div class="modal-footer">

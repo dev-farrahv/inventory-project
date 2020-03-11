@@ -18,6 +18,7 @@ export interface Product {
   itemCode: string;
   image: string;
   weight: number;
+  isSelected?: boolean;
 }
 
 @Injectable({
@@ -25,29 +26,29 @@ export interface Product {
 })
 
 export class ProductService {
-  
-  private productsCollection: AngularFirestoreCollection<Product>;
- 
-  private products: Observable<Product[]>;  
 
-   // Upload Task 
-   task: AngularFireUploadTask;
- 
-   // Progress in percentage
-   percentage: Observable<number>;
-  
-   // Snapshot of uploading file
-   snapshot: Observable<any>;
-  
-   // Uploaded File URL
-   UploadedFileURL: Observable<string>;
-  
-   //Uploaded Image List
-   images: Observable<any[]>;
-  
+  private productsCollection: AngularFirestoreCollection<Product>;
+
+  private products: Observable<Product[]>;
+
+  // Upload Task 
+  task: AngularFireUploadTask;
+
+  // Progress in percentage
+  percentage: Observable<number>;
+
+  // Snapshot of uploading file
+  snapshot: Observable<any>;
+
+  // Uploaded File URL
+  UploadedFileURL: Observable<string>;
+
+  //Uploaded Image List
+  images: Observable<any[]>;
+
   constructor(db: AngularFirestore, private storage: AngularFireStorage, private database: AngularFirestore) {
     this.productsCollection = db.collection<Product>('products');
- 
+
     this.products = this.productsCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -62,32 +63,32 @@ export class ProductService {
   getproducts() {
     return this.products;
   }
- 
+
   getProduct(id) {
     return this.productsCollection.doc<Product>(id).valueChanges();
   }
- 
+
   updateProduct(product: Product) {
     return this.productsCollection.doc(product.id).update(product);
   }
- 
+
   addProduct(product: Product) {
     return this.productsCollection.add(product);
   }
- 
+
   removeProduct(id) {
     return this.productsCollection.doc(id).delete();
   }
 
   uploadFile(event: FileList) {
-    
+
     return new Promise<string>((res, reject) => {
       // The File object
       const file = event.item(0)
 
       // Validation for Images Only
-      if (file.type.split('/')[0] !== 'image') { 
-      console.error('unsupported file type :( ')
+      if (file.type.split('/')[0] !== 'image') {
+        console.error('unsupported file type :( ')
         reject();
       }
 
@@ -107,6 +108,6 @@ export class ProductService {
       });
     })
   }
-  
+
 
 }
