@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "8.0.0",
+    "@angular/animations": "^8.0.0",
     "@angular/common": "8.0.0",
     "@angular/compiler": "8.0.0",
     "@angular/core": "8.0.0",
@@ -32,7 +32,7 @@
     "font-awesome": "4.7.0",
     "ng2-charts": "2.3.0",
     "ngx-spinner": "^8.1.0",
-    "ngx-toastr": "^12.0.0",
+    "ngx-toastr": "^11.1.0",
     "pdfmake": "^0.1.65",
     "rxjs": "6.5.2",
     "tslib": "^1.9.0",

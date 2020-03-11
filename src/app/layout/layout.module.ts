@@ -14,6 +14,7 @@ import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
     imports: [
@@ -24,7 +25,7 @@ import { ViewReservationComponent } from './view-reservation/view-reservation.co
         PageHeaderModule,
         NgbModule,
         FormsModule,
-        NgxSpinnerModule
+        NgxSpinnerModule,
     ],
     declarations: [
         LayoutComponent,

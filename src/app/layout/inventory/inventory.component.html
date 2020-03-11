@@ -147,6 +147,7 @@
       type="button"
       class="btn bg-dark-pink text-white"
       (click)="saveReservation()"
+      [disabled]="loading"
     >
       Reserve
     </button>

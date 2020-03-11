@@ -16,7 +16,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
-
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
     imports: [
@@ -31,6 +31,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
         AngularFireStorageModule,
         FormsModule,
         NgxSpinnerModule,
+        ToastrModule.forRoot()
     ],
     declarations: [AppComponent],
     providers: [AuthGuard, AngularFireAuth],

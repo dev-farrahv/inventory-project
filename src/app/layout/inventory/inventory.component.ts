@@ -4,6 +4,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
 import { Product, ProductService } from 'src/app/shared/services/product.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-inventory',
@@ -43,7 +44,15 @@ export class InventoryComponent implements OnInit {
   };
 
   closeResult: string;
-  constructor(private modalService: NgbModal, public router: Router, private reservationService: ReservationService, private productService: ProductService) { }
+  loading = false;
+
+  constructor(
+    private modalService: NgbModal,
+    public router: Router,
+    private reservationService: ReservationService,
+    private productService: ProductService,
+    private toastr: ToastrService
+  ) { }
 
   open(content, product) {
     this.modalProduct = product;
@@ -77,21 +86,20 @@ export class InventoryComponent implements OnInit {
   }
 
   saveReservation() {
-
+    this.loading = true;
     this.reservation.referenceNumber = 'RN-' + (Math.random() * 100000000).toFixed();
     this.reservation.price = this.modalProduct.price;
-    console.log(this.modalProduct.weight);
-    console.log(this.modalProduct.price);
-
     this.reservation.totalWeight = this.modalProduct.weight * this.reservation.qty;
     this.reservation.totalPrice = this.reservation.price * this.reservation.qty;
     this.reservation.product = this.modalProduct;
     this.reservation.status = 'Pending';
     this.reservationService.addReservation(this.reservation).then(() => {
+      this.toastr.success('Product reserved!');
       console.log('success');
       this.modalProduct.qty -= this.reservation.qty;
       this.productService.updateProduct(this.modalProduct);
       this.close();
+      this.loading = false;
     });
   }
 
