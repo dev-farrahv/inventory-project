@@ -102,71 +102,71 @@ export class ViewReservationComponent implements OnInit {
 
 
 
-  // async printPdf(){
-  //   const docDefinition = {
-  //       // {
-  //       //   image: 'test.jpeg',
-  //       //   width: 150,
-  //       //   height: 150,
-  //       // }, 
-  //     content: [
-  //       {
-  //         text: '2nd Bags/Luggage, Clothes and accessories \n \n \n',
-  //         style: 'header',
-  //         alignment: 'center'
-  //       },
-  //       {
-  //         image: await this.getBase64ImageFromURL(this.product.image),
-  //         width: 200,
-  //         height: 200,
-  //         alignment: 'center'
-  //       }, 
-  //       {
-  //         style: 'tableExample',
-  //         table: {
-  //           widths: ['*', '*', '*', '*'],
-  //           body: [
-  //             [{text: 'Item Code: ', bold: true}, this.product.itemCode, {text: 'Product Name: ', bold: true}, this.product.name],
-  //             [{text: 'Price: ', bold: true}, this.reservation.price , {text: 'Owner: ', bold: true}, this.reservation.name],
-  //             [{text: 'Address: ' , bold: true}, this.reservation.address, {text: 'Description: ', bold: true}, this.product.remarks],
-  //             [{text: 'Weight: ' , bold: true}, this.product.weight, {text: 'Color: ', bold: true}, this.product.color]
-  //           ]
-  //         },
-  //         layout: {
-  //           hLineWidth: function (i, node) {
-  //             return (i === 0 || i === node.table.body.length) ? 2 : 1;
-  //           },
-  //           vLineWidth: function (i, node) {
-  //             return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-  //           },
-  //           hLineColor: function (i, node) {
-  //             return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
-  //           },
-  //           vLineColor: function (i, node) {
-  //             return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-  //           },
-  //           // hLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-  //           // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-  //           // paddingLeft: function(i, node) { return 4; },
-  //           // paddingRight: function(i, node) { return 4; },
-  //           // paddingTop: function(i, node) { return 2; },
-  //           // paddingBottom: function(i, node) { return 2; },
-  //           // fillColor: function (rowIndex, node, columnIndex) { return null; }
-  //         }
-  //       },
-  //     ],
-  //     styles: {
-  //       tableExample: {
-  //         fontSize: 14
-  //       },
-  //       header: {
-  //         fontSize: 18,
-  //         bold: true,
-  //         alignment: 'justify'
-  //       }
-  //     }
-  //   };
+  async printPdf() {
+    const docDefinition = {
+      // {
+      //   image: 'test.jpeg',
+      //   width: 150,
+      //   height: 150,
+      // }, 
+      content: [
+        {
+          text: '2nd Bags/Luggage, Clothes and accessories \n \n \n',
+          style: 'header',
+          alignment: 'center'
+        },
+        {
+          image: await this.getBase64ImageFromURL(this.reservation.products[0].image),
+          width: 200,
+          height: 200,
+          alignment: 'center'
+        },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['*', '*', '*', '*'],
+            body: [
+              [{ text: 'Item Code: ', bold: true }, this.reservation.products[0].itemCode, { text: 'Product Name: ', bold: true }, this.reservation.products[0].name],
+              [{ text: 'Price: ', bold: true }, this.reservation.products[0].price, { text: 'Owner: ', bold: true }, this.reservation.name],
+              [{ text: 'Address: ', bold: true }, this.reservation.address, { text: 'Description: ', bold: true }, this.reservation.products[0].remarks],
+              [{ text: 'Weight: ', bold: true }, this.reservation.products[0].weight, { text: 'Color: ', bold: true }, this.reservation.products[0].color]
+            ]
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+            },
+            // hLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            // paddingLeft: function(i, node) { return 4; },
+            // paddingRight: function(i, node) { return 4; },
+            // paddingTop: function(i, node) { return 2; },
+            // paddingBottom: function(i, node) { return 2; },
+            // fillColor: function (rowIndex, node, columnIndex) { return null; }
+          }
+        },
+      ],
+      styles: {
+        tableExample: {
+          fontSize: 14
+        },
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'justify'
+        }
+      }
+    };
 
-  //   pdfMake.createPdf(docDefinition).open();
-  // }
+    pdfMake.createPdf(docDefinition).open();
+  }
 }
