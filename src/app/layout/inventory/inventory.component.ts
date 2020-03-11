@@ -73,25 +73,34 @@ export class InventoryComponent implements OnInit {
   saveReservation() {
     this.loading = true;
 
-    const totalPrice = this.productList.reduce((total, product) => {
+    this.reservation.totalPrice = this.productList.filter(item => item.isSelected).reduce((total, product) => {
       const price = product.price * product.qty;
       return total + price;
     }, 0);
 
     this.reservation.referenceNumber = 'RN-2020' + (Math.random() * 1000000).toFixed();
-    this.reservation.totalPrice = totalPrice;
     this.reservation.products = this.productList.filter(item => item.isSelected);
     this.reservation.status = 'Pending';
+    this.reservation.subTotal = this.reservation.totalPrice;
+    this.reservation.shippingFee = 0;
+    this.reservation.totalWeight = 0;
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
       console.log('success');
       this.close();
       this.loading = false;
+      this.resetSelectedList();
     });
   }
 
   getSelectedProduct() {
     return this.productList.filter(item => item.isSelected);
+  }
+
+  resetSelectedList() {
+    this.productList.forEach(product => {
+      product.isSelected = false;
+    });
   }
 
 }

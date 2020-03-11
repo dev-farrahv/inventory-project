@@ -15,6 +15,9 @@ export interface Reservation {
   totalPrice: number;
   products: Product[];
   status?: string;
+  shippingFee?: number;
+  subTotal?: number;
+  totalWeight?: number;
 }
 @Injectable({
   providedIn: 'root'

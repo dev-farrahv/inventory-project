@@ -53,6 +53,44 @@
         ></textarea>
       </fieldset>
     </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Shipping Fee</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.shippingFee"
+            (keyup)="calcSubTotal()"
+            (change)="checkIfZero()"
+            type="number"
+          />
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Sub Total</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.subTotal"
+            readonly
+            type="number"
+          />
+        </fieldset>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Total Weight (Kg)</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.totalWeight"
+            type="number"
+          />
+        </fieldset>
+      </div>
+    </div>
     <hr />
     <h3>
       Product List

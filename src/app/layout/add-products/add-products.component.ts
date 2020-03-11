@@ -16,35 +16,35 @@ export class AddProductsComponent implements OnInit {
   fileData: File = null;
   previewUrl: any = null;
   fileUpload: FileList = null;
-  product: Product = {  
-    name: "",
-    serialNumber: "",
-    qty: 0,
-    color: "",
+  product: Product = {
+    name: '',
+    serialNumber: '',
+    qty: 1,
+    color: '',
     price: 0,
-    currency: "",
-    remarks: "",
-    otherDescription: "",
-    itemCode: "",
-    image: "assets/images/empty.png",
+    currency: '',
+    remarks: '',
+    otherDescription: '',
+    itemCode: '',
+    image: 'assets/images/empty.png',
     weight: 0,
   };
 
   constructor(private productService: ProductService, public router: Router, private spinner: NgxSpinnerService) { }
- 
+
   ngOnInit() {
   }
- 
+
   remove(item) {
     this.productService.removeProduct(item.id);
   }
 
-  async saveProduct(){
-   if (this.fileData) {
+  async saveProduct() {
+    if (this.fileData) {
       this.spinner.show();
       this.product.image = await this.productService.uploadFile(this.fileUpload);
       this.spinner.hide();
-   }
+    }
 
     this.productService.addProduct(this.product).then(() => {
       this.router.navigate(['/inventory']);
@@ -56,7 +56,7 @@ export class AddProductsComponent implements OnInit {
     this.fileUpload = <FileList>fileInput.target.files;
     this.preview();
   }
-  
+
   preview() {
     // Show preview 
     const mimeType = this.fileData.type;

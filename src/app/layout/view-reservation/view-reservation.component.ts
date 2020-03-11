@@ -86,6 +86,22 @@ export class ViewReservationComponent implements OnInit {
     });
   }
 
+  calcSubTotal() {
+    if (this.reservation.shippingFee != null) {
+      this.reservation.subTotal = this.reservation.totalPrice + this.reservation.shippingFee;
+    } else {
+      this.reservation.subTotal = this.reservation.totalPrice;
+    }
+  }
+
+  checkIfZero() {
+    if (this.reservation.shippingFee == null) {
+      this.reservation.shippingFee = 0;
+    }
+  }
+
+
+
   // async printPdf(){
   //   const docDefinition = {
   //       // {
