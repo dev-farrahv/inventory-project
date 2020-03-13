@@ -2,16 +2,6 @@
   <div class="px-3 d-flex justify-content-between">
     <h2>Reservations</h2>
     <div class="d-flex p-2">
-      <select
-        [(ngModel)]="reservation.status"
-        (change)="updateStatus()"
-        class="text-dark w-100 bg-transparent mx-2"
-      >
-        <option value="Pending">Pending</option>
-        <option value="For Shipment">For Shipment</option>
-        <option value="Completed">Completed</option>
-        <option value="Canceled">Canceled</option>
-      </select>
       <button
         class="btn bg-dark-pink text-white"
         (click)="printPdf(reservation)"
@@ -82,12 +72,26 @@
     <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Total Weight (Kg)</label>
+          <label>Total Weight (G/Kg)</label>
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.totalWeight"
             type="number"
           />
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Status</label>
+          <select
+            [(ngModel)]="reservation.status"
+            class="text-dark w-100 bg-transparent mx-2 form-control"
+          >
+            <option value="Pending">Pending</option>
+            <option value="For Shipment">For Shipment</option>
+            <option value="Completed">Completed</option>
+            <option value="Canceled">Canceled</option>
+          </select>
         </fieldset>
       </div>
     </div>
@@ -125,7 +129,7 @@
               class="form-control bg-transparent"
               rows="4"
               cols="3"
-              [(ngModel)]="product.otherDescription"
+              [(ngModel)]="product.description"
             ></textarea>
           </fieldset>
         </div>
@@ -155,19 +159,20 @@
         <div class="row">
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
-              <label>Color</label>
+              <label>Price</label>
               <input
                 class="form-control bg-transparent"
-                [(ngModel)]="product.color"
+                [(ngModel)]="product.sellingPrice"
+                type="number"
               />
             </fieldset>
           </div>
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
-              <label>Price</label>
+              <label>Purchase Price</label>
               <input
                 class="form-control bg-transparent"
-                [(ngModel)]="product.price"
+                [(ngModel)]="product.purchasePrice"
                 type="number"
               />
             </fieldset>
@@ -177,13 +182,21 @@
         <div class="row">
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
-              <label>Remarks</label>
-              <textarea
+              <label>Color</label>
+              <input
                 class="form-control bg-transparent"
-                rows="4"
-                cols="3"
+                [(ngModel)]="product.color"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Remarks</label>
+
+              <input
+                class=" bg-transparent form-control"
                 [(ngModel)]="product.remarks"
-              ></textarea>
+              />
             </fieldset>
           </div>
           <div class="col-xl-6 col-lg-6"></div>

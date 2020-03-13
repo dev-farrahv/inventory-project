@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
 import { Product, ProductService } from 'src/app/shared/services/product.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-inventory',
@@ -36,7 +37,8 @@ export class InventoryComponent implements OnInit {
     public router: Router,
     private reservationService: ReservationService,
     private productService: ProductService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
   ) { }
 
   open(content) {
@@ -73,9 +75,9 @@ export class InventoryComponent implements OnInit {
 
   saveReservation() {
     this.loading = true;
-
+    this.spinner.show();
     this.reservation.totalPrice = this.productList.filter(item => item.isSelected).reduce((total, product) => {
-      const price = product.price * product.qty;
+      const price = product.sellingPrice * product.qty;
       return total + price;
     }, 0);
 
@@ -91,6 +93,8 @@ export class InventoryComponent implements OnInit {
       this.close();
       this.loading = false;
       this.resetSelectedList();
+      this.spinner.hide();
+
     });
   }
 

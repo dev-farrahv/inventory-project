@@ -3,6 +3,7 @@ import { routerTransition } from '../../router.animations';
 import { Product, ProductService } from 'src/app/shared/services/product.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -21,16 +22,22 @@ export class AddProductsComponent implements OnInit {
     serialNumber: '',
     qty: 1,
     color: '',
-    price: 0,
+    purchasePrice: 0,
+    sellingPrice: 0,
     currency: '',
     remarks: '',
-    otherDescription: '',
+    description: '',
     itemCode: '',
     image: 'assets/images/empty.png',
     weight: 0,
   };
 
-  constructor(private productService: ProductService, public router: Router, private spinner: NgxSpinnerService) { }
+  constructor(
+    private productService: ProductService,
+    public router: Router,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit() {
   }
@@ -43,11 +50,14 @@ export class AddProductsComponent implements OnInit {
     if (this.fileData) {
       this.spinner.show();
       this.product.image = await this.productService.uploadFile(this.fileUpload);
-      this.spinner.hide();
+
+    } else {
+      return this.toastr.warning('Please upload an image!');
     }
 
     this.productService.addProduct(this.product).then(() => {
       this.router.navigate(['/inventory']);
+      this.spinner.hide();
     });
   }
 

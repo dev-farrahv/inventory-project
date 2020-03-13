@@ -17,7 +17,7 @@
     <div class="row">
       <div class="col-sm-5 col-md-4 col-lg-3 mb-2 text-center">
         <img
-          class="img-thumbnail-empty w-100 mb-2"
+          class="img-thumbnail-empty w-100 mb-3"
           src="assets/images/empty.png"
           alt=""
           *ngIf="!previewUrl"
@@ -25,10 +25,13 @@
         <img
           [src]="previewUrl"
           alt=""
-          class="img-thumbnail w-100 mb-2"
+          class="img-thumbnail w-100 mb-3"
           *ngIf="previewUrl"
         />
-        <button class="btn btn-dark btn-sm w-100" (click)="uploadInput.click()">
+        <button
+          class="btn btn-dark btn-sm w-100 mb-3"
+          (click)="uploadInput.click()"
+        >
           Upload
         </button>
 
@@ -40,18 +43,24 @@
           #uploadInput
         />
       </div>
-      <div class="col-sm-7 col-md-8 col-lg-9">
-        <div class="row">
-          <div class="col-md-6 col-lg-6 col-xl-6">
-            <fieldset class="form-group">
-              <label>Product name</label>
-              <input
-                class=" bg-transparent form-control"
-                [(ngModel)]="product.name"
-              />
-            </fieldset>
-          </div>
-        </div>
+      <div class="col-sm-7 col-md-8 col-lg-6">
+        <fieldset class="form-group">
+          <label>Product name</label>
+          <input
+            class=" bg-transparent form-control"
+            [(ngModel)]="product.name"
+          />
+        </fieldset>
+
+        <fieldset class="form-group">
+          <label>Description</label>
+          <textarea
+            class=" bg-transparent form-control"
+            rows="4"
+            cols="3"
+            [(ngModel)]="product.description"
+          ></textarea>
+        </fieldset>
 
         <div class="row">
           <div class="col-md-6 col-lg-6 col-xl-6">
@@ -77,6 +86,26 @@
         <div class="row">
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
+              <label>Purchase Price</label>
+              <input
+                class=" bg-transparent form-control"
+                [(ngModel)]="product.purchasePrice"
+                type="number"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Selling Price</label>
+              <input
+                class=" bg-transparent form-control"
+                [(ngModel)]="product.sellingPrice"
+                type="number"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
               <label>Color</label>
               <input
                 class=" bg-transparent form-control"
@@ -84,42 +113,16 @@
               />
             </fieldset>
           </div>
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Price</label>
-              <input
-                class=" bg-transparent form-control"
-                [(ngModel)]="product.price"
-                type="number"
-              />
-            </fieldset>
-          </div>
         </div>
 
-        <div class="row">
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Remarks</label>
-              <textarea
-                class=" bg-transparent form-control"
-                rows="4"
-                cols="3"
-                [(ngModel)]="product.remarks"
-              ></textarea>
-            </fieldset>
-          </div>
-          <div class="col-xl-6 col-lg-6">
-            <fieldset class="form-group">
-              <label>Other Description</label>
-              <textarea
-                class=" bg-transparent form-control"
-                rows="4"
-                cols="3"
-                [(ngModel)]="product.otherDescription"
-              ></textarea>
-            </fieldset>
-          </div>
-        </div>
+        <fieldset class="form-group">
+          <label>Remarks</label>
+
+          <input
+            class=" bg-transparent form-control"
+            [(ngModel)]="product.remarks"
+          />
+        </fieldset>
       </div>
     </div>
   </div>

@@ -27,14 +27,18 @@
       class="col-xs-12 col-sm-6 col-md-6 "
       *ngFor="let item of productList | filter: search"
     >
-      <div
-        class="card mb-3 cursor"
-        (click)="item.isSelected = !item.isSelected"
-      >
+      <div class="card mb-3 ">
         <div class="card-body">
           <div class="row">
-            <div class="col-xl-4 col-lg-12 col-md-12 mb-3 relative">
-              <img class="img-thumbnail w-100" [src]="item.image" alt="" />
+            <div
+              class="col-xl-4 col-lg-12 col-md-12 mb-3 relative"
+              (click)="item.isSelected = !item.isSelected"
+            >
+              <img
+                class="img-thumbnail w-100 cursor"
+                [src]="item.image"
+                alt=""
+              />
               <i
                 class="fa fa-check-square-o check text-success"
                 aria-hidden="true"
@@ -47,14 +51,24 @@
               ></i>
             </div>
             <div class="col-xl-8 col-lg-12 col-md-12">
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Product Name</span> <br />
-                    <span class="text-muted"> {{ item.name }}</span>
-                  </p>
-                </fieldset>
-              </div>
+              <fieldset class="form-group">
+                <p>
+                  <span>Product Name</span> <br />
+                  <span class="text-muted"> {{ item.name }}</span>
+                </p>
+              </fieldset>
+              <fieldset class="form-group">
+                <p>
+                  <span>Price</span> <br />
+                  <span class="text-muted">{{ item.sellingPrice }}</span>
+                </p>
+              </fieldset>
+              <fieldset class="form-group">
+                <p>
+                  <span>Description</span> <br />
+                  <span class="text-muted">{{ item.description }}</span>
+                </p>
+              </fieldset>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
@@ -86,29 +100,11 @@
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
                     <p>
-                      <span>Price</span> <br />
-                      <span class="text-muted">{{ item.price }}</span>
+                      <span>Remarks</span> <br />
+                      <span class="text-muted">{{ item.remarks }}</span>
                     </p>
                   </fieldset>
                 </div>
-              </div>
-
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Remarks</span> <br />
-                    <span class="text-muted"> {{ item.remarks }}</span>
-                  </p>
-                </fieldset>
-              </div>
-
-              <div>
-                <fieldset class="form-group">
-                  <p>
-                    <span>Other Description</span> <br />
-                    <span class="text-muted">{{ item.otherDescription }}</span>
-                  </p>
-                </fieldset>
               </div>
             </div>
           </div>
@@ -198,3 +194,4 @@
     </button>
   </div>
 </ng-template>
+<ngx-spinner></ngx-spinner>

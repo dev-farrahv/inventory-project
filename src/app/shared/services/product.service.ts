@@ -11,10 +11,11 @@ export interface Product {
   serialNumber: string;
   qty: number;
   color: string;
-  price: number;
+  purchasePrice: number;
+  sellingPrice: number;
   currency: string;
   remarks: string;
-  otherDescription: string;
+  description?: string;
   itemCode: string;
   image: string;
   weight: number;

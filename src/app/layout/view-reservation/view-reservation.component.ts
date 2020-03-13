@@ -50,9 +50,11 @@ export class ViewReservationComponent implements OnInit {
   ngOnInit() {
   }
 
-  updateStatus() {
+  updateReservation() {
+    this.spinner.show();
     this.reservationService.updateReservation(this.reservation).then(() => {
-      this.toastr.success('Status updated!');
+      this.toastr.success('Reservation updated!');
+      this.spinner.hide();
     });
   }
 
@@ -90,8 +92,6 @@ export class ViewReservationComponent implements OnInit {
     }
   }
 
-
-
   async printPdf() {
     const docDefinition = {
       // {
@@ -117,7 +117,7 @@ export class ViewReservationComponent implements OnInit {
             widths: ['*', '*', '*', '*'],
             body: [
               [{ text: 'Item Code: ', bold: true }, this.reservation.products[0].itemCode, { text: 'Product Name: ', bold: true }, this.reservation.products[0].name],
-              [{ text: 'Price: ', bold: true }, this.reservation.products[0].price, { text: 'Owner: ', bold: true }, this.reservation.name],
+              [{ text: 'Price: ', bold: true }, this.reservation.products[0].purchasePrice, { text: 'Owner: ', bold: true }, this.reservation.name],
               [{ text: 'Address: ', bold: true }, this.reservation.address, { text: 'Description: ', bold: true }, this.reservation.products[0].remarks],
               [{ text: 'Weight: ', bold: true }, this.reservation.products[0].weight, { text: 'Color: ', bold: true }, this.reservation.products[0].color]
             ]
@@ -159,4 +159,9 @@ export class ViewReservationComponent implements OnInit {
 
     pdfMake.createPdf(docDefinition).open();
   }
+
+  ngOnDestroy() {
+    this.updateReservation();
+  }
+
 }
