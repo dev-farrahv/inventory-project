@@ -27,7 +27,7 @@
       <tbody>
         <tr
           *ngFor="let item of reservationList | filter: search; let i = index"
-          (click)="router.navigate(['/view-reservation', { id: item.id }])"
+          (dblclick)="router.navigate(['/view-reservation', { id: item.id }])"
         >
           <th>{{ i + 1 }}</th>
           <td>{{ item.referenceNumber }}</td>
@@ -36,8 +36,8 @@
           <td class="sm-hidden">{{ item.totalPrice }}</td>
           <td>{{ item.status }}</td>
           <td>
-            <button class="btn bg-transparent">
-              <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" (click)="printPdf(item)">
+              <i class="fa fa-print" aria-hidden="true"></i>
             </button>
           </td>
         </tr>
