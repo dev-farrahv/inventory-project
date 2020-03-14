@@ -39,6 +39,14 @@
                 [src]="item.image"
                 alt=""
               />
+              <div class="p-2">
+                <button
+                  class="btn btn-primary btn-sm w-100"
+                  (click)="router.navigate(['/add-products', { id: item.id }])"
+                >
+                  Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+              </div>
               <i
                 class="fa fa-check-square-o check text-success"
                 aria-hidden="true"

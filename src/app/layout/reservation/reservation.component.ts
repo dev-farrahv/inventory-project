@@ -16,7 +16,7 @@ export class ReservationComponent implements OnInit {
   search = '';
   reservationList: Reservation[];
   printList = [];
-  
+
   constructor(private reservationService: ReservationService, public router: Router) { }
 
   ngOnInit() {
@@ -46,31 +46,209 @@ export class ReservationComponent implements OnInit {
     });
   }
 
+  // async printPdf(item) {
+  //   const dateToday = new Date();
+  //   this.printList = [];
+  //   this.printList.push([{ text: 'Products', style: 'tableHeader', alignment: 'center' }, { text: 'Amount', style: 'tableHeader', alignment: 'center' }]);
+  //   item.products.forEach(invoice => {
+  //     const invoicePrintList = [];
+  //     invoicePrintList.push(invoice['name']);
+  //     invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'center' });
+
+  //     this.printList.push(invoicePrintList);
+  //   });
+  //   this.printList.push([{ text: 'SUB TOTAL', style: 'tableHeader', alignment: 'center' }, { text: item.subTotal, style: 'tableHeader', alignment: 'center' }]);
+
+  //   const docDefinition = {
+  //     // {
+  //     //   image: 'test.jpeg',
+  //     //   width: 150,
+  //     //   height: 150,
+  //     // }, 
+  //     //{
+  //     //   image: await this.getBase64ImageFromURL(item.products[0].image),
+  //     //   width: 200,
+  //     //   height: 200,
+  //     //   alignment: 'center'
+  //     // },
+  //     content: [
+  //       {
+  //         text: 'INVOICE \n \n',
+  //         style: 'header',
+  //         alignment: 'center'
+  //       },
+  //       {
+  //         alignment: 'justify',
+  //         columns: [
+  //           {
+  //             image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+  //             fit: [100, 100],
+  //             width: 'auto',
+  //           },
+  //           {
+  //             width: 'auto',
+  //             stack: [
+  //               {
+  //                 text: [
+  //                   { text: '   2Nd \n', fontSize: 15, bold: true },
+  //                   'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
+  //                   'OGURISU KITA GOTO CHO 1-9-103 \n',
+  //                   'KYOTO, \n',
+  //                   'KYOTO, \n',
+  //                   'Japan, \n',
+  //                   'Mobile: 08053361176 \n',
+  //                   'hazeltitco@yahoo.com \n',
+  //                   'https://www.facebook.com/2Nd-107816430558898 \n',
+  //                 ]
+  //               }
+  //             ],
+  //             style: 'superMargin'
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         text: [
+  //           { text: ' Invoice To: \n', fontSize: 12, bold: true },
+  //           { text: item.name + ' \n \n', fontSize: 12 },
+  //           { text: ' Date: \n', fontSize: 12, bold: true },
+  //           { text: dateToday + ' \n \n', fontSize: 12 }
+  //         ]
+  //       },
+  //       {
+  //         style: 'tableExample',
+  //         table: {
+  //           widths: ['*', '*'],
+  //           body: [... this.printList]
+  //           // body: [
+  //           //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
+  //           //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
+  //           // ]
+  //         },
+  //         layout: {
+  //           hLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 2 : 1;
+  //           },
+  //           vLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+  //           },
+  //           hLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+  //           },
+  //           vLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+  //           },
+  //         }
+  //       },
+  //       { text: '\n \n' },
+  //       {
+  //         style: 'tableExample',
+  //         table: {
+  //           headerRows: 1,
+  //           body: [
+  //             [{
+  //               text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipperd, you will be notified by Facebook message aloing with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html" +
+  //                 "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
+  //                 "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED"
+  //             }],
+  //           ]
+  //         },
+  //         layout: {
+  //           hLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 2 : 1;
+  //           },
+  //           vLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+  //           },
+  //           hLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+  //           },
+  //           vLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+  //           },
+  //         }
+  //       },
+  //       { text: '\n \n' },
+  //       {
+  //         style: 'tableExample',
+  //         table: {
+  //           headerRows: 1,
+  //           widths: [500],
+  //           body: [
+  //             [{
+  //               text: [
+  //                 { text: "PAYPAL \n\n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n" },
+  //                 { text: "BDO \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n METROBANK \n \n Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n" },
+  //                 { text: "JP BANK \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 " }
+  //               ]
+  //             }],
+  //           ]
+  //         },
+  //         layout: {
+  //           hLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 2 : 1;
+  //           },
+  //           vLineWidth: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+  //           },
+  //           hLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+  //           },
+  //           vLineColor: function (i, node) {
+  //             return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+  //           },
+  //         }
+  //       }
+  //     ],
+  //     styles: {
+  //       tableExample: {
+  //         fontSize: 14
+  //       },
+  //       header: {
+  //         fontSize: 18,
+  //         bold: true,
+  //         alignment: 'justify'
+  //       },
+  //       tableHeader: {
+  //         bold: true,
+  //         fontSize: 13,
+  //         color: 'black'
+  //       },
+  //       modeofpaymentheader: {
+  //         bold: true,
+  //         fontSize: 13,
+  //         color: 'black'
+  //       },
+  //       superMargin: {
+  //         margin: [20, 0, 40, 0],
+  //         fontSize: 9
+  //       }
+  //     }
+  //   };
+
+  //   pdfMake.createPdf(docDefinition).open();
+  // }
+
   async printPdf(item) {
     const dateToday = new Date();
     this.printList = [];
-    this.printList.push([{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}]);
-    item.products.forEach(invoice => {
+    const rowsHeader = [
+      { text: 'Products', style: 'tableHeader', alignment: 'left' },
+      { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+    ];
+    this.printList.push(rowsHeader);
+    item.products.forEach((invoice, i) => {
       const invoicePrintList = [];
-      invoicePrintList.push(invoice['name']);
-      invoicePrintList.push( {text: invoice['sellingPrice'], alignment: 'center'});
-      
+      invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
+      invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+
       this.printList.push(invoicePrintList);
     });
-    this.printList.push([{text: 'SUB TOTAL', style: 'tableHeader', alignment: 'center'}, {text: '25000', style: 'tableHeader', alignment: 'center'}]);    
-    
+    // const subtotal = [
+    //   { text: 'SUB TOTAL: ' + item.subTotal, style: 'tableHeader', alignment: 'left' }
+    // ];
+    // this.printList.push(subtotal);
+
     const docDefinition = {
-      // {
-      //   image: 'test.jpeg',
-      //   width: 150,
-      //   height: 150,
-      // }, 
-      //{
-      //   image: await this.getBase64ImageFromURL(item.products[0].image),
-      //   width: 200,
-      //   height: 200,
-      //   alignment: 'center'
-      // },
       content: [
         {
           text: 'INVOICE \n \n',
@@ -88,17 +266,18 @@ export class ReservationComponent implements OnInit {
             {
               width: 'auto',
               stack: [
-                {text: [
-                  {text: '   2Nd \n', fontSize: 15, bold: true},
-                  'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                  'OGURISU KITA GOTO CHO 1-9-103 \n',
-                  'KYOTO, \n',
-                  'KYOTO, \n',
-                  'Japan, \n',
-                  'Mobile: 08053361176 \n',
-                  'hazeltitco@yahoo.com \n',
-                  'https://www.facebook.com/2Nd-107816430558898 \n',
-                ]
+                {
+                  text: [
+                    { text: '   2Nd \n', fontSize: 15, bold: true },
+                    'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
+                    'OGURISU KITA GOTO CHO 1-9-103 \n',
+                    'KYOTO, \n',
+                    'KYOTO, \n',
+                    'Japan, \n',
+                    'Mobile: 08053361176 \n',
+                    'hazeltitco@yahoo.com \n',
+                    'https://www.facebook.com/2Nd-107816430558898 \n',
+                  ]
                 }
               ],
               style: 'superMargin'
@@ -107,17 +286,17 @@ export class ReservationComponent implements OnInit {
         },
         {
           text: [
-            {text: ' Invoice To: \n', fontSize: 12, bold: true},
-            {text: item.name + ' \n \n', fontSize: 12},
-            {text: ' Date: \n', fontSize: 12, bold: true},
-            {text: dateToday + ' \n \n', fontSize: 12}
+            { text: ' Invoice To: \n', fontSize: 12, bold: true },
+            { text: item.name + ' \n \n', fontSize: 12 },
+            { text: ' Date: \n', fontSize: 12, bold: true },
+            { text: dateToday + ' \n \n', fontSize: 12 }
           ]
         },
         {
           style: 'tableExample',
           table: {
             widths: ['*', '*'],
-            body: [ ... this.printList]
+            body: [... this.printList]
             // body: [
             //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
             //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
@@ -138,15 +317,20 @@ export class ReservationComponent implements OnInit {
             },
           }
         },
-        { text: '\n \n'}, 
+        { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
+        { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
+        { text: '\n \n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
             body: [
-              [{text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipperd, you will be notified by Facebook message aloing with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html" +
-              "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
-              "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED"}],
+              [{
+                text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipperd, you will be notified by Facebook message aloing with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html" +
+                  "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
+                  "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED",
+                style: 'termsAndCondition'
+              }],
             ]
           },
           layout: {
@@ -164,33 +348,34 @@ export class ReservationComponent implements OnInit {
             },
           }
         },
-        { text: '\n \n'}, 
+        { text: '\n \n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
             widths: [500],
             body: [
-              [{text: [
-                {text: "PAYPAL \n\n", style: 'modeofpaymentheader' }, {text: "hazeltitco@yahoo.com \n \n \n" },
-                {text: "BDO \n\n", style: 'modeofpaymentheader' }, {text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n METROBANK \n \n Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n" },
-                {text: "JP BANK \n\n", style: 'modeofpaymentheader' }, {text: "Hazel Joyce Titco Kojima \n \n  1448043110571 " }  
+              [{
+                text: [
+                  { text: "PAYPAL \n\n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n" },
+                  { text: "BDO \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n METROBANK \n \n Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n" },
+                  { text: "JP BANK \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 " }
                 ]
               }],
             ]
           },
           layout: {
             hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+              return 1
             },
             vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+              return 1
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+              return 'gray';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              return 'gray';
             },
           }
         }
@@ -217,11 +402,25 @@ export class ReservationComponent implements OnInit {
         superMargin: {
           margin: [20, 0, 40, 0],
           fontSize: 9
+        },
+        subtotal: {
+          fontSize: 13,
+          margin: [5, 5, 5, 5],
+          bold: true,
+        },
+        shippingFee: {
+          fontSize: 12,
+          margin: [5, 5, 5, 0],
+        },
+        termsAndCondition: {
+          fontSize: 12,
+          margin: [10, 10, 10, 10],
         }
       }
     };
 
     pdfMake.createPdf(docDefinition).open();
   }
+
 
 }

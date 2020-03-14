@@ -4,9 +4,9 @@
     <div class="d-flex p-2">
       <button
         class="btn bg-dark-pink text-white"
-        (click)="printPdf(reservation)"
+        (click)="printInvoicePdf(reservation)"
       >
-        <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
+        <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Invoice
       </button>
     </div>
   </div>
@@ -102,7 +102,7 @@
     <hr />
     <div
       class="row mb-2 custom-border rounded px-2 pt-3"
-      *ngFor="let product of reservation.products"
+      *ngFor="let product of reservation.products; let i = index"
     >
       <div class="col-sm-5 col-md-4 col-lg-3 mb-2 text-center">
         <img
@@ -110,6 +110,9 @@
           alt=""
           class="img-thumbnail w-100 mb-2 product-image"
         />
+        <button class="btn bg-dark-pink text-white" (click)="printItemPdf(i)">
+          <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Item
+        </button>
       </div>
       <div class="col-sm-7 col-md-8 col-lg-9">
         <div>
