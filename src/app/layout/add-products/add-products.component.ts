@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { Product, ProductService } from 'src/app/shared/services/product.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,6 +17,7 @@ export class AddProductsComponent implements OnInit {
   fileData: File = null;
   previewUrl: any = null;
   fileUpload: FileList = null;
+  editMode = false;
   product: Product = {
     name: '',
     serialNumber: '',
@@ -36,10 +37,22 @@ export class AddProductsComponent implements OnInit {
     private productService: ProductService,
     public router: Router,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params.id) {
+        this.spinner.show();
+        this.editMode = true;
+        this.productService.getProduct(params.id).subscribe(product => {
+          this.product = product;
+          this.product.id = params.id;
+          this.spinner.hide();
+        });
+      }
+    });
   }
 
   remove(item) {
@@ -47,18 +60,31 @@ export class AddProductsComponent implements OnInit {
   }
 
   async saveProduct() {
-    if (this.fileData) {
-      this.spinner.show();
-      this.product.image = await this.productService.uploadFile(this.fileUpload);
+    if (!this.editMode) {
+      if (this.fileData) {
+        this.spinner.show();
+        this.product.image = await this.productService.uploadFile(this.fileUpload);
 
+      } else {
+        return this.toastr.warning('Please upload an image!');
+      }
+
+      this.productService.addProduct(this.product).then(() => {
+        this.toastr.success('Product Added!');
+        this.router.navigate(['/inventory']);
+        this.spinner.hide();
+      });
     } else {
-      return this.toastr.warning('Please upload an image!');
+      if (this.fileData) {
+        this.spinner.show();
+        this.product.image = await this.productService.uploadFile(this.fileUpload);
+      }
+      this.productService.updateProduct(this.product).then(() => {
+        this.toastr.success('Product Updated!');
+        this.router.navigate(['/inventory']);
+        this.spinner.hide();
+      });
     }
-
-    this.productService.addProduct(this.product).then(() => {
-      this.router.navigate(['/inventory']);
-      this.spinner.hide();
-    });
   }
 
   fileProgress(fileInput: any) {
