@@ -121,12 +121,6 @@ export class ViewReservationComponent implements OnInit {
               [
                 { text: 'Item Code ', bold: true, alignment: 'right', style: 'col' },
                 { text: this.reservation.products[i].itemCode, bold: true, style: 'col' },
-                // {
-                //   qr: this.reservation.products[i].purchasePrice.toString(),
-                //   alignment: 'center',
-                //   margin: [10, 10, 10, 10],
-                //   rowSpan: 6
-                // }
                 {
                   image: await this.getBase64ImageFromURL(this.reservation.products[i].image),
                   width: 100,
@@ -147,10 +141,10 @@ export class ViewReservationComponent implements OnInit {
                 { text: 'Price ', bold: true, fontSize: 14, alignment: 'right', style: 'col' },
                 { text: this.reservation.products[i].sellingPrice, style: 'col', fontSize: 14, bold: true },
               ],
-              [
-                { text: 'Weight ', bold: true, alignment: 'right', style: 'col' },
-                { text: this.reservation.products[i].weight, style: 'col' },
-              ],
+              // [
+              //   { text: 'Weight ', bold: true, alignment: 'right', style: 'col' },
+              //   { text: this.reservation.products[i].weight, style: 'col' },
+              // ],
               [
                 { text: 'Remarks ', bold: true, alignment: 'right', style: 'col' },
                 { text: this.reservation.products[i].remarks, style: 'col' },
