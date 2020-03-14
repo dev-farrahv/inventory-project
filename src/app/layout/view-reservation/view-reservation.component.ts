@@ -115,7 +115,7 @@ export class ViewReservationComponent implements OnInit {
         {
           style: 'tableExample',
           table: {
-            headerRows: 6,
+            headerRows: 5,
             widths: [100, '*', '*'],
             body: [
               [
@@ -126,7 +126,7 @@ export class ViewReservationComponent implements OnInit {
                   width: 100,
                   alignment: 'center',
                   margin: [10, 10, 10, 10],
-                  rowSpan: 6
+                  rowSpan: 5
                 },
               ],
               [
@@ -141,10 +141,6 @@ export class ViewReservationComponent implements OnInit {
                 { text: 'Price ', bold: true, fontSize: 14, alignment: 'right', style: 'col' },
                 { text: this.reservation.products[i].sellingPrice, style: 'col', fontSize: 14, bold: true },
               ],
-              // [
-              //   { text: 'Weight ', bold: true, alignment: 'right', style: 'col' },
-              //   { text: this.reservation.products[i].weight, style: 'col' },
-              // ],
               [
                 { text: 'Remarks ', bold: true, alignment: 'right', style: 'col' },
                 { text: this.reservation.products[i].remarks, style: 'col' },
