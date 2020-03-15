@@ -170,13 +170,13 @@ export class ViewReservationComponent implements OnInit {
           }
         },
 
-        {
-          qr: this.reservation.products[i].purchasePrice.toString(),
-          alignment: 'center',
-          margin: [0, 100, 0, 5],
-          fit: 200
-        },
-        { text: 'SCAN QR', alignment: 'center', fontSize: 12 }
+        // {
+        //   qr: this.reservation.products[i].purchasePrice.toString(),
+        //   alignment: 'center',
+        //   margin: [0, 100, 0, 5],
+        //   fit: 200
+        // },
+        // { text: 'SCAN QR', alignment: 'center', fontSize: 12 }
       ],
       styles: {
         tableExample: {
