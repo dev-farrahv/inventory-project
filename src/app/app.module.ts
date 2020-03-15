@@ -10,13 +10,13 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
 import { NgxSpinnerModule } from "ngx-spinner";
 
-import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ToastrModule } from 'ngx-toastr';
+import { AngularFireModule } from '@angular/fire';
 
 @NgModule({
     imports: [
@@ -29,12 +29,13 @@ import { ToastrModule } from 'ngx-toastr';
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,
         AngularFireStorageModule,
+        AngularFireAuthModule,
         FormsModule,
         NgxSpinnerModule,
         ToastrModule.forRoot()
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard, AngularFireAuth],
+    providers: [AuthGuard],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
