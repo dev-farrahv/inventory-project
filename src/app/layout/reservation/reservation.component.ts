@@ -251,7 +251,7 @@ export class ReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: 'INVOICE \n \n',
+          text: 'INVOICE \n',
           style: 'header',
           alignment: 'center'
         },
@@ -286,10 +286,10 @@ export class ReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Invoice To: \n', fontSize: 12, bold: true },
-            { text: item.name + ' \n \n', fontSize: 12 },
-            { text: ' Date: \n', fontSize: 12, bold: true },
-            { text: dateToday + ' \n \n', fontSize: 12 }
+            { text: ' Invoice To: \n', fontSize: 10, bold: true },
+            { text: item.name + ' \n', fontSize: 10 },
+            { text: ' Date: \n', fontSize: 10, bold: true },
+            { text: dateToday + ' \n', fontSize: 10 }
           ]
         },
         {
@@ -319,7 +319,7 @@ export class ReservationComponent implements OnInit {
         },
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
-        { text: '\n \n' },
+        { text: '\n' },
         {
           style: 'tableExample',
           table: {
@@ -353,25 +353,30 @@ export class ReservationComponent implements OnInit {
             },
           }
         },
-        { text: '\n \n' },
+        { text: '\n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
-            widths: [500],
+            widths: ['*','*'],
             body: [
-              [{
-                stack:[{
-                  text: [
-                    { text: "PAYPAL \n\n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' },
-                    { text: "BDO \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n "},
-                    { text: "METROBANK \n \n ", style: 'modeofpaymentheader' }, { text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' },
-                    { text: "JP BANK \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }
-                  ]
-                }],
-                style: 'superMargin'
-              }],
+              [{ text: "\n PAYPAL", style: 'modeofpaymentheader' }, { text: "\n BDO ", style: 'modeofpaymentheader' }],
+              [{ text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ",  style: 'modeOfPaymentMargin' }],
+              [{ text: "METROBANK ", style: 'modeofpaymentheader' }, { text: "JP BANK ", style: 'modeofpaymentheader' }],
+              [{ text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }],
             ]
+            // body: [
+            //   [{
+                
+            //       text: [
+            //         { text: "PAYPAL \n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' },
+            //         { text: "BDO \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n "},
+            //         { text: "METROBANK \n", style: 'modeofpaymentheader' }, { text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' },
+            //         { text: "JP BANK \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }
+            //       ]
+                
+            //   }],
+            // ]
           },
           layout: {
             hLineWidth: function (i, node) {
@@ -381,10 +386,10 @@ export class ReservationComponent implements OnInit {
               return (i === 0 || i === node.table.widths.length) ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'white';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
             },
           }
         }
@@ -404,6 +409,7 @@ export class ReservationComponent implements OnInit {
           color: 'black'
         },
         modeofpaymentheader: {
+          margin: [10, 0, 10, 0],
           bold: true,
           fontSize: 13,
           color: 'black',
@@ -413,7 +419,7 @@ export class ReservationComponent implements OnInit {
           fontSize: 9
         },
         modeOfPaymentMargin: {
-          margin: [10, 10, 10, 0],
+          margin: [10, 0, 10, 0],
           fontSize: 9
         },
         subtotal: {

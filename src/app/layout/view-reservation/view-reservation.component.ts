@@ -224,7 +224,7 @@ export class ViewReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: 'INVOICE \n \n',
+          text: 'INVOICE \n',
           style: 'header',
           alignment: 'center'
         },
@@ -259,10 +259,10 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Invoice To: \n', fontSize: 12, bold: true },
-            { text: item.name + ' \n \n', fontSize: 12 },
-            { text: ' Date: \n', fontSize: 12, bold: true },
-            { text: dateToday + ' \n \n', fontSize: 12 }
+            { text: ' Invoice To: \n', fontSize: 10, bold: true },
+            { text: item.name + ' \n', fontSize: 10 },
+            { text: ' Date: \n', fontSize: 10, bold: true },
+            { text: dateToday + ' \n', fontSize: 10 }
           ]
         },
         {
@@ -292,16 +292,21 @@ export class ViewReservationComponent implements OnInit {
         },
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
-        { text: '\n \n' },
+        { text: '\n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
             body: [
               [{
-                text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipperd, you will be notified by Facebook message aloing with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html" +
-                  "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
-                  "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED",
+                stack:[{
+                  text: [
+                    { text: "Terms and conditions \n \n", style: 'modeofpaymentheader' },
+                    { text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. " +
+                    "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
+                    "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED" }
+                  ]
+                }],
                 style: 'termsAndCondition'
               }],
             ]
@@ -321,34 +326,43 @@ export class ViewReservationComponent implements OnInit {
             },
           }
         },
-        { text: '\n \n' },
+        { text: '\n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
-            widths: [500],
+            widths: ['*','*'],
             body: [
-              [{
-                text: [
-                  { text: "PAYPAL \n\n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n" },
-                  { text: "BDO \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n METROBANK \n \n Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n" },
-                  { text: "JP BANK \n\n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 " }
-                ]
-              }],
+              [{ text: "\n PAYPAL", style: 'modeofpaymentheader' }, { text: "\n BDO ", style: 'modeofpaymentheader' }],
+              [{ text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ",  style: 'modeOfPaymentMargin' }],
+              [{ text: "METROBANK ", style: 'modeofpaymentheader' }, { text: "JP BANK ", style: 'modeofpaymentheader' }],
+              [{ text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }],
             ]
+            // body: [
+            //   [{
+                
+            //       text: [
+            //         { text: "PAYPAL \n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' },
+            //         { text: "BDO \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n "},
+            //         { text: "METROBANK \n", style: 'modeofpaymentheader' }, { text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' },
+            //         { text: "JP BANK \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }
+            //       ]
+                
+            //   }],
+            // ]
           },
           layout: {
             hLineWidth: function (i, node) {
-              return 1
+              return (i === 0 || i === node.table.body.length) ? 2 : 1;
             },
             vLineWidth: function (i, node) {
-              return 1
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return 'gray';
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'white';
             },
             vLineColor: function (i, node) {
-              return 'gray';
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
             },
           }
         }
@@ -368,12 +382,17 @@ export class ViewReservationComponent implements OnInit {
           color: 'black'
         },
         modeofpaymentheader: {
+          margin: [10, 0, 10, 0],
           bold: true,
           fontSize: 13,
-          color: 'black'
+          color: 'black',
         },
         superMargin: {
-          margin: [20, 0, 40, 0],
+          margin: [10, 10, 10, 10],
+          fontSize: 9
+        },
+        modeOfPaymentMargin: {
+          margin: [10, 0, 10, 0],
           fontSize: 9
         },
         subtotal: {
