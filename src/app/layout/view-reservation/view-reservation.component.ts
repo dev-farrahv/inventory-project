@@ -27,7 +27,9 @@ export class ViewReservationComponent implements OnInit {
     totalPrice: 0,
   };
   printList: any[];
-  shippingFee: ShippingFee[];
+  shippingFees: ShippingFee[];
+
+  activeZone: ShippingFee[];
 
   constructor(
     public router: Router,
@@ -37,6 +39,7 @@ export class ViewReservationComponent implements OnInit {
     private toastr: ToastrService,
     private shippinService: ShippingFeeService
   ) {
+    this.spinner.show();
     this.route.params.subscribe(params => {
       if (!params.id) {
         router.navigate(['/reservations']);
@@ -45,12 +48,18 @@ export class ViewReservationComponent implements OnInit {
       this.reservationService.getReservation(params.id).subscribe(reservation => {
         this.reservation = reservation;
         this.reservation.id = params.id;
-        console.log(this.reservation);
-
+        if (this.reservation.zone == null) {
+          this.reservation.zone = 1;
+        }
+        if (this.reservation.discount == null) {
+          this.reservation.discount = 0;
+        }
+        this.spinner.hide();
       });
     });
-    this.shippinService.getShippingFees().subscribe((shipping: ShippingFee[]) => {
-      this.shippingFee = shipping;
+    this.shippinService.getShippingFees().subscribe((sf: ShippingFee[]) => {
+      this.shippingFees = sf;
+      this.setZone();
     });
   }
 
@@ -94,9 +103,41 @@ export class ViewReservationComponent implements OnInit {
     }
   }
 
+  calcShippingFee() {
+    let weight = this.reservation.totalWeight;
+    if (this.reservation.shippingFee == null) {
+      weight = 0;
+    }
+
+    if (weight > 12000) {
+      weight = 12000;
+    }
+
+    const amount = this.activeZone.find(sf => weight <= sf.max).amount;
+
+    this.reservation.shippingFee = amount;
+    this.calcSubTotal();
+  }
+
+  setZone() {
+    this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
+      return a.min - b.min;
+    });
+
+    this.calcShippingFee();
+  }
+
   checkIfZero() {
     if (this.reservation.shippingFee == null) {
       this.reservation.shippingFee = 0;
+    }
+
+    if (this.reservation.discount == null) {
+      this.reservation.discount = 0;
+    }
+
+    if (this.reservation.totalWeight == null) {
+      this.reservation.totalWeight = 0;
     }
   }
 
