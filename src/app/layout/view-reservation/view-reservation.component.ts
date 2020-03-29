@@ -25,6 +25,8 @@ export class ViewReservationComponent implements OnInit {
     referenceNumber: '',
     products: [],
     totalPrice: 0,
+    modeOfPayment: '',
+    dateCreated: '',
   };
   printList: any[];
   shippingFee: ShippingFee[];
@@ -419,8 +421,148 @@ export class ViewReservationComponent implements OnInit {
     pdfMake.createPdf(docDefinition).open();
   }
 
+  async printPaymentReceipt(item) {
+    const dateToday = new Date();
+    this.printList = [];
+    const rowsHeader = [
+      { text: 'Products', style: 'tableHeader', alignment: 'left' },
+      { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+    ];
+    this.printList.push(rowsHeader);
+    item.products.forEach((invoice, i) => {
+      const invoicePrintList = [];
+      invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
+      invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+
+      this.printList.push(invoicePrintList);
+    });
+    const docDefinition = {
+      content: [
+        {
+          text: 'Payment Receipt \n',
+          style: 'header',
+          alignment: 'center'
+        },
+        {
+          alignment: 'justify',
+          columns: [
+            {
+              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              fit: [100, 100],
+              width: 'auto',
+            },
+            {
+              width: 'auto',
+              stack: [
+                {
+                  text: [
+                    { text: '   2Nd \n', fontSize: 15, bold: true },
+                    'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
+                    'OGURISU KITA GOTO CHO 1-9-103 \n',
+                    'KYOTO, \n',
+                    'KYOTO, \n',
+                    'Japan, \n',
+                    'Mobile: 08053361176 \n',
+                    'hazeltitco@yahoo.com \n',
+                    'https://www.facebook.com/2Nd-107816430558898 \n',
+                  ]
+                }
+              ],
+              style: 'superMargin'
+            }
+          ]
+        },
+        {
+          text: [
+            { text: ' Received From: \n', bold: true },
+            { text: item.name + ' \n \n' },
+            { text: item.address   + ' \n \n' }
+          ]
+        },
+        {
+          style: 'tableExample',
+          table: {
+            widths: ['*', '*','*', '*'],
+            body: [
+              [{text: 'Reference Number', style: 'tableHeader'}, {text: 'Date', style: 'tableHeader'}, {text: 'Payment Type', style: 'tableHeader'}, {text: 'Amount', style: 'tableHeader'}],
+              [{text: item.referenceNumber}, {text: item.dateCreated}, {text: item.modeOfPayment}, {text: item.subTotal}],
+              //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
+            ]
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+            },
+          }
+        },
+      ],
+      styles: {
+        tableExample: {
+          fontSize: 14
+        },
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'justify'
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black'
+        },
+        modeofpaymentheader: {
+          margin: [10, 0, 10, 0],
+          bold: true,
+          fontSize: 13,
+          color: 'black',
+        },
+        superMargin: {
+          margin: [10, 10, 10, 10],
+          fontSize: 9
+        },
+        modeOfPaymentMargin: {
+          margin: [10, 0, 10, 0],
+          fontSize: 9
+        },
+        subtotal: {
+          fontSize: 13,
+          margin: [5, 5, 5, 5],
+          bold: true,
+        },
+        shippingFee: {
+          fontSize: 12,
+          margin: [5, 5, 5, 0],
+        },
+        termsAndCondition: {
+          fontSize: 12,
+          margin: [10, 10, 10, 10],
+        }
+      }
+    };
+
+    pdfMake.createPdf(docDefinition).open();
+  }
   ngOnDestroy() {
     this.updateReservation();
   }
 
+  showModeOfPayment() {
+    console.log(this.reservation.status);
+    this.spinner.show();
+    this.reservationService.updateReservation(this.reservation).then(() => {
+      this.toastr.success('Reservation updated!');
+      this.spinner.hide();
+    });
+  }
+
+  
 }

@@ -86,12 +86,38 @@
           <select
             [(ngModel)]="reservation.status"
             class="text-dark w-100 bg-transparent mx-2 form-control"
+            (change)="showModeOfPayment($event)"
           >
             <option value="Pending">Pending</option>
             <option value="For Shipment">For Shipment</option>
             <option value="Completed">Completed</option>
             <option value="Canceled">Canceled</option>
           </select>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row" *ngIf="reservation.status=='Completed'">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Mode Of Payment</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.modeOfPayment"
+            (change)="updateReservation($event)"
+          />
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label> &nbsp; </label>
+          <div>
+            <button
+              class="btn bg-dark-pink text-white"
+              (click)="printPaymentReceipt(reservation)"
+            >
+              <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Payment Receipt
+            </button>
+          </div>
         </fieldset>
       </div>
     </div>
