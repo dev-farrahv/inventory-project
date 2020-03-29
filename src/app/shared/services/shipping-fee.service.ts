@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -21,7 +21,7 @@ export class ShippingFeeService {
 
   private shippingFee: Observable<ShippingFee[]>;
 
-  constructor(db: AngularFirestore) { 
+  constructor(db: AngularFirestore) {
 
     this.shippingFeeCollection = db.collection<ShippingFee>('shippingFees');
 
@@ -45,5 +45,5 @@ export class ShippingFeeService {
   getShippingFees() {
     return this.shippingFee;
   }
-  
+
 }
