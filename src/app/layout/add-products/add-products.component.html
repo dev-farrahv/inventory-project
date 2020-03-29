@@ -4,10 +4,17 @@
     <div class="d-flex">
       <div>
         <button
+          class="btn bg-dark text-white px-5 mx-2"
+          (click)="open(delete)"
+          *ngIf="editMode"
+        >
+          Delete
+        </button>
+        <button
           class="btn bg-dark-pink text-white px-5"
           (click)="saveProduct()"
         >
-          Save
+          {{ editMode ? 'Update' : 'Save' }}
         </button>
       </div>
     </div>
@@ -127,4 +134,39 @@
     </div>
   </div>
 </div>
+
+<!-- Reserve Modal -->
+
+<ng-template #delete let-c="close" let-d="dismiss">
+  <div class="modal-header bg-pink">
+    <h4 class="modal-title">Confirm</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fieldset class="form-group">
+      <label>Are you sure you want to delete this Product?</label>
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="deleteProduct(product.id)"
+      [disabled]="loading"
+    >
+      Delete
+    </button>
+  </div>
+</ng-template>
+
 <ngx-spinner></ngx-spinner>
