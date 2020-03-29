@@ -69,7 +69,7 @@ export class InventoryComponent implements OnInit {
   ngOnInit() {
     this.productService.getproducts().subscribe(res => {
       this.productList = res;
-      console.log(this.productList);
+
     });
   }
 
@@ -87,9 +87,10 @@ export class InventoryComponent implements OnInit {
     this.reservation.subTotal = this.reservation.totalPrice;
     this.reservation.shippingFee = 0;
     this.reservation.totalWeight = 0;
+    this.reservation.discount = 0;
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
-      console.log('success');
+
       this.close();
       this.loading = false;
       this.resetSelectedList();

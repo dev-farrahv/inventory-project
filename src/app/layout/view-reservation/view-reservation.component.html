@@ -45,13 +45,57 @@
     </div>
 
     <div class="row">
+      <div class="col-xl-6 col-lg-6 d-flex">
+        <div class="flex-1">
+          <fieldset class="form-group">
+            <label>Total Weight (G)</label>
+            <input
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.totalWeight"
+              type="number"
+              (keyup)="calcShippingFee()"
+              (change)="checkIfZero()"
+            />
+          </fieldset>
+        </div>
+        <div class="ml-2 flex-1">
+          <fieldset class="form-group">
+            <label>Zone</label>
+            <select
+              class="text-dark w-100 bg-transparent form-control"
+              [(ngModel)]="reservation.zone"
+              (ngModelChange)="setZone()"
+            >
+              <option [value]="1">1</option>
+              <option [value]="2">2</option>
+              <option [value]="3">3 (EUROPE)</option>
+              <option [value]="4">3 (SOUTH AMERICA & AFRICA)</option>
+            </select>
+          </fieldset>
+        </div>
+      </div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Shipping Fee</label>
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.shippingFee"
-            (keyup)="calcSubTotal()"
+            (change)="checkIfZero()"
+            type="number"
+            readonly
+          />
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Discount (%)</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.discount"
+            (keyup)="calcDiscount()"
             (change)="checkIfZero()"
             type="number"
           />
@@ -60,32 +104,21 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Sub Total</label>
-          <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.subTotal"
-            readonly
-            type="number"
-          />
+          <div class="form-control bg-transparent">
+            {{ loading ? 'calculating ...' : calcSubTotal() }}
+          </div>
         </fieldset>
       </div>
     </div>
+
     <div class="row">
-      <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group">
-          <label>Total Weight (G/Kg)</label>
-          <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.totalWeight"
-            type="number"
-          />
-        </fieldset>
-      </div>
+      <div class="col-xl-6 col-lg-6"></div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Status</label>
           <select
             [(ngModel)]="reservation.status"
-            class="text-dark w-100 bg-transparent mx-2 form-control"
+            class="text-dark w-100 bg-transparent form-control"
             (change)="showModeOfPayment($event)"
           >
             <option value="Pending">Pending</option>

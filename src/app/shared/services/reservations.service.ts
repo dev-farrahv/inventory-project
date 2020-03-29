@@ -20,6 +20,8 @@ export interface Reservation {
   totalWeight?: number;
   modeOfPayment?: string;
   dateCreated?: string;
+  discount?: number;
+  zone?: number;
 }
 @Injectable({
   providedIn: 'root'
