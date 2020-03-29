@@ -29,10 +29,10 @@
 {min: 901, max: 1000, continent: ["Europe"], zone: "3", shippingFee: "3200"},
 {min: 901, max: 1000, continent: ["South America "," Africa"], zone: "4", shippingFee: "4900"},
 
-{min: 10001, max: 1250, continent: ["Asia"], zone: "1", shippingFee: "2400"},
-{min: 10001, max: 1250, continent: ["Oceania"," North America", " Central America"," Middle East"], zone: "2", shippingFee: "3300"},
-{min: 10001, max: 1250, continent: ["Europe"], zone: "3", shippingFee: "3650"},
-{min: 10001, max: 1250, continent: ["South America "," Africa"], zone: "4", shippingFee: "5700"},
+{min: 1001, max: 1250, continent: ["Asia"], zone: "1", shippingFee: "2400"},
+{min: 1001, max: 1250, continent: ["Oceania"," North America", " Central America"," Middle East"], zone: "2", shippingFee: "3300"},
+{min: 1001, max: 1250, continent: ["Europe"], zone: "3", shippingFee: "3650"},
+{min: 1001, max: 1250, continent: ["South America "," Africa"], zone: "4", shippingFee: "5700"},
 
 {min: 1251, max: 1500, continent: ["Asia"], zone: "1", shippingFee: "2700"},
 {min: 1251, max: 1500, continent: ["Oceania"," North America", " Central America"," Middle East"], zone: "2", shippingFee: "3700"},
