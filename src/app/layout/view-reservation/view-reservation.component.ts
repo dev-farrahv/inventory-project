@@ -29,6 +29,7 @@ export class ViewReservationComponent implements OnInit {
     dateCreated: '',
   };
   printList: any[];
+  showDiscountInvoice: any[];
   shippingFees: ShippingFee[];
 
   activeZone: ShippingFee[];
@@ -271,10 +272,11 @@ export class ViewReservationComponent implements OnInit {
 
       this.printList.push(invoicePrintList);
     });
-    // const subtotal = [
-    //   { text: 'SUB TOTAL: ' + item.subTotal, style: 'tableHeader', alignment: 'left' }
-    // ];
-    // this.printList.push(subtotal);
+
+    this.showDiscountInvoice = [];
+    if(item.discount != 0){
+      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + ' %', style: 'shippingFee', alignment: 'right' });
+    }
 
     const docDefinition = {
       content: [
@@ -345,6 +347,8 @@ export class ViewReservationComponent implements OnInit {
             },
           }
         },
+        { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
+        [ ...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
         { text: '\n' },

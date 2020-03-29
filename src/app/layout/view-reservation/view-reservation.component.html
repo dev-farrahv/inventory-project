@@ -112,7 +112,6 @@
     </div>
 
     <div class="row">
-      <div class="col-xl-6 col-lg-6"></div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Status</label>
@@ -128,10 +127,8 @@
           </select>
         </fieldset>
       </div>
-    </div>
-    <div class="row" *ngIf="reservation.status=='Completed'">
       <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group">
+        <fieldset class="form-group" *ngIf="reservation.status=='Completed'">
           <label>Mode Of Payment</label>
           <input
             class="form-control bg-transparent"
@@ -140,6 +137,9 @@
           />
         </fieldset>
       </div>
+    </div>
+    <div class="row" *ngIf="reservation.status=='Completed'">
+      <div class="col-xl-6 col-lg-6"></div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label> &nbsp; </label>
