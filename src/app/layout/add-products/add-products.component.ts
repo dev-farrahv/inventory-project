@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class AddProductsComponent implements OnInit {
       if (params.id) {
         this.spinner.show();
         this.editMode = true;
-        this.productService.getProduct(params.id).subscribe(product => {
+        this.productService.getProduct(params.id).pipe(take(1)).subscribe(product => {
           this.product = product;
           this.product.id = params.id;
           this.spinner.hide();
@@ -74,7 +75,22 @@ export class AddProductsComponent implements OnInit {
 
       this.productService.addProduct(this.product).then(() => {
         this.toastr.success('Product Added!');
-        this.router.navigate(['/inventory']);
+        this.product = {
+          name: '',
+          serialNumber: '',
+          qty: 1,
+          color: '',
+          purchasePrice: 0,
+          sellingPrice: 0,
+          currency: '',
+          remarks: '',
+          description: '',
+          itemCode: '',
+          image: 'assets/images/empty.png',
+          weight: 0,
+        };
+        this.fileData = null;
+        this.previewUrl = null;
         this.spinner.hide();
       });
     } else {
