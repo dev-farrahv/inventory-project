@@ -80,7 +80,6 @@
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.shippingFee"
-            (keyup)="calcSubTotal()"
             (change)="checkIfZero()"
             type="number"
             readonly
@@ -96,7 +95,7 @@
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.discount"
-            (keyup)="calcSubTotal()"
+            (keyup)="calcDiscount()"
             (change)="checkIfZero()"
             type="number"
           />
@@ -105,12 +104,9 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Sub Total</label>
-          <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.subTotal"
-            readonly
-            type="number"
-          />
+          <div class="form-control bg-transparent">
+            {{ loading ? 'calculating ...' : calcSubTotal() }}
+          </div>
         </fieldset>
       </div>
     </div>

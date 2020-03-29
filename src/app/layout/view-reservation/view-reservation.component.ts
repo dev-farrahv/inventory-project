@@ -30,6 +30,7 @@ export class ViewReservationComponent implements OnInit {
   shippingFees: ShippingFee[];
 
   activeZone: ShippingFee[];
+  loading = true;
 
   constructor(
     public router: Router,
@@ -37,7 +38,7 @@ export class ViewReservationComponent implements OnInit {
     private route: ActivatedRoute,
     private reservationService: ReservationService,
     private toastr: ToastrService,
-    private shippinService: ShippingFeeService
+    private shippingService: ShippingFeeService
   ) {
     this.spinner.show();
     this.route.params.subscribe(params => {
@@ -55,9 +56,10 @@ export class ViewReservationComponent implements OnInit {
           this.reservation.discount = 0;
         }
         this.spinner.hide();
+        this.loading = false;
       });
     });
-    this.shippinService.getShippingFees().subscribe((sf: ShippingFee[]) => {
+    this.shippingService.getShippingFees().subscribe((sf: ShippingFee[]) => {
       this.shippingFees = sf;
       this.setZone();
     });
@@ -96,11 +98,7 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    if (this.reservation.shippingFee != null) {
-      this.reservation.subTotal = this.reservation.totalPrice + this.reservation.shippingFee;
-    } else {
-      this.reservation.subTotal = this.reservation.totalPrice;
-    }
+    return (this.reservation.totalPrice + this.reservation.shippingFee) - ((this.reservation.discount * this.reservation.totalPrice) / 100);
   }
 
   calcShippingFee() {
@@ -116,8 +114,19 @@ export class ViewReservationComponent implements OnInit {
     const amount = this.activeZone.find(sf => weight <= sf.max).amount;
 
     this.reservation.shippingFee = amount;
-    this.calcSubTotal();
+    this.reservation.subTotal = this.calcSubTotal();
   }
+
+  calcDiscount() {
+
+    if (this.reservation.discount > 100) {
+      this.reservation.discount = 100;
+    }
+
+    this.reservation.subTotal = this.calcSubTotal();
+  }
+
+
 
   setZone() {
     this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
