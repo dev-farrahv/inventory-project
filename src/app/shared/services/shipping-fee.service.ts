@@ -8,8 +8,9 @@ export interface ShippingFee {
   id?: string;
   min: number;
   max: number;
-  shippingFee: string;
-  zone: string;
+  shippingFee?: number;
+  amount: number;
+  zone: number;
   continent: [];
 }
 
@@ -40,6 +41,10 @@ export class ShippingFeeService {
 
   addShippingFee(shippingFee: ShippingFee) {
     return this.shippingFeeCollection.add(shippingFee);
+  }
+
+  updateShippingFee(shippingFee: ShippingFee) {
+    return this.shippingFeeCollection.doc(shippingFee.id).update(shippingFee);
   }
 
   getShippingFees() {
