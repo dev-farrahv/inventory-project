@@ -27,6 +27,7 @@ export class ViewReservationComponent implements OnInit {
     totalPrice: 0,
     modeOfPayment: '',
     dateCreated: '',
+    measurement: ''
   };
   printList: any[];
   showDiscountInvoice: any[];
@@ -57,6 +58,12 @@ export class ViewReservationComponent implements OnInit {
         }
         if (this.reservation.discount == null) {
           this.reservation.discount = 0;
+        }
+        if (this.reservation.measurement == null) {
+          this.reservation.measurement = 'g';
+        }
+        if (this.reservation.dateCreated == null) {
+          this.reservation.dateCreated = new Date().toDateString();
         }
         this.spinner.hide();
         this.loading = false;
@@ -101,13 +108,17 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    return (this.reservation.totalPrice + this.reservation.shippingFee) - ((this.reservation.discount * this.reservation.totalPrice) / 100);
+    return (this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount;
   }
 
   calcShippingFee() {
     let weight = this.reservation.totalWeight;
     if (this.reservation.shippingFee == null) {
       weight = 0;
+    }
+
+    if (this.reservation.measurement == 'kg') {
+      weight = weight * 1000;
     }
 
     if (weight > 12000) {
@@ -122,14 +133,8 @@ export class ViewReservationComponent implements OnInit {
 
   calcDiscount() {
 
-    if (this.reservation.discount > 100) {
-      this.reservation.discount = 100;
-    }
-
     this.reservation.subTotal = this.calcSubTotal();
   }
-
-
 
   setZone() {
     this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
@@ -273,7 +278,7 @@ export class ViewReservationComponent implements OnInit {
 
     this.showDiscountInvoice = [];
     if (item.discount != 0) {
-      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + ' %', style: 'shippingFee', alignment: 'right' });
+      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
     }
 
     const docDefinition = {
@@ -526,8 +531,9 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Received From: \n', bold: true },
+            { text: ' Shipped to: \n', bold: true },
             { text: item.name + ' \n \n' },
+            { text: ' Address: \n', bold: true },
             { text: item.address + ' \n \n' }
           ]
         },

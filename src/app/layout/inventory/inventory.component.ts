@@ -88,6 +88,7 @@ export class InventoryComponent implements OnInit {
     this.reservation.shippingFee = 0;
     this.reservation.totalWeight = 0;
     this.reservation.discount = 0;
+    this.reservation.dateCreated = new Date().toDateString();
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
 
