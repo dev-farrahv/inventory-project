@@ -155,55 +155,60 @@ export class ViewReservationComponent implements OnInit {
 
   async printItemPdf(i) {
     const docDefinition = {
-      // {
-      //   image: 'test.jpeg',
-      //   width: 150,
-      //   height: 150,
-      // }, 
       content: [
         {
-          text: '2nd Bags/Luggage, Clothes and accessories \n \n \n',
-          style: 'header',
-          alignment: 'center'
+          alignment: 'justify',
+          columns: [
+            {
+              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              fit: [100, 100],
+              margin: [5, 5, 5, 5],
+              width: 'auto',
+            },
+            {
+              width: 'auto',
+              stack: [
+                {
+                  text: [
+                    { text: '   2Nd \n', fontSize: 9, bold: true },
+                    { text: ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OGURISU KITA GOTO CHO 1-9-103 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ', fontSize: 9 },
+                  ]
+                }
+              ],
+              style: 'superMargin'
+            }
+          ]
         },
-        // {
-        //   image: await this.getBase64ImageFromURL(this.reservation.products[i].image),
-        //   width: 200,
-        //   alignment: 'center',
-        //   margin: [10, 10, 10, 10]
-        // },
         {
           style: 'tableExample',
           table: {
             headerRows: 5,
-            widths: [100, '*', '*'],
+            widths: [100, 150],
             body: [
               [
-                { text: 'Item Code ', bold: true, alignment: 'right', style: 'col' },
-                { text: this.reservation.products[i].itemCode, bold: true, style: 'col' },
+                { text: 'Item Code: \n' + this.reservation.products[i].itemCode, bold: true, alignment: 'left', style: 'col' },
                 {
                   image: await this.getBase64ImageFromURL(this.reservation.products[i].image),
                   width: 100,
                   alignment: 'center',
                   margin: [10, 10, 10, 10],
-                  rowSpan: 5
+                  rowSpan: 6
                 },
               ],
               [
-                { text: 'Name ', bold: true, alignment: 'right', style: 'col' },
-                { text: this.reservation.products[i].name, style: 'col' },
+                { text: 'Ref. No: \n' + this.reservation.referenceNumber, bold: true, alignment: 'left', style: 'col' },
               ],
               [
-                { text: 'Owner ', bold: true, alignment: 'right', style: 'col' },
-                { text: this.reservation.name, style: 'col' },
+                { text: 'Name: \n' + this.reservation.products[i].name, bold: true, alignment: 'left', style: 'col' },
               ],
               [
-                { text: 'Price ', bold: true, fontSize: 14, alignment: 'right', style: 'col' },
-                { text: this.reservation.products[i].sellingPrice, style: 'col', fontSize: 14, bold: true },
+                { text: 'Owner: \n' + this.reservation.name, bold: true, alignment: 'left', style: 'col' },
               ],
               [
-                { text: 'Remarks ', bold: true, alignment: 'right', style: 'col' },
-                { text: this.reservation.products[i].remarks, style: 'col' },
+                { text: 'Price: \n' + this.reservation.products[i].sellingPrice, bold: true, fontSize: 10, alignment: 'left', style: 'col' },
+              ],
+              [
+                { text: 'Remarks: \n' + this.reservation.products[i].remarks, bold: true, alignment: 'left', style: 'col' },
               ],
             ]
           },
@@ -220,16 +225,8 @@ export class ViewReservationComponent implements OnInit {
             vLineColor: function (index, node) {
               return (index === 0 || index === node.table.widths.length) ? 'black' : 'gray';
             },
-            // hLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
-            // paddingLeft: function(i, node) { return 4; },
-            // paddingRight: function(i, node) { return 4; },
-            // paddingTop: function(i, node) { return 2; },
-            // paddingBottom: function(i, node) { return 2; },
-            // fillColor: function (rowIndex, node, columnIndex) { return null; }
           }
         },
-
         // {
         //   qr: this.reservation.products[i].purchasePrice.toString(),
         //   alignment: 'center',
@@ -240,11 +237,12 @@ export class ViewReservationComponent implements OnInit {
       ],
       styles: {
         tableExample: {
-          fontSize: 14
+          fontSize: 14,
+          margin: [0, 0, 0, 0]
         },
         col: {
           fontSize: 10,
-          margin: [10, 10, 10, 10]
+          margin: [0, 0, 0, 0]
         },
         header: {
           fontSize: 16,
@@ -274,7 +272,7 @@ export class ViewReservationComponent implements OnInit {
     });
 
     this.showDiscountInvoice = [];
-    if(item.discount != 0){
+    if (item.discount != 0) {
       this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + ' %', style: 'shippingFee', alignment: 'right' });
     }
 
@@ -348,7 +346,7 @@ export class ViewReservationComponent implements OnInit {
           }
         },
         { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
-        [ ...this.showDiscountInvoice],
+        [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
         { text: '\n' },
@@ -530,16 +528,16 @@ export class ViewReservationComponent implements OnInit {
           text: [
             { text: ' Received From: \n', bold: true },
             { text: item.name + ' \n \n' },
-            { text: item.address   + ' \n \n' }
+            { text: item.address + ' \n \n' }
           ]
         },
         {
           style: 'tableExample',
           table: {
-            widths: ['*', '*','*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
-              [{text: 'Reference Number', style: 'tableHeader'}, {text: 'Date', style: 'tableHeader'}, {text: 'Payment Type', style: 'tableHeader'}, {text: 'Amount', style: 'tableHeader'}],
-              [{text: item.referenceNumber}, {text: item.dateCreated}, {text: item.modeOfPayment}, {text: item.subTotal}],
+              [{ text: 'Reference Number', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Payment Type', style: 'tableHeader' }, { text: 'Amount', style: 'tableHeader' }],
+              [{ text: item.referenceNumber }, { text: item.dateCreated }, { text: item.modeOfPayment }, { text: item.subTotal }],
               //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
             ]
           },
@@ -618,5 +616,5 @@ export class ViewReservationComponent implements OnInit {
     });
   }
 
-  
+
 }
