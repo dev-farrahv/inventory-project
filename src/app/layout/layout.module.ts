@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import {NgxImageCompressService} from 'ngx-image-compress';
 
 @NgModule({
     imports: [
@@ -26,7 +27,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
         NgbModule,
         FormsModule,
         NgxSpinnerModule,
-        Ng2SearchPipeModule
+        Ng2SearchPipeModule,
     ],
     declarations: [
         LayoutComponent,
@@ -35,6 +36,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
         AddProductsComponent,
         ReservationComponent,
         InventoryComponent,
-        ViewReservationComponent]
+        ViewReservationComponent],
+    providers : [
+        NgxImageCompressService
+    ]
 })
 export class LayoutModule { }

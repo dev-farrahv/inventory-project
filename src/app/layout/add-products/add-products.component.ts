@@ -6,6 +6,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { take } from 'rxjs/operators';
+import { NgxImageCompressService } from 'ngx-image-compress';
+
 
 
 @Component({
@@ -35,6 +37,18 @@ export class AddProductsComponent implements OnInit {
     weight: 0,
   };
   closeResult: string;
+  imageFileCompressed: any = null;
+  getCompressedFile: any=null;
+
+
+
+  //file: any;
+  //localUrl: any;
+  //localCompressedURl:any;
+  sizeOfOriginalImage:number;
+  sizeOFCompressedImage:number;
+  //imgResultBeforeCompress:string;
+  //imgResultAfterCompress:string;
 
   constructor(
     private productService: ProductService,
@@ -42,7 +56,8 @@ export class AddProductsComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private imageCompress: NgxImageCompressService
   ) { }
 
   ngOnInit() {
@@ -63,10 +78,50 @@ export class AddProductsComponent implements OnInit {
     this.productService.removeProduct(item.id);
   }
 
+
+  dataURItoBlob(dataURI) {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+    int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'image/jpeg' });
+    return blob;
+  }
+
   async saveProduct() {
     if (!this.editMode) {
       if (this.fileData) {
         this.spinner.show();
+
+        console.log("before upload");
+        console.log(this.fileUpload);
+
+        var image = this.previewUrl;
+        var fileName = this.fileUpload[0].name;
+        var orientation = -1;
+        this.sizeOfOriginalImage = this.imageCompress.byteCount(image)/(1024*1024);
+        console.warn('Size in bytes is now:',  this.sizeOfOriginalImage);
+        await this.imageCompress.compressFile(image, orientation, 50, 50).then(
+        result => {
+        //this.imgResultAfterCompress = result;
+        //this.localCompressedURl = result;
+        this.sizeOFCompressedImage = this.imageCompress.byteCount(result)/(1024*1024)
+        console.warn('Size in bytes after compression:',  this.sizeOFCompressedImage);
+        // create file from byte
+        const imageName = fileName;
+        // call method that creates a blob from dataUri
+        //const imageBlob = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
+        //imageFile created below is the new compressed file which can be send to API in form data
+        this.imageFileCompressed = new File([result], imageName, { type: 'image/jpeg' });
+        this.fileUpload = this.imageFileCompressed;
+        });
+        
+
+        console.log('outside updated');
+        console.log(this.fileUpload);
+
         this.product.image = await this.productService.uploadFile(this.fileUpload);
 
       } else {
