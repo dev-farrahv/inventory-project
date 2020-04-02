@@ -38,17 +38,10 @@ export class AddProductsComponent implements OnInit {
   };
   closeResult: string;
   imageFileCompressed: any = null;
-  getCompressedFile: any=null;
-
-
-
-  //file: any;
-  //localUrl: any;
-  //localCompressedURl:any;
-  sizeOfOriginalImage:number;
-  sizeOFCompressedImage:number;
-  //imgResultBeforeCompress:string;
-  //imgResultAfterCompress:string;
+  getCompressedFile: any = null;
+  sizeOfOriginalImage: number;
+  sizeOFCompressedImage: number;
+  imgResultAfterCompress: string;
 
   constructor(
     private productService: ProductService,
@@ -84,7 +77,7 @@ export class AddProductsComponent implements OnInit {
     const arrayBuffer = new ArrayBuffer(byteString.length);
     const int8Array = new Uint8Array(arrayBuffer);
     for (let i = 0; i < byteString.length; i++) {
-    int8Array[i] = byteString.charCodeAt(i);
+      int8Array[i] = byteString.charCodeAt(i);
     }
     const blob = new Blob([int8Array], { type: 'image/jpeg' });
     return blob;
@@ -95,34 +88,8 @@ export class AddProductsComponent implements OnInit {
       if (this.fileData) {
         this.spinner.show();
 
-        console.log("before upload");
-        console.log(this.fileUpload);
-
-        var image = this.previewUrl;
-        var fileName = this.fileUpload[0].name;
-        var orientation = -1;
-        this.sizeOfOriginalImage = this.imageCompress.byteCount(image)/(1024*1024);
-        console.warn('Size in bytes is now:',  this.sizeOfOriginalImage);
-        await this.imageCompress.compressFile(image, orientation, 50, 50).then(
-        result => {
-        //this.imgResultAfterCompress = result;
-        //this.localCompressedURl = result;
-        this.sizeOFCompressedImage = this.imageCompress.byteCount(result)/(1024*1024)
-        console.warn('Size in bytes after compression:',  this.sizeOFCompressedImage);
-        // create file from byte
-        const imageName = fileName;
-        // call method that creates a blob from dataUri
-        //const imageBlob = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
-        //imageFile created below is the new compressed file which can be send to API in form data
-        this.imageFileCompressed = new File([result], imageName, { type: 'image/jpeg' });
-        this.fileUpload = this.imageFileCompressed;
-        });
-        
-
-        console.log('outside updated');
-        console.log(this.fileUpload);
-
-        this.product.image = await this.productService.uploadFile(this.fileUpload);
+        await this.compressImage();
+        this.product.image = await this.productService.uploadFile(this.imageFileCompressed, this.fileUpload[0].name);
 
       } else {
         return this.toastr.warning('Please upload an image!');
@@ -151,7 +118,8 @@ export class AddProductsComponent implements OnInit {
     } else {
       if (this.fileData) {
         this.spinner.show();
-        this.product.image = await this.productService.uploadFile(this.fileUpload);
+        await this.compressImage();
+        this.product.image = await this.productService.uploadFile(this.imageFileCompressed, this.fileUpload[0].name);
       }
       this.productService.updateProduct(this.product).then(() => {
         this.toastr.success('Product Updated!');
@@ -176,12 +144,10 @@ export class AddProductsComponent implements OnInit {
   }
 
   preview() {
-    // Show preview 
     const mimeType = this.fileData.type;
     if (mimeType.match(/image\/*/) == null) {
       return;
     }
-
     const reader = new FileReader();
     reader.readAsDataURL(this.fileData);
     reader.onload = (_event) => {
@@ -211,4 +177,21 @@ export class AddProductsComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  async compressImage() {
+    return new Promise(res => {
+      console.log('before upload');
+      console.log(this.fileUpload);
+      const image = this.previewUrl;
+      const orientation = -1;
+      this.sizeOfOriginalImage = this.imageCompress.byteCount(image) / (1024 * 1024);
+      console.warn('Size in bytes is now:', this.sizeOfOriginalImage);
+      this.imageCompress.compressFile(image, orientation, 50, 50).then(
+        result => {
+          console.warn('Size in bytes after compression:', this.sizeOFCompressedImage);
+          this.sizeOFCompressedImage = this.imageCompress.byteCount(result) / (1024 * 1024);
+          this.imageFileCompressed = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
+          res();
+        });
+    });
+  }
 }

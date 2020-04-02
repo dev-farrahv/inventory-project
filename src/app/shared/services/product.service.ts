@@ -82,33 +82,17 @@ export class ProductService {
     return this.productsCollection.doc(id).delete();
   }
 
-  uploadFile(event: FileList) {
+  uploadFile(file: any, filename: string) {
 
     return new Promise<string>((res, reject) => {
-      // The File object
-      const file = event.item(0)
-
-      // Validation for Images Only
-      if (file.type.split('/')[0] !== 'image') {
-        console.error('unsupported file type :( ')
-        reject();
-      }
-
-      // The storage path
-      const path = `freakyStorage/${new Date().getTime()}_${file.name}`;
-
-      // Totally optional metadata
-      const customMetadata = { app: 'Freaky Image Upload Demo' };
-
-      //File reference
+      const path = `compressed/image${new Date().getTime()}_${filename}`;
+      const customMetadata = { app: '2nd Image Upload Demo' };
       const fileRef = this.storage.ref(path);
-
-      // The main task
       this.storage.upload(path, file, { customMetadata }).then(async result => {
         const url = await result.ref.getDownloadURL();
-        res(url)
+        res(url);
       });
-    })
+    });
   }
 
 
