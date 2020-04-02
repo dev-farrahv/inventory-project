@@ -48,7 +48,7 @@
       <div class="col-xl-6 col-lg-6 d-flex">
         <div class="flex-1">
           <fieldset class="form-group">
-            <label>Total Weight (G)</label>
+            <label>Total Weight </label>
             <input
               class="form-control bg-transparent"
               [(ngModel)]="reservation.totalWeight"
@@ -60,20 +60,38 @@
         </div>
         <div class="ml-2 flex-1">
           <fieldset class="form-group">
-            <label>Zone</label>
+            <label>Measurement (G/KG)</label>
             <select
               class="text-dark w-100 bg-transparent form-control"
-              [(ngModel)]="reservation.zone"
+              [(ngModel)]="reservation.measurement"
               (ngModelChange)="setZone()"
             >
-              <option [value]="1">1</option>
-              <option [value]="2">2</option>
-              <option [value]="3">3 (EUROPE)</option>
-              <option [value]="4">3 (SOUTH AMERICA & AFRICA)</option>
+              <option value="g">G</option>
+              <option value="kg">KG</option>
             </select>
           </fieldset>
         </div>
       </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Zone</label>
+          <select
+            class="text-dark w-100 bg-transparent form-control"
+            [(ngModel)]="reservation.zone"
+            (ngModelChange)="setZone()"
+          >
+            <option [value]="1">ASIA</option>
+            <option [value]="2"
+              >OCEANIA, NORTH AMERICA, CENTRAL AMERICA & MIDDLE EAST</option
+            >
+            <option [value]="3">EUROPE</option>
+            <option [value]="4">SOUTH AMERICA & AFRICA</option>
+          </select>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Shipping Fee</label>
@@ -86,12 +104,9 @@
           />
         </fieldset>
       </div>
-    </div>
-
-    <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Discount (%)</label>
+          <label>Discount</label>
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.discount"
@@ -101,6 +116,9 @@
           />
         </fieldset>
       </div>
+    </div>
+
+    <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Sub Total</label>
@@ -109,16 +127,13 @@
           </div>
         </fieldset>
       </div>
-    </div>
-
-    <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Status</label>
           <select
             [(ngModel)]="reservation.status"
             class="text-dark w-100 bg-transparent form-control"
-            (change)="showModeOfPayment($event)"
+            (change)="showModeOfPayment()"
           >
             <option value="Pending">Pending</option>
             <option value="For Shipment">For Shipment</option>
@@ -127,8 +142,10 @@
           </select>
         </fieldset>
       </div>
+    </div>
+    <div class="row" *ngIf="reservation.status == 'Completed'">
       <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group" *ngIf="reservation.status=='Completed'">
+        <fieldset class="form-group" *ngIf="reservation.status == 'Completed'">
           <label>Mode Of Payment</label>
           <input
             class="form-control bg-transparent"
@@ -137,9 +154,6 @@
           />
         </fieldset>
       </div>
-    </div>
-    <div class="row" *ngIf="reservation.status=='Completed'">
-      <div class="col-xl-6 col-lg-6"></div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label> &nbsp; </label>
@@ -148,7 +162,8 @@
               class="btn bg-dark-pink text-white"
               (click)="printPaymentReceipt(reservation)"
             >
-              <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Payment Receipt
+              <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Payment
+              Receipt
             </button>
           </div>
         </fieldset>

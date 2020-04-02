@@ -27,6 +27,7 @@ export class ViewReservationComponent implements OnInit {
     totalPrice: 0,
     modeOfPayment: '',
     dateCreated: '',
+    measurement: ''
   };
   printList: any[];
   showDiscountInvoice: any[];
@@ -57,6 +58,12 @@ export class ViewReservationComponent implements OnInit {
         }
         if (this.reservation.discount == null) {
           this.reservation.discount = 0;
+        }
+        if (this.reservation.measurement == null) {
+          this.reservation.measurement = 'g';
+        }
+        if (this.reservation.dateCreated == null) {
+          this.reservation.dateCreated = new Date().toDateString();
         }
         this.spinner.hide();
         this.loading = false;
@@ -101,13 +108,17 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    return (this.reservation.totalPrice + this.reservation.shippingFee) - ((this.reservation.discount * this.reservation.totalPrice) / 100);
+    return (this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount;
   }
 
   calcShippingFee() {
     let weight = this.reservation.totalWeight;
     if (this.reservation.shippingFee == null) {
       weight = 0;
+    }
+
+    if (this.reservation.measurement == 'kg') {
+      weight = weight * 1000;
     }
 
     if (weight > 12000) {
@@ -122,14 +133,8 @@ export class ViewReservationComponent implements OnInit {
 
   calcDiscount() {
 
-    if (this.reservation.discount > 100) {
-      this.reservation.discount = 100;
-    }
-
     this.reservation.subTotal = this.calcSubTotal();
   }
-
-
 
   setZone() {
     this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
@@ -227,6 +232,13 @@ export class ViewReservationComponent implements OnInit {
             },
           }
         },
+        // {
+        //   qr: this.reservation.products[i].purchasePrice.toString(),
+        //   alignment: 'center',
+        //   margin: [0, 100, 0, 5],
+        //   fit: 200
+        // },
+        // { text: 'SCAN QR', alignment: 'center', fontSize: 12 }
       ],
       styles: {
         tableExample: {
@@ -265,8 +277,8 @@ export class ViewReservationComponent implements OnInit {
     });
 
     this.showDiscountInvoice = [];
-    if(item.discount != 0){
-      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + ' %', style: 'shippingFee', alignment: 'right' });
+    if (item.discount != 0) {
+      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
     }
 
     const docDefinition = {
@@ -339,7 +351,7 @@ export class ViewReservationComponent implements OnInit {
           }
         },
         { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
-        [ ...this.showDiscountInvoice],
+        [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
         { text: '\n' },
@@ -519,18 +531,19 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Received From: \n', bold: true },
+            { text: ' Shipped to: \n', bold: true },
             { text: item.name + ' \n \n' },
-            { text: item.address   + ' \n \n' }
+            { text: ' Address: \n', bold: true },
+            { text: item.address + ' \n \n' }
           ]
         },
         {
           style: 'tableExample',
           table: {
-            widths: ['*', '*','*', '*'],
+            widths: ['*', '*', '*', '*'],
             body: [
-              [{text: 'Reference Number', style: 'tableHeader'}, {text: 'Date', style: 'tableHeader'}, {text: 'Payment Type', style: 'tableHeader'}, {text: 'Amount', style: 'tableHeader'}],
-              [{text: item.referenceNumber}, {text: item.dateCreated}, {text: item.modeOfPayment}, {text: item.subTotal}],
+              [{ text: 'Reference Number', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Payment Type', style: 'tableHeader' }, { text: 'Amount', style: 'tableHeader' }],
+              [{ text: item.referenceNumber }, { text: item.dateCreated }, { text: item.modeOfPayment }, { text: item.subTotal }],
               //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
             ]
           },
@@ -609,5 +622,5 @@ export class ViewReservationComponent implements OnInit {
     });
   }
 
-  
+
 }
