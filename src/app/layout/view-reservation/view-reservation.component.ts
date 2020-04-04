@@ -132,7 +132,9 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcDiscount() {
-
+    if (this.reservation.discount < 0) {
+      this.reservation.discount = 0;
+    }
     this.reservation.subTotal = this.calcSubTotal();
   }
 
