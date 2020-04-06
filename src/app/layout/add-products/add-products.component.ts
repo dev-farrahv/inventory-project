@@ -187,9 +187,10 @@ export class AddProductsComponent implements OnInit {
       console.warn('Size in bytes is now:', this.sizeOfOriginalImage);
       this.imageCompress.compressFile(image, orientation, 50, 50).then(
         result => {
-          console.warn('Size in bytes after compression:', this.sizeOFCompressedImage);
+
           this.sizeOFCompressedImage = this.imageCompress.byteCount(result) / (1024 * 1024);
-          this.imageFileCompressed = this.dataURItoBlob(this.imgResultAfterCompress.split(',')[1]);
+          console.warn('Size in bytes after compression:', this.sizeOFCompressedImage);
+          this.imageFileCompressed = this.dataURItoBlob(result.split(',')[1]);
           res();
         });
     });
