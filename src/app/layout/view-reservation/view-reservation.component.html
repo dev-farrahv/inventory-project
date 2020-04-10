@@ -86,6 +86,7 @@
             >
             <option [value]="3">EUROPE</option>
             <option [value]="4">SOUTH AMERICA & AFRICA</option>
+            <option [value]="5">OTHERS</option>
           </select>
         </fieldset>
       </div>
@@ -100,7 +101,7 @@
             [(ngModel)]="reservation.shippingFee"
             (change)="checkIfZero()"
             type="number"
-            readonly
+            [readonly] = "reservation.zone != 5 ? true : false " 
           />
         </fieldset>
       </div>
