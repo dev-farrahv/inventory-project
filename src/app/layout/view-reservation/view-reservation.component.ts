@@ -125,11 +125,17 @@ export class ViewReservationComponent implements OnInit {
       weight = 12000;
     }
 
-    const amount = this.activeZone.find(sf => weight <= sf.max).amount;
+    if(this.reservation.zone == 5){
+      this.reservation.shippingFee = 0;
+    }else{
+      const amount = this.activeZone.find(sf => weight <= sf.max).amount;
+      this.reservation.shippingFee = amount;
 
-    this.reservation.shippingFee = amount;
+    }
+
     this.reservation.subTotal = this.calcSubTotal();
   }
+
 
   calcDiscount() {
     if (this.reservation.discount < 0) {
@@ -355,7 +361,7 @@ export class ViewReservationComponent implements OnInit {
         { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
         [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
-        { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
+        { text: 'Sub Total:      ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {
           style: 'tableExample',
