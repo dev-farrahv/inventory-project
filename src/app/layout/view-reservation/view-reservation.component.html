@@ -122,10 +122,14 @@
     <div class="row">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Sub Total</label>
-          <div class="form-control bg-transparent">
-            {{ loading ? 'calculating ...' : calcSubTotal() }}
-          </div>
+          <label>Previous Balance</label>
+          <input
+            class="form-control bg-transparent"
+            [(ngModel)]="reservation.previousBalance"
+            (keyup)="calcPreviousBalance()"
+            (change)="checkIfZero()"
+            type="number"
+          />
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
@@ -144,6 +148,19 @@
         </fieldset>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Sub Total</label>
+          <div class="form-control bg-transparent">
+            {{ loading ? 'calculating ...' : calcSubTotal() }}
+          </div>
+        </fieldset>
+      </div>
+    </div>    
+
+
     <div class="row" *ngIf="reservation.status == 'Completed'">
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group" *ngIf="reservation.status == 'Completed'">

@@ -5,6 +5,7 @@ import { AddProductsComponent } from './add-products/add-products.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
+import { SharerManagementComponent } from './sharer-management/sharer-management.component';
 
 const routes: Routes = [
     {
@@ -28,6 +29,10 @@ const routes: Routes = [
             {
                 path: 'inventory',
                 component: InventoryComponent
+            },
+            {
+                path: 'sharer-management',
+                component: SharerManagementComponent
             },
         ]
     }

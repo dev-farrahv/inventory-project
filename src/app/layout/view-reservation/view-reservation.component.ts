@@ -27,7 +27,8 @@ export class ViewReservationComponent implements OnInit {
     totalPrice: 0,
     modeOfPayment: '',
     dateCreated: '',
-    measurement: ''
+    measurement: '',
+    previousBalance: 0
   };
   printList: any[];
   showDiscountInvoice: any[];
@@ -108,7 +109,7 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    return (this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount;
+    return ((this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount) + this.reservation.previousBalance;
   }
 
   calcShippingFee() {
@@ -144,6 +145,13 @@ export class ViewReservationComponent implements OnInit {
     this.reservation.subTotal = this.calcSubTotal();
   }
 
+  calcPreviousBalance() {
+    if (this.reservation.previousBalance < 0) {
+      this.reservation.previousBalance = 0;
+    }
+    this.reservation.subTotal = this.calcSubTotal();
+  }
+
   setZone() {
     this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
       return a.min - b.min;
@@ -163,6 +171,10 @@ export class ViewReservationComponent implements OnInit {
 
     if (this.reservation.totalWeight == null) {
       this.reservation.totalWeight = 0;
+    }
+
+    if (this.reservation.previousBalance == null) {
+      this.reservation.previousBalance = 0;
     }
   }
 
@@ -361,6 +373,7 @@ export class ViewReservationComponent implements OnInit {
         { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
         [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
+        { text: 'Other Charges:      ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {

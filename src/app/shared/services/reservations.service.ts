@@ -23,6 +23,7 @@ export interface Reservation {
   discount?: number;
   zone?: number;
   measurement?: string;
+  previousBalance?: number;
 }
 @Injectable({
   providedIn: 'root'

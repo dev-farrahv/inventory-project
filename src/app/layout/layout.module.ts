@@ -10,6 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AddProductsComponent } from './add-products/add-products.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { SharerManagementComponent } from './sharer-management/sharer-management.component';
 import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -36,7 +37,8 @@ import {NgxImageCompressService} from 'ngx-image-compress';
         AddProductsComponent,
         ReservationComponent,
         InventoryComponent,
-        ViewReservationComponent],
+        ViewReservationComponent,
+        SharerManagementComponent],
     providers : [
         NgxImageCompressService
     ]
