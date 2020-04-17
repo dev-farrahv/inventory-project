@@ -17,6 +17,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import {NgxImageCompressService} from 'ngx-image-compress';
+import { EarningReportComponent } from './earning-report/earning-report.component';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import {NgxImageCompressService} from 'ngx-image-compress';
         ReservationComponent,
         InventoryComponent,
         ViewReservationComponent,
-        SharerManagementComponent],
+        SharerManagementComponent,
+        EarningReportComponent],
     providers : [
         NgxImageCompressService
     ]

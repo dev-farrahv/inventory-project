@@ -6,6 +6,8 @@ import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 import { SharerManagementComponent } from './sharer-management/sharer-management.component';
+import { EarningReportComponent } from './earning-report/earning-report.component';
+
 
 const routes: Routes = [
     {
@@ -33,6 +35,10 @@ const routes: Routes = [
             {
                 path: 'sharer-management',
                 component: SharerManagementComponent
+            },
+            {
+                path: 'earning-report',
+                component: EarningReportComponent
             },
         ]
     }
