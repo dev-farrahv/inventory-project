@@ -1,0 +1,125 @@
+<div [@routerTransition] class="main">
+  <div class="px-3 d-flex justify-content-between">
+    <h2>Earning Report</h2>
+    <div class="d-flex p-2">
+      <button
+        class="btn bg-dark-pink text-white"
+        (click)="open(delete)"
+      >
+        <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Start A Week
+      </button>
+    </div>
+  </div>
+  <div class="p-2 d-flex justify-content-between bg-transparent border-0">
+    <div>
+      <i class="fa fa-search mr-2" aria-hidden="true"></i>
+      <input
+        type="text"
+        class="px-2 search-input"
+        placeholder="Search..."
+        [(ngModel)]="search"
+      />
+    </div>
+  </div>
+  <div class="card mb-3 bg-transparent">
+    <table class="card-body table table-hover">
+      <thead class="bg-pink">
+        <tr>
+          <th>#</th>
+          <th>Week Code</th>
+          <th>Start date</th>
+          <th class="sm-hidden">End Date</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>1</th>
+          <td>WEEK 256</td>
+          <td>April 8, 2020</td>
+          <td>April 14, 2020</td>
+          <td>On Going</td>
+          <td>
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+              <i class="fa fa-print" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>WEEK 255</td>
+          <td>April 1, 2020</td>
+          <td>April 7, 2020</td>
+          <td>Completed</td>
+          <td>
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+              <i class="fa fa-print" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>WEEK 254</td>
+          <td>March 25, 2020</td>
+          <td>April 1, 2020</td>
+          <td>Completed</td>
+          <td>
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+              <i class="fa fa-print" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Reserve Modal -->
+
+<ng-template #delete let-c="close" let-d="dismiss">
+  <div class="modal-header bg-pink">
+    <h4 class="modal-title">Start a Week</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Start Date</label>
+          <input
+            class="form-control bg-transparent"
+            type="datetime"
+          />
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>End Date</label>
+          <input
+            class="form-control bg-transparent"
+            type="text"
+          />
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+    >
+      Start / End
+    </button>
+  </div>
+</ng-template>

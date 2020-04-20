@@ -10,12 +10,14 @@ import { HeaderComponent } from './components/header/header.component';
 import { AddProductsComponent } from './add-products/add-products.component';
 import { ReservationComponent } from './reservation/reservation.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { SharerManagementComponent } from './sharer-management/sharer-management.component';
 import { PageHeaderModule } from '../shared';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import {NgxImageCompressService} from 'ngx-image-compress';
+import { EarningReportComponent } from './earning-report/earning-report.component';
 
 @NgModule({
     imports: [
@@ -36,7 +38,9 @@ import {NgxImageCompressService} from 'ngx-image-compress';
         AddProductsComponent,
         ReservationComponent,
         InventoryComponent,
-        ViewReservationComponent],
+        ViewReservationComponent,
+        SharerManagementComponent,
+        EarningReportComponent],
     providers : [
         NgxImageCompressService
     ]
