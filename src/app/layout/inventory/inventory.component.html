@@ -24,10 +24,10 @@
 
   <div class="row">
     <div
-      class="col-xs-12 col-sm-6 col-md-6 "
+      class="col-xs-12 col-sm-6 col-md-6"
       *ngFor="let item of productList | filter: search"
     >
-      <div class="card mb-3 ">
+      <div class="card mb-3">
         <div class="card-body">
           <div class="row">
             <div
@@ -116,12 +116,14 @@
               </div>
 
               <div class="row">
+                <div class="col-xl-6 col-lg-6"></div>
                 <div class="col-xl-6 col-lg-6">
-
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                  <button class="btn bg-dark-pink text-white" (click)="printItemPdf(item)">
-                    <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Item
+                  <button
+                    class="btn bg-dark-pink text-white"
+                    (click)="printItemPdf(item)"
+                  >
+                    <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
+                    Item
                   </button>
                 </div>
               </div>
@@ -149,6 +151,12 @@
   </div>
   <div class="modal-body">
     <fieldset class="form-group">
+      <label>Week</label>
+      <select class="form-control" [(ngModel)]="reservation.weekId">
+        <option *ngFor="let week of weeks">{{ week.weekId }}</option>
+      </select>
+    </fieldset>
+    <fieldset class="form-group">
       <label>Name</label>
       <input class="form-control" [(ngModel)]="reservation.name" />
     </fieldset>
@@ -172,7 +180,7 @@
     <hr />
     <h3 class="text-center">Product List</h3>
     <hr />
-    <fieldset class="form-group ">
+    <fieldset class="form-group">
       <div class="d-flex" *ngFor="let item of getSelectedProduct()">
         <div class="w-25">
           <img class="img-thumbnail" [src]="item.image" alt="" />
@@ -213,4 +221,10 @@
     </button>
   </div>
 </ng-template>
-<ngx-spinner></ngx-spinner>
+<ngx-spinner
+  bdColor="rgba(0,0,0,0.2)"
+  size="default"
+  color="#fff"
+  type="ball-atom"
+  [fullScreen]="true"
+></ngx-spinner>

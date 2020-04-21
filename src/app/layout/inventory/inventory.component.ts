@@ -8,6 +8,9 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ProfitService } from 'src/app/shared/services/profit.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -17,7 +20,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   animations: [routerTransition()]
 })
 export class InventoryComponent implements OnInit {
+  private destroyed$ = new Subject();
   search = '';
+  weeks: any[];
   reservationList: Reservation[];
   reservation: Reservation = {
     qty: 0,
@@ -42,6 +47,7 @@ export class InventoryComponent implements OnInit {
     private productService: ProductService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
+    private weeksService: ProfitService
   ) { }
 
   open(content) {
@@ -70,9 +76,14 @@ export class InventoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productService.getproducts().subscribe(res => {
+    this.spinner.show();
+    this.productService.getproducts().pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this.productList = res;
-
+      this.spinner.hide();
+    });
+    this.weeksService.getWeeks().pipe(takeUntil(this.destroyed$)).subscribe(weeks => {
+      this.weeks = weeks;
+      this.reservation.weekId = weeks.length;
     });
   }
 
@@ -179,7 +190,7 @@ export class InventoryComponent implements OnInit {
                 },
               ],
               [
-                { text: 'Serial No: \n'+ item.serialNumber , bold: true, alignment: 'left', style: 'col' },
+                { text: 'Serial No: \n' + item.serialNumber, bold: true, alignment: 'left', style: 'col' },
               ],
               [
                 { text: 'Name: \n' + item.name, bold: true, alignment: 'left', style: 'col' },
@@ -235,4 +246,9 @@ export class InventoryComponent implements OnInit {
     pdfMake.createPdf(docDefinition).open();
   }
 
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }
