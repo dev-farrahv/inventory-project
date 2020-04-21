@@ -20,9 +20,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class ReservationComponent implements OnInit {
   private destroyed$ = new Subject();
   search = '';
+  reservations: Reservation[];
   reservationList: Reservation[];
   printList = [];
   shippingFeeData = [];
+  filterStatus = 'All';
   shippingFee: ShippingFee = {
     min: 0,
     max: 0,
@@ -42,7 +44,8 @@ export class ReservationComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.reservationService.getreservations().pipe(takeUntil(this.destroyed$)).subscribe(res => {
-      this.reservationList = res.filter(reservation => reservation.status !== 'Canceled');
+      this.reservations = res;
+      this.reservationList = res;
       this.spinner.hide();
     });
   }
@@ -306,4 +309,12 @@ export class ReservationComponent implements OnInit {
     this.destroyed$.complete();
   }
 
+  setReservationsByStatus() {
+    if (this.filterStatus == 'All') {
+      this.reservationList = this.reservations;
+    } else {
+      this.reservationList = this.reservations.filter(reservation => reservation.status === this.filterStatus);
+    }
+
+  }
 }

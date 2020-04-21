@@ -82,6 +82,7 @@ export class ProfitSharesComponent implements OnInit {
   }
   async startNewWeek() {
     const newWeek = {
+      dateStarte: new Date().toLocaleDateString(),
       weekId: this.weeks.length + 1,
       sharers: []
     };
@@ -89,13 +90,18 @@ export class ProfitSharesComponent implements OnInit {
     await this.weeksService.addWeek(newWeek);
     this.setReservationsByWeekId();
     this.spinner.hide();
-    this.toastr.success(`Week ${newWeek.weekId} added!`)
+    this.toastr.success(`Week ${newWeek.weekId} added!`);
   }
 
   async addSharer() {
     if (!this.sharer.name || !this.sharer.shares) {
       return;
     }
+
+    if (this.sharer.shares > 10) {
+      return this.toastr.warning('Maximum 10 shares only!');
+    }
+
     this.weeks[this.weekId - 1].sharers.push(this.sharer);
     this.sharer = {
       name: null,
