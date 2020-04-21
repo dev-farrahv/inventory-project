@@ -7,6 +7,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { ViewReservationComponent } from './view-reservation/view-reservation.component';
 import { SharerManagementComponent } from './sharer-management/sharer-management.component';
 import { EarningReportComponent } from './earning-report/earning-report.component';
+import { ProfitSharesComponent } from './profit-shares/profit-shares.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,10 @@ const routes: Routes = [
             {
                 path: 'earning-report',
                 component: EarningReportComponent
+            },
+            {
+                path: 'profit-shares',
+                component: ProfitSharesComponent
             },
         ]
     }

@@ -18,6 +18,7 @@ import { ViewReservationComponent } from './view-reservation/view-reservation.co
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import {NgxImageCompressService} from 'ngx-image-compress';
 import { EarningReportComponent } from './earning-report/earning-report.component';
+import { ProfitSharesComponent } from './profit-shares/profit-shares.component';
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ import { EarningReportComponent } from './earning-report/earning-report.componen
         InventoryComponent,
         ViewReservationComponent,
         SharerManagementComponent,
-        EarningReportComponent],
+        EarningReportComponent,
+        ProfitSharesComponent],
     providers : [
         NgxImageCompressService
     ]

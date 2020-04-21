@@ -201,32 +201,14 @@
       <i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;
       <span>{{ 'Reservations' | translate }}</span>
     </a>
-
-    <div class="nested-menu">
-        <a class="list-group-item" (click)="addExpandClass('earning')">
-          <span><i class="fa fa fa-usd"></i>&nbsp; Earning Management</span>
-        </a>
-        <li class="nested" [class.expand]="showMenu === 'earning'">
-          <ul class="submenu">
-            <li>
-              <a
-                [routerLink]="['/earning-report']"
-                [routerLinkActive]="['side-nav-active']"
-              >
-                <span>Week Management</span>
-              </a>
-            </li>
-            <li>
-              <a
-                [routerLink]="['/sharer-management']"
-                [routerLinkActive]="['side-nav-active']"
-              >
-                <span> Sharer Management</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-      </div>
+    <a
+      [routerLink]="['/profit-shares']"
+      [routerLinkActive]="['side-nav-active']"
+      class="list-group-item"
+    >
+      <i class="fa fa-money" aria-hidden="true"></i>&nbsp;
+      <span>{{ 'Profit Shares' | translate }}</span>
+    </a>
   </div>
   <div>
     <a

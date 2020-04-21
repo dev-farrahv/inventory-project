@@ -272,7 +272,7 @@ export class ReservationComponent implements OnInit {
     pdfMake.createPdf(docDefinition).open();
   }
 
-  populateShippingFee(){
+  populateShippingFee() {
     this.shippingFeeData = []; //insert here the data to be populated
 
     this.shippingFeeData.forEach((data, i) => {

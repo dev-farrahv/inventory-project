@@ -24,6 +24,7 @@ export interface Reservation {
   zone?: number;
   measurement?: string;
   previousBalance?: number;
+  weekId?: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ReservationService {
 
   private reservations: Observable<Reservation[]>;
 
-  constructor(db: AngularFirestore) {
+  constructor(private db: AngularFirestore) {
     this.reservationsCollection = db.collection<Reservation>('reservations');
 
     this.reservations = this.reservationsCollection.snapshotChanges().pipe(
@@ -53,6 +54,18 @@ export class ReservationService {
 
   getReservation(id) {
     return this.reservationsCollection.doc<Reservation>(id).valueChanges();
+  }
+
+  getReservationByWeekId(weekId) {
+    return this.db.collection<Reservation>('reservations', ref => ref.where('weekId', '==', weekId)).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
   }
 
   updateReservation(reservation: Reservation) {
