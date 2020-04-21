@@ -33,6 +33,7 @@
     "firebase-admin": "^8.10.0",
     "font-awesome": "4.7.0",
     "image-compressor.js": "^1.1.4",
+    "moment": "^2.24.0",
     "ng2-charts": "2.3.0",
     "ng2-file-upload": "^1.4.0",
     "ng2-search-filter": "^0.5.1",

@@ -101,7 +101,7 @@
             [(ngModel)]="reservation.shippingFee"
             (change)="checkIfZero()"
             type="number"
-            [readonly] = "reservation.zone != 5 ? true : false " 
+            [readonly]="reservation.zone != 5 ? true : false"
           />
         </fieldset>
       </div>
@@ -138,7 +138,7 @@
           <select
             [(ngModel)]="reservation.status"
             class="text-dark w-100 bg-transparent form-control"
-            (change)="showModeOfPayment()"
+            (change)="updateReservation()"
           >
             <option value="Pending">Pending</option>
             <option value="For Shipment">For Shipment</option>
@@ -158,8 +158,7 @@
           </div>
         </fieldset>
       </div>
-    </div>    
-
+    </div>
 
     <div class="row" *ngIf="reservation.status == 'Completed'">
       <div class="col-xl-6 col-lg-6">
@@ -168,7 +167,6 @@
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.modeOfPayment"
-            (change)="updateReservation($event)"
           />
         </fieldset>
       </div>
@@ -289,7 +287,7 @@
               <label>Remarks</label>
 
               <input
-                class=" bg-transparent form-control"
+                class="bg-transparent form-control"
                 [(ngModel)]="product.remarks"
               />
             </fieldset>

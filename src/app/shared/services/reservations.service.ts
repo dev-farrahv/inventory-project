@@ -20,6 +20,7 @@ export interface Reservation {
   totalWeight?: number;
   modeOfPayment?: string;
   dateCreated?: string;
+  dateUpdated?: any;
   discount?: number;
   zone?: number;
   measurement?: string;
@@ -66,6 +67,34 @@ export class ReservationService {
         });
       })
     );
+  }
+
+  getReservationByStatus(status) {
+    return this.db.collection<Reservation>('reservations',
+      ref => ref.where('status', '==', status)).snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          });
+        })
+      );
+  }
+
+  getReservationByWeek(from, to) {
+    return this.db.collection<Reservation>('reservations',
+      ref => ref
+        .where('status', '==', 'Completed')
+        .where('dateUpdated', '>', from).where('dateUpdated', '<', to)).snapshotChanges().pipe(
+          map(actions => {
+            return actions.map(a => {
+              const data = a.payload.doc.data();
+              const id = a.payload.doc.id;
+              return { id, ...data };
+            });
+          })
+        );
   }
 
   updateReservation(reservation: Reservation) {

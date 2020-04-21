@@ -7,6 +7,8 @@ import { ProfitService } from 'src/app/shared/services/profit.service';
 import { routerTransition } from 'src/app/router.animations';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-profit-shares',
@@ -16,10 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfitSharesComponent implements OnInit {
   private destroyed$ = new Subject();
-  weeks: any[] = [];
-  week: any;
+  reservations: Reservation[];
   reservationList: Reservation[];
-  weekId: number;
   reservation$: any;
   deductionPercent = 30;
   loading: boolean;
@@ -29,98 +29,133 @@ export class ProfitSharesComponent implements OnInit {
   totalDeductions: number;
   totalNetProfit: number;
   totalShares = 0;
-  sharer = {
+  sharer: any = {
     name: null,
-    shares: null
+    percent: null
   };
+  sharers: any[] = [];
+  fromDate: any;
+  toDate: any;
+  hoveredDate: NgbDate | null = null;
+  totalPercent = 0;
+  totalProfitPerShare = 0;
 
   constructor(
     private modalService: NgbModal,
     private reservationService: ReservationService,
-    private weeksService: ProfitService,
+    private profitService: ProfitService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
+    private calendar: NgbCalendar,
+    public formatter: NgbDateParserFormatter
   ) { }
 
   ngOnInit() {
+    this.toDate = this.calendar.getToday();
+    this.fromDate = this.calendar.getPrev(this.calendar.getToday(), 'd', 7);
     this.loading = true;
     this.spinner.show();
-    this.weeksService.getWeeksOrderById().pipe(takeUntil(this.destroyed$)).subscribe(weeks => {
-      this.weeks = weeks;
-      this.weekId = weeks.length;
-      this.week = this.weeks[this.weekId - 1];
-
-      this.spinner.hide();
-      this.setReservationsByWeekId();
-      this.loading = false;
-    });
-  }
-
-  setReservationsByWeekId() {
-    this.spinner.show();
-    if (this.reservation$) {
-      this.reservation$.unsubscribe();
-    }
-
-    this.reservation$ = this.reservationService.getReservationByWeekId(this.weekId).
-      pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.reservationList = res.sort((a, b) => {
-          const dateA = new Date(a.dateCreated);
-          const dateB = new Date(b.dateCreated);
-          return dateA > dateB ? 1 : -1;
-        });
-        this.totalSoldPrice = this.calculateTotalPrice('sellingPrice');
-        this.totalPurchasePrice = this.calculateTotalPrice('purchasePrice');
-        this.totalProfit = this.calculateOverAllTotalProfit();
-        this.totalDeductions = this.calculateTotalDeductionsByPercent();
-        this.totalNetProfit = this.calculateTotalNetProfit();
-        this.totalShares = this.weeks[this.weekId - 1].sharers.reduce((total, sharer) => {
-          return total + sharer.shares;
-        }, 0);
+    this.reservationService.getReservationByStatus('Completed')
+      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
+        this.reservations = res;
+        this.setReservationsByWeek();
         this.spinner.hide();
+        this.loading = false;
+      });
+    this.profitService.getsharer()
+      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
+        this.sharers = res;
+        this.totalPercent = res.reduce((total, r) => {
+          return total + r.percent;
+        }, 0);
+
+        this.totalProfitPerShare = res.reduce((total, r) => {
+          return total + this.calculateProfitPerShare(r.percent);
+        }, 0);
+
       });
   }
-  async startNewWeek() {
-    const newWeek = {
-      dateStarte: new Date().toLocaleDateString(),
-      weekId: this.weeks.length + 1,
-      sharers: []
-    };
+
+  setReservationsByWeek() {
     this.spinner.show();
-    await this.weeksService.addWeek(newWeek);
-    this.setReservationsByWeekId();
+    const to = moment(new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day)).add(1, 'days');
+    const from = moment(new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day));
+
+    this.reservationList = this.reservations.filter(r => r.dateUpdated).filter(
+      r => moment(new Date(r.dateUpdated.seconds * 1000)) >= from
+        && moment(new Date(r.dateUpdated.seconds * 1000)) < to).sort((a, b) => {
+          return a.dateUpdated > b.dateUpdated ? 1 : -1;
+        });
+    this.totalSoldPrice = this.calculateTotalPrice('sellingPrice');
+    this.totalPurchasePrice = this.calculateTotalPrice('purchasePrice');
+    this.totalProfit = this.calculateOverAllTotalProfit();
+    this.totalDeductions = this.calculateTotalDeductionsByPercent();
+    this.totalNetProfit = this.calculateTotalNetProfit();
+
     this.spinner.hide();
-    this.toastr.success(`Week ${newWeek.weekId} added!`);
   }
 
   async addSharer() {
-    if (!this.sharer.name || !this.sharer.shares) {
+    if (!this.sharer.name || !this.sharer.percent) {
       return;
     }
-
-    if (this.sharer.shares > 10) {
-      return this.toastr.warning('Maximum 10 shares only!');
+    if ((this.sharer.percent + this.totalPercent) > 100) {
+      return this.toastr.warning('Maximum percent exceeds!');
     }
 
-    this.weeks[this.weekId - 1].sharers.push(this.sharer);
+    this.spinner.show();
+    this.profitService.addSharer(this.sharer);
+    this.spinner.hide();
+    this.close();
     this.sharer = {
       name: null,
-      shares: null
+      percent: null
     };
+  }
+
+  async updateSharer() {
+    if (!this.sharer.name || !this.sharer.percent) {
+      return;
+    }
+    if ((this.sharer.percent + this.totalPercent) > 100) {
+      return this.toastr.warning('Maximum percent exceeds!');
+    }
 
     this.spinner.show();
-    await this.weeksService.updateWeek(this.weeks[this.weekId - 1]);
+    this.profitService.updateSharer(this.sharer);
     this.spinner.hide();
+    this.close();
+    this.sharer = {
+      name: null,
+      percent: null
+    };
+  }
 
-
+  async deleteSharer() {
+    this.spinner.show();
+    this.profitService.removeSharer(this.sharer.id);
+    this.spinner.hide();
     this.close();
   }
 
-  open(content) {
+  openEdit(content, sharer) {
+    this.sharer = sharer;
     this.modalService.open(content, { size: 'sm' }).result.then((result) => {
-      console.log(result);
+      // console.log(result);
     }, (reason) => {
-      console.log(reason);
+      // console.log(reason);
+    });
+  }
+
+  open(content) {
+    this.sharer = {
+      name: null,
+      percent: null
+    };
+    this.modalService.open(content, { size: 'sm' }).result.then((result) => {
+      // console.log(result);
+    }, (reason) => {
+      // console.log(reason);
     });
   }
 
@@ -132,20 +167,6 @@ export class ProfitSharesComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
-  }
-
-  prevWeek() {
-    if (this.weekId !== 1) {
-      this.weekId--;
-      this.setReservationsByWeekId();
-    }
-  }
-
-  nextWeek() {
-    if (this.weekId !== this.weeks.length) {
-      this.weekId++;
-      this.setReservationsByWeekId();
-    }
   }
 
   calculateTotalProfit(sellingPrice, purchasePrice) {
@@ -193,12 +214,45 @@ export class ProfitSharesComponent implements OnInit {
     }, 0);
   }
 
-  calculateProfitPerShare(shares) {
+  calculateProfitPerShare(percent) {
 
-    if (!shares || !this.totalNetProfit || !this.totalShares) {
+    if (!percent || !this.totalNetProfit) {
       return 0;
     }
 
-    return (this.totalNetProfit / this.totalShares) * shares;
+    return (this.totalNetProfit * percent) / 100;
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+
+    if (this.fromDate && this.toDate) {
+      this.setReservationsByWeek();
+    }
+
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 }

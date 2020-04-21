@@ -151,12 +151,6 @@
   </div>
   <div class="modal-body">
     <fieldset class="form-group">
-      <label>Week</label>
-      <select class="form-control" [(ngModel)]="reservation.weekId">
-        <option *ngFor="let week of weeks">{{ week.weekId }}</option>
-      </select>
-    </fieldset>
-    <fieldset class="form-group">
       <label>Name</label>
       <input class="form-control" [(ngModel)]="reservation.name" />
     </fieldset>

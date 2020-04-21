@@ -7,14 +7,14 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProfitService {
-  private weeksCollection: AngularFirestoreCollection<any>;
+  private sharerCollection: AngularFirestoreCollection<any>;
 
-  private weeks: Observable<any[]>;
+  private sharer: Observable<any[]>;
 
   constructor(private db: AngularFirestore) {
-    this.weeksCollection = this.db.collection<any>('weeks');
+    this.sharerCollection = this.db.collection<any>('sharer');
 
-    this.weeks = this.weeksCollection.snapshotChanges().pipe(
+    this.sharer = this.sharerCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();
@@ -25,35 +25,23 @@ export class ProfitService {
     );
   }
 
-  getWeeks() {
-    return this.weeks;
+  getsharer() {
+    return this.sharer;
   }
 
-  getWeekById(id) {
-    return this.weeksCollection.doc<any>(id).valueChanges();
+  getSharerById(id) {
+    return this.sharerCollection.doc<any>(id).valueChanges();
   }
 
-  getWeeksOrderById() {
-    return this.db.collection<any>('weeks', ref => ref.orderBy('weekId', 'asc')).snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
-    );
+  updateSharer(sharer: any) {
+    return this.sharerCollection.doc(sharer.id).update(sharer);
   }
 
-  updateWeek(week: any) {
-    return this.weeksCollection.doc(week.id).update(week);
+  addSharer(sharer: any) {
+    return this.sharerCollection.add(sharer);
   }
 
-  addWeek(week: any) {
-    return this.weeksCollection.add(week);
-  }
-
-  removeWeek(id) {
-    return this.weeksCollection.doc(id).delete();
+  removeSharer(id) {
+    return this.sharerCollection.doc(id).delete();
   }
 }

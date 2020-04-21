@@ -7,6 +7,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ToastrService } from 'ngx-toastr';
 import { ShippingFeeService, ShippingFee } from 'src/app/shared/services/shipping-fee.service';
+import * as moment from 'moment';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -53,6 +54,7 @@ export class ViewReservationComponent implements OnInit {
 
       this.reservationService.getReservation(params.id).subscribe(reservation => {
         this.reservation = reservation;
+        console.log(moment(new Date(this.reservation.dateUpdated.seconds * 1000)).format());
         this.reservation.id = params.id;
         if (this.reservation.zone == null) {
           this.reservation.zone = 1;
@@ -65,6 +67,9 @@ export class ViewReservationComponent implements OnInit {
         }
         if (this.reservation.dateCreated == null) {
           this.reservation.dateCreated = new Date().toDateString();
+        }
+        if (this.reservation.previousBalance == null) {
+          this.reservation.previousBalance = 0;
         }
         this.spinner.hide();
         this.loading = false;
@@ -82,8 +87,9 @@ export class ViewReservationComponent implements OnInit {
 
   updateReservation() {
     this.spinner.show();
+    this.reservation.dateUpdated = new Date();
     this.reservationService.updateReservation(this.reservation).then(() => {
-      this.toastr.success('Reservation updated!');
+      // this.toastr.success('Reservation updated!');
       this.spinner.hide();
     });
   }
@@ -126,9 +132,9 @@ export class ViewReservationComponent implements OnInit {
       weight = 12000;
     }
 
-    if(this.reservation.zone == 5){
+    if (this.reservation.zone == 5) {
       this.reservation.shippingFee = 0;
-    }else{
+    } else {
       const amount = this.activeZone.find(sf => weight <= sf.max).amount;
       this.reservation.shippingFee = amount;
 
@@ -633,15 +639,5 @@ export class ViewReservationComponent implements OnInit {
   ngOnDestroy() {
     this.updateReservation();
   }
-
-  showModeOfPayment() {
-    console.log(this.reservation.status);
-    this.spinner.show();
-    this.reservationService.updateReservation(this.reservation).then(() => {
-      this.toastr.success('Reservation updated!');
-      this.spinner.hide();
-    });
-  }
-
 
 }

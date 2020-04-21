@@ -22,7 +22,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class InventoryComponent implements OnInit {
   private destroyed$ = new Subject();
   search = '';
-  weeks: any[];
   reservationList: Reservation[];
   reservation: Reservation = {
     qty: 0,
@@ -47,7 +46,6 @@ export class InventoryComponent implements OnInit {
     private productService: ProductService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private weeksService: ProfitService
   ) { }
 
   open(content) {
@@ -80,10 +78,6 @@ export class InventoryComponent implements OnInit {
     this.productService.getproducts().pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this.productList = res;
       this.spinner.hide();
-    });
-    this.weeksService.getWeeks().pipe(takeUntil(this.destroyed$)).subscribe(weeks => {
-      this.weeks = weeks;
-      this.reservation.weekId = weeks.length;
     });
   }
 
