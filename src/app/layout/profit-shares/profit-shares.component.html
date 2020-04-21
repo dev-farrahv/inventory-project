@@ -14,11 +14,11 @@
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
     </button>
     <h4 class="m-0">Week {{ weekId }}</h4>
-    <button class="btn bg-transparent" (click)="nestWeek()">
+    <button class="btn bg-transparent" (click)="nextWeek()">
       <i class="fa fa-chevron-right" aria-hidden="true"></i>
     </button>
   </div>
-  <div class="card bg-transparent table-div">
+  <div class="card bg-transparent mb-3">
     <table class="card-body table table-hover">
       <thead class="bg-pink">
         <tr>
@@ -36,7 +36,7 @@
       <tbody *ngIf="!reservationList || reservationList.length == 0">
         <tr>
           <td colspan="13" class="text-center">
-            {{ loading ? 'Loading ...' : 'No Record' }}
+            {{ loading ? 'Loading ...' : 'No Completed Record' }}
           </td>
         </tr>
       </tbody>
@@ -69,7 +69,8 @@
           </td>
         </tr>
       </tbody>
-      <tfoot>
+
+      <tfoot class="bg-pink">
         <th></th>
         <th></th>
         <th></th>
@@ -82,7 +83,90 @@
       </tfoot>
     </table>
   </div>
+
+  <div
+    class="p-2 d-flex justify-content-between align-items-center bg-transparent"
+  >
+    <h4 class="m-0">Sharers</h4>
+
+    <button class="btn bg-dark-pink text-white" (click)="open(add)">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add Sharer
+    </button>
+  </div>
+  <div class="card bg-transparent">
+    <table class="card-body table table-hover">
+      <thead class="bg-pink">
+        <tr>
+          <th>Sharer Name</th>
+          <th>Share</th>
+          <th class="text-center">ROI plus Profit per Sharer</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="weeks[weekId - 1]?.sharers.length == 0">
+        <tr>
+          <td colspan="13" class="text-center">
+            {{ loading ? 'Loading ...' : 'No sharer added Record' }}
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="weeks[weekId - 1]">
+        <tr *ngFor="let sharer of weeks[weekId - 1]?.sharers">
+          <td>{{ sharer.name }}</td>
+          <td>{{ sharer.shares }}</td>
+          <td class="text-center">
+            {{ calculateProfitPerShare(sharer.shares) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<!-- Reserve Modal -->
+
+<ng-template #add let-c="close" let-d="dismiss">
+  <div class="modal-header bg-pink">
+    <h4 class="modal-title">Add Sharer</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fieldset class="form-group">
+      <label>Sharer Name</label>
+      <input
+        class="form-control bg-transparent"
+        type="text"
+        [(ngModel)]="sharer.name"
+      />
+    </fieldset>
+    <fieldset class="form-group">
+      <label>Shares</label>
+      <input
+        class="form-control bg-transparent"
+        type="number"
+        [(ngModel)]="sharer.shares"
+      />
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn bg-dark-pink text-white"
+      (click)="addSharer()"
+    >
+      Add
+    </button>
+  </div>
+</ng-template>
 
 <ngx-spinner
   bdColor="rgba(0,0,0,0.2)"

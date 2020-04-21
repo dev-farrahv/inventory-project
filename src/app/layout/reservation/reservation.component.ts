@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
@@ -15,6 +18,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   animations: [routerTransition()]
 })
 export class ReservationComponent implements OnInit {
+  private destroyed$ = new Subject();
   search = '';
   reservationList: Reservation[];
   printList = [];
@@ -28,11 +32,18 @@ export class ReservationComponent implements OnInit {
     continent: []
   };
 
-  constructor(private reservationService: ReservationService, private shippingService: ShippingFeeService, public router: Router) { }
+  constructor(
+    private reservationService: ReservationService,
+    private shippingService: ShippingFeeService,
+    public router: Router,
+    private spinner: NgxSpinnerService
+  ) { }
 
   ngOnInit() {
-    this.reservationService.getreservations().subscribe(res => {
+    this.spinner.show();
+    this.reservationService.getreservations().pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this.reservationList = res.filter(reservation => reservation.status !== 'Canceled');
+      this.spinner.hide();
     });
   }
 
@@ -287,6 +298,12 @@ export class ReservationComponent implements OnInit {
       });
     });
 
+  }
+
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
 }

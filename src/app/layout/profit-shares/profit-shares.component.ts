@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfitSharesComponent implements OnInit {
   private destroyed$ = new Subject();
-  weeks: any[];
+  weeks: any[] = [];
   week: any;
   reservationList: Reservation[];
   weekId: number;
@@ -28,6 +28,11 @@ export class ProfitSharesComponent implements OnInit {
   totalProfit: number;
   totalDeductions: number;
   totalNetProfit: number;
+  totalShares = 0;
+  sharer = {
+    name: null,
+    shares: null
+  };
 
   constructor(
     private modalService: NgbModal,
@@ -40,9 +45,11 @@ export class ProfitSharesComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.spinner.show();
-    this.weeksService.getWeeks().pipe(takeUntil(this.destroyed$)).subscribe(weeks => {
+    this.weeksService.getWeeksOrderById().pipe(takeUntil(this.destroyed$)).subscribe(weeks => {
       this.weeks = weeks;
       this.weekId = weeks.length;
+      this.week = this.weeks[this.weekId - 1];
+
       this.spinner.hide();
       this.setReservationsByWeekId();
       this.loading = false;
@@ -54,11 +61,10 @@ export class ProfitSharesComponent implements OnInit {
     if (this.reservation$) {
       this.reservation$.unsubscribe();
     }
-    console.log(this.weekId);
 
     this.reservation$ = this.reservationService.getReservationByWeekId(this.weekId).
       pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.reservationList = res.filter(reservation => reservation.status !== 'Canceled').sort((a, b) => {
+        this.reservationList = res.sort((a, b) => {
           const dateA = new Date(a.dateCreated);
           const dateB = new Date(b.dateCreated);
           return dateA > dateB ? 1 : -1;
@@ -68,6 +74,9 @@ export class ProfitSharesComponent implements OnInit {
         this.totalProfit = this.calculateOverAllTotalProfit();
         this.totalDeductions = this.calculateTotalDeductionsByPercent();
         this.totalNetProfit = this.calculateTotalNetProfit();
+        this.totalShares = this.weeks[this.weekId - 1].sharers.reduce((total, sharer) => {
+          return total + sharer.shares;
+        }, 0);
         this.spinner.hide();
       });
   }
@@ -78,8 +87,39 @@ export class ProfitSharesComponent implements OnInit {
     };
     this.spinner.show();
     await this.weeksService.addWeek(newWeek);
+    this.setReservationsByWeekId();
     this.spinner.hide();
     this.toastr.success(`Week ${newWeek.weekId} added!`)
+  }
+
+  async addSharer() {
+    if (!this.sharer.name || !this.sharer.shares) {
+      return;
+    }
+    this.weeks[this.weekId - 1].sharers.push(this.sharer);
+    this.sharer = {
+      name: null,
+      shares: null
+    };
+
+    this.spinner.show();
+    await this.weeksService.updateWeek(this.weeks[this.weekId - 1]);
+    this.spinner.hide();
+
+
+    this.close();
+  }
+
+  open(content) {
+    this.modalService.open(content, { size: 'sm' }).result.then((result) => {
+      console.log(result);
+    }, (reason) => {
+      console.log(reason);
+    });
+  }
+
+  close() {
+    this.modalService.dismissAll();
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
@@ -95,7 +135,7 @@ export class ProfitSharesComponent implements OnInit {
     }
   }
 
-  nestWeek() {
+  nextWeek() {
     if (this.weekId !== this.weeks.length) {
       this.weekId++;
       this.setReservationsByWeekId();
@@ -145,5 +185,14 @@ export class ProfitSharesComponent implements OnInit {
       }, 0);
       return totalPrice + amount;
     }, 0);
+  }
+
+  calculateProfitPerShare(shares) {
+
+    if (!shares || !this.totalNetProfit || !this.totalShares) {
+      return 0;
+    }
+
+    return (this.totalNetProfit / this.totalShares) * shares;
   }
 }

@@ -57,7 +57,7 @@ export class ReservationService {
   }
 
   getReservationByWeekId(weekId) {
-    return this.db.collection<Reservation>('reservations', ref => ref.where('weekId', '==', weekId)).snapshotChanges().pipe(
+    return this.db.collection<Reservation>('reservations', ref => ref.where('status', '==', 'Completed').where('weekId', '==', weekId)).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();

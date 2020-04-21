@@ -33,6 +33,18 @@ export class ProfitService {
     return this.weeksCollection.doc<any>(id).valueChanges();
   }
 
+  getWeeksOrderById() {
+    return this.db.collection<any>('weeks', ref => ref.orderBy('weekId', 'asc')).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
   updateWeek(week: any) {
     return this.weeksCollection.doc(week.id).update(week);
   }

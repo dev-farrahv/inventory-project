@@ -36,7 +36,10 @@
           <td class="sm-hidden">{{ item.totalPrice }}</td>
           <td>{{ item.status }}</td>
           <td>
-            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" (click)="printPdf(item)">
+            <button
+              class="btn bg-dark-pink text-white btn-sm rounded-circle"
+              (click)="printPdf(item)"
+            >
               <i class="fa fa-print" aria-hidden="true"></i>
             </button>
           </td>
@@ -45,3 +48,11 @@
     </table>
   </div>
 </div>
+
+<ngx-spinner
+  bdColor="rgba(0,0,0,0.2)"
+  size="default"
+  color="#fff"
+  type="ball-atom"
+  [fullScreen]="true"
+></ngx-spinner>
