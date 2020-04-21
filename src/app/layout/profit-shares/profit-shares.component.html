@@ -22,7 +22,7 @@
     <table class="card-body table table-hover">
       <thead class="bg-pink">
         <tr>
-          <th>Date Reserved</th>
+          <th>Reference Number</th>
           <th>Customer Name</th>
           <th>Product Name</th>
           <th>Sold Price</th>
@@ -42,7 +42,7 @@
       </tbody>
       <tbody *ngFor="let reservation of reservationList">
         <tr *ngFor="let product of reservation.products">
-          <td>{{ reservation.dateCreated }}</td>
+          <td>{{ reservation.referenceNumber }}</td>
           <td>{{ reservation.name }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.sellingPrice | number }}</td>

@@ -2,10 +2,7 @@
   <div class="px-3 d-flex justify-content-between">
     <h2>Earning Report</h2>
     <div class="d-flex p-2">
-      <button
-        class="btn bg-dark-pink text-white"
-        (click)="open(delete)"
-      >
+      <button class="btn bg-dark-pink text-white" (click)="open(delete)">
         <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Start A Week
       </button>
     </div>
@@ -13,12 +10,7 @@
   <div class="p-2 d-flex justify-content-between bg-transparent border-0">
     <div>
       <i class="fa fa-search mr-2" aria-hidden="true"></i>
-      <input
-        type="text"
-        class="px-2 search-input"
-        placeholder="Search..."
-        [(ngModel)]="search"
-      />
+      <input type="text" class="px-2 search-input" placeholder="Search..." />
     </div>
   </div>
   <div class="card mb-3 bg-transparent">
@@ -41,7 +33,7 @@
           <td>April 14, 2020</td>
           <td>On Going</td>
           <td>
-            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle">
               <i class="fa fa-print" aria-hidden="true"></i>
             </button>
           </td>
@@ -53,7 +45,7 @@
           <td>April 7, 2020</td>
           <td>Completed</td>
           <td>
-            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle">
               <i class="fa fa-print" aria-hidden="true"></i>
             </button>
           </td>
@@ -65,7 +57,7 @@
           <td>April 1, 2020</td>
           <td>Completed</td>
           <td>
-            <button class="btn bg-dark-pink text-white btn-sm rounded-circle" >
+            <button class="btn bg-dark-pink text-white btn-sm rounded-circle">
               <i class="fa fa-print" aria-hidden="true"></i>
             </button>
           </td>
@@ -94,19 +86,13 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Start Date</label>
-          <input
-            class="form-control bg-transparent"
-            type="datetime"
-          />
+          <input class="form-control bg-transparent" type="datetime" />
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>End Date</label>
-          <input
-            class="form-control bg-transparent"
-            type="text"
-          />
+          <input class="form-control bg-transparent" type="text" />
         </fieldset>
       </div>
     </div>
@@ -115,10 +101,7 @@
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">
       Cancel
     </button>
-    <button
-      type="button"
-      class="btn btn-danger"
-    >
+    <button type="button" class="btn btn-danger">
       Start / End
     </button>
   </div>
