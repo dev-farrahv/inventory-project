@@ -167,6 +167,7 @@
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.modeOfPayment"
+            (change)="updateReservation()"
           />
         </fieldset>
       </div>

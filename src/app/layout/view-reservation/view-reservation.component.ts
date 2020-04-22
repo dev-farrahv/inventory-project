@@ -636,8 +636,4 @@ export class ViewReservationComponent implements OnInit {
 
     pdfMake.createPdf(docDefinition).open();
   }
-  ngOnDestroy() {
-    this.updateReservation();
-  }
-
 }
