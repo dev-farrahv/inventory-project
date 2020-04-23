@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { ExportToCsv } from 'export-to-csv';
 
 @Component({
   selector: 'app-profit-shares',
@@ -39,6 +40,8 @@ export class ProfitSharesComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
   totalPercent = 0;
   totalProfitPerShare = 0;
+  csvProducts: any;
+  csvSharer: any;
 
   constructor(
     private modalService: NgbModal,
@@ -254,5 +257,74 @@ export class ProfitSharesComponent implements OnInit {
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  generateCsv(){
+    console.log(this.reservationList);
+    this.csvProducts = [];
+    this.csvSharer = [];
+    
+    this.reservationList.forEach((reservation, r) => {
+      reservation.products.forEach((product, p) => {
+        this.csvProducts.push({
+          col1: reservation.referenceNumber,
+          col2: reservation.name,
+          col3: product.name,
+          col4: product.sellingPrice,
+          col5: product.purchasePrice,
+          col6: this.calculateTotalProfit(product.sellingPrice, product.purchasePrice),
+          col7: this.calculateDeductionsByPercent(product.sellingPrice,product.purchasePrice),
+          col8: this.calculateNetProfit(product.sellingPrice, product.purchasePrice),
+        });
+      });
+    });
+    
+    // footer total
+    this.csvProducts.push({
+      col1: '',
+      col2: '',
+      col3: '',
+      col4: this.totalSoldPrice,
+      col5: this.totalPurchasePrice,
+      col6: this.totalProfit,
+      col7: this.totalDeductions,
+      col8: this.totalNetProfit,
+    });
+    
+    //for sharer table
+    this.csvSharer = [{col1: '',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''}, {col1: '',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''},
+                      {col1: 'SHARERS',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''}];
+    this.sharers.forEach((sharer, p) => {
+      this.csvSharer.push({
+        col1: sharer.name,
+        col2: sharer.percent,
+        col3: this.calculateProfitPerShare(sharer.percent),
+        col4: '',
+        col5: '',
+        col6: '',
+        col7: '',
+        col8: '',
+      });
+    });
+    
+    var data = [ ... this.csvProducts, ... this.csvSharer];
+
+    const options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: '2nd Bags and Clothing co.',
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: false,
+      headers: ['Reference Number', 'Customer Name', 'Product Name', 'Sold Price', 'Purchase Price', 'Total Profit', '-30% Profit', 'Net Profit']
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+     
+    const csvExporter = new ExportToCsv(options);
+     
+    csvExporter.generateCsv(data);
   }
 }

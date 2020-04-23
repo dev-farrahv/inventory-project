@@ -54,7 +54,7 @@ export class ViewReservationComponent implements OnInit {
 
       this.reservationService.getReservation(params.id).subscribe(reservation => {
         this.reservation = reservation;
-        console.log(moment(new Date(this.reservation.dateUpdated.seconds * 1000)).format());
+        //console.log(moment(new Date(this.reservation.dateUpdated.seconds * 1000)).format());
         this.reservation.id = params.id;
         if (this.reservation.zone == null) {
           this.reservation.zone = 1;

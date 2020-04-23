@@ -29,6 +29,7 @@
     "acorn": "6.1.0",
     "chart.js": "2.7.3",
     "core-js": "2.5.7",
+    "export-to-csv": "^0.2.1",
     "firebase": "^7.11.0",
     "firebase-admin": "^8.10.0",
     "font-awesome": "4.7.0",
