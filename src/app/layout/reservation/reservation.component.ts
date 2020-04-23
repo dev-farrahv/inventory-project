@@ -94,7 +94,7 @@ export class ReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: 'PACKING SLIP \n',
+          text: 'INVOICE \n',
           style: 'header',
           alignment: 'center'
         },
