@@ -10,6 +10,7 @@ export const environment = {
   //   appId: "1:822754006392:web:acf6d2bdca99103e72248d",
   //   measurementId: "G-TQDWNVKY2B"
   // },
+  // baseUrl: 'http://2nd-inventory.s3-website.us-east-2.amazonaws.com'
   firebase: {
     apiKey: "AIzaSyBksI7tWJcu7qeMPtgbYtpHi7QTBJVuf9Q",
     authDomain: "project-inventory-dev.firebaseapp.com",
@@ -19,5 +20,6 @@ export const environment = {
     messagingSenderId: "290692590739",
     appId: "1:290692590739:web:abd2f2d549c7fd5e443166",
     measurementId: "G-P1B8GRRX7F"
-  }
+  },
+  baseUrl: 'http://2nd-development.s3-website.us-east-2.amazonaws.com'
 };

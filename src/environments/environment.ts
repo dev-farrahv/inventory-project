@@ -23,7 +23,9 @@ export const environment = {
     messagingSenderId: "290692590739",
     appId: "1:290692590739:web:abd2f2d549c7fd5e443166",
     measurementId: "G-P1B8GRRX7F"
-  }
+  },
+  baseUrl: 'http://localhost:4200'
+  // baseUrl: 'http://2nd-development.s3-website.us-east-2.amazonaws.com'
 };
 
 
