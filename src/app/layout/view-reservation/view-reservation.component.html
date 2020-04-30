@@ -1,13 +1,16 @@
 <div class="main">
   <div class="px-3 d-flex justify-content-between">
     <h2>Reservations</h2>
-    <div class="d-flex p-2">
-      <button
-        class="btn bg-dark-pink text-white"
-        (click)="printInvoicePdf(reservation)"
-      >
-        <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Invoice
-      </button>
+    <div class="d-flex p-4">
+      <div class="col" style="margin-right: 20px;">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-danger" id="dropdownBasic1"  ngbDropdownToggle> <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="printInvoicePdf(reservation, 1)" ngbDropdownItem>Invoice</button>
+            <button (click)="printInvoicePdf(reservation, 2)" ngbDropdownItem>Packing Slip</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <hr />

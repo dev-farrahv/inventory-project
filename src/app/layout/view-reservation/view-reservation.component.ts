@@ -34,9 +34,9 @@ export class ViewReservationComponent implements OnInit {
   printList: any[];
   showDiscountInvoice: any[];
   shippingFees: ShippingFee[];
-
   activeZone: ShippingFee[];
   loading = true;
+  printHeaderVal = '';
 
   constructor(
     public router: Router,
@@ -296,7 +296,7 @@ export class ViewReservationComponent implements OnInit {
     pdfMake.createPdf(docDefinition).open();
   }
 
-  async printInvoicePdf(item) {
+  async printInvoicePdf(item, printType) {
     const dateToday = new Date();
     this.printList = [];
     const rowsHeader = [
@@ -316,11 +316,15 @@ export class ViewReservationComponent implements OnInit {
     if (item.discount != 0) {
       this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
     }
+    
+    if(printType == 1){
+      this.printHeaderVal = 'INVOICE';
+    }else{ this.printHeaderVal = 'Packing Slip'; }
 
     const docDefinition = {
       content: [
         {
-          text: 'INVOICE \n',
+          text: this.printHeaderVal +' \n',
           style: 'header',
           alignment: 'center'
         },
@@ -333,11 +337,27 @@ export class ViewReservationComponent implements OnInit {
               width: 'auto',
             },
             {
+              style: 'invoiceNumberStyle',
+              table: {
+                widths: [100,100],
+                body: [
+                  [{text: 'Invoice # ', alignment: 'left'}, item.referenceNumber.replace("RN", "2i")],
+                  [{text: 'Date ', alignment: 'left'}, new Date().toDateString()],
+                  [{text: 'Due Date ', alignment: 'left'}, new Date().toDateString()],
+                ]
+              }
+            },
+          ]
+        },
+        {
+          alignment: 'justify',
+          columns: [
+            {
               width: 'auto',
               stack: [
                 {
                   text: [
-                    { text: '   2Nd \n', fontSize: 15, bold: true },
+                    { text: '2Nd \n', fontSize: 15, bold: true },
                     'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
                     'OGURISU KITA GOTO CHO 1-9-103 \n',
                     'KYOTO, \n',
@@ -404,7 +424,8 @@ export class ViewReservationComponent implements OnInit {
                     {
                       text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. " +
                         "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
-                        "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED"
+                        "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n" +
+                        "It takes 3 days for the bank to process the payment transaction.",
                     }
                   ]
                 }],
@@ -489,7 +510,7 @@ export class ViewReservationComponent implements OnInit {
           color: 'black',
         },
         superMargin: {
-          margin: [10, 10, 10, 10],
+          margin: [0, 10, 10, 10],
           fontSize: 9
         },
         modeOfPaymentMargin: {
@@ -508,6 +529,11 @@ export class ViewReservationComponent implements OnInit {
         termsAndCondition: {
           fontSize: 12,
           margin: [10, 10, 10, 10],
+        },
+        invoiceNumberStyle:{
+          fontSize: 10,
+          alignment: 'right',
+          margin: [200, 10, 10, 10],
         }
       }
     };
