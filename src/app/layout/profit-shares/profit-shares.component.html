@@ -195,7 +195,7 @@
         </tr>
         <tr *ngFor="let sharer of sharers" (dblclick)="openEdit(edit, sharer)">
           <td>{{ sharer.name }}</td>
-          <td>{{ sharer.percent }}</td>
+          <td>{{ sharer.percent }} %</td>
           <td class="text-center">
             {{ calculateProfitPerShare(sharer.percent) }}
           </td>
@@ -203,7 +203,7 @@
       </tbody>
       <tfoot class="bg-pink">
         <th>Total</th>
-        <th>{{ totalPercent }}</th>
+        <th>{{ totalPercent }} %</th>
         <th class="text-center">{{ totalProfitPerShare }}</th>
       </tfoot>
     </table>
