@@ -137,10 +137,11 @@
           <label>Status</label>
           <select
             [(ngModel)]="reservation.status"
-            class="text-dark w-100 bg-transparent form-control"
+            class="text-dark w-100 bg-pink form-control"
             (change)="updateReservation()"
           >
             <option value="Pending">Pending</option>
+            <option value="Paid">Paid</option>
             <option value="For Shipment">For Shipment</option>
             <option value="Completed">Completed</option>
             <option value="Canceled">Canceled</option>

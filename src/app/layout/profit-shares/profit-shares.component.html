@@ -81,7 +81,7 @@
         </div>
       </div>
       <button class="btn bg-dark-pink text-white" (click)="generateCsv()">
-        <i class="fa fa-plus" aria-hidden="true"></i> Generate Csv
+        <i class="fa fa-download" aria-hidden="true"></i> Download CSV
       </button>
     </form>
   </div>
@@ -108,6 +108,7 @@
           <th>Total Profit</th>
           <th>-30% Profit</th>
           <th>Net Profit</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody *ngIf="!reservationList || reservationList.length == 0">
@@ -119,7 +120,11 @@
       </tbody>
       <tbody *ngFor="let reservation of reservationList">
         <tr *ngFor="let product of reservation.products">
-          <td>{{ reservation.referenceNumber }}</td>
+          <td>
+            <a [href]="getUrl(reservation.id)" target="_blank">{{
+              reservation.referenceNumber
+            }}</a>
+          </td>
           <td>{{ reservation.name }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.sellingPrice | number }}</td>
@@ -144,6 +149,9 @@
                 | number
             }}
           </td>
+          <td>
+            {{ reservation.status }}
+          </td>
         </tr>
       </tbody>
 
@@ -156,6 +164,7 @@
         <th>{{ totalProfit }}</th>
         <th>{{ totalDeductions }}</th>
         <th>{{ totalNetProfit }}</th>
+        <th></th>
       </tfoot>
     </table>
   </div>

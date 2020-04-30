@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { ExportToCsv } from 'export-to-csv';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profit-shares',
@@ -42,6 +43,7 @@ export class ProfitSharesComponent implements OnInit {
   totalProfitPerShare = 0;
   csvProducts: any;
   csvSharer: any;
+  baseUrl: string;
 
   constructor(
     private modalService: NgbModal,
@@ -54,13 +56,14 @@ export class ProfitSharesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.baseUrl = environment.baseUrl;
     this.toDate = this.calendar.getToday();
     this.fromDate = this.calendar.getPrev(this.calendar.getToday(), 'd', 7);
     this.loading = true;
     this.spinner.show();
-    this.reservationService.getReservationByStatus('Completed')
+    this.reservationService.getreservations()
       .pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.reservations = res;
+        this.reservations = res.filter(r => r.status !== 'Canceled' && r.status !== 'Pending');
         this.setReservationsByWeek();
         this.spinner.hide();
         this.loading = false;
@@ -259,11 +262,11 @@ export class ProfitSharesComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
-  generateCsv(){
+  generateCsv() {
     console.log(this.reservationList);
     this.csvProducts = [];
     this.csvSharer = [];
-    
+
     this.reservationList.forEach((reservation, r) => {
       reservation.products.forEach((product, p) => {
         this.csvProducts.push({
@@ -273,12 +276,12 @@ export class ProfitSharesComponent implements OnInit {
           col4: product.sellingPrice,
           col5: product.purchasePrice,
           col6: this.calculateTotalProfit(product.sellingPrice, product.purchasePrice),
-          col7: this.calculateDeductionsByPercent(product.sellingPrice,product.purchasePrice),
+          col7: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice),
           col8: this.calculateNetProfit(product.sellingPrice, product.purchasePrice),
         });
       });
     });
-    
+
     // footer total
     this.csvProducts.push({
       col1: '',
@@ -290,10 +293,13 @@ export class ProfitSharesComponent implements OnInit {
       col7: this.totalDeductions,
       col8: this.totalNetProfit,
     });
-    
-    //for sharer table
-    this.csvSharer = [{col1: '',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''}, {col1: '',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''},
-                      {col1: 'SHARERS',col2: '',col3: '',col4: '',col5: '',col6: '',col7: '',col8: ''}];
+
+    // for Sharer table
+    this.csvSharer = [
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' },
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' },
+      { col1: 'SHARERS', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' }];
+
     this.sharers.forEach((sharer, p) => {
       this.csvSharer.push({
         col1: sharer.name,
@@ -306,25 +312,37 @@ export class ProfitSharesComponent implements OnInit {
         col8: '',
       });
     });
-    
-    var data = [ ... this.csvProducts, ... this.csvSharer];
 
-    const options = { 
+    const data = [... this.csvProducts, ... this.csvSharer];
+
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalSeparator: '.',
-      showLabels: true, 
+      showLabels: true,
       showTitle: true,
       title: '2nd Bags and Clothing co.',
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: false,
-      headers: ['Reference Number', 'Customer Name', 'Product Name', 'Sold Price', 'Purchase Price', 'Total Profit', '-30% Profit', 'Net Profit']
+      headers: [
+        'Reference Number',
+        'Customer Name',
+        'Product Name',
+        'Sold Price',
+        'Purchase Price',
+        'Total Profit',
+        '-30% Profit',
+        'Net Profit']
       // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
     };
-     
+
     const csvExporter = new ExportToCsv(options);
-     
+
     csvExporter.generateCsv(data);
+  }
+
+  getUrl(id) {
+    return `${this.baseUrl}/view-reservation;id=${id}`;
   }
 }

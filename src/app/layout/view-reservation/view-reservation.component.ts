@@ -43,6 +43,7 @@ export class ViewReservationComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
     private reservationService: ReservationService,
+    private productService: ProductService,
     private toastr: ToastrService,
     private shippingService: ShippingFeeService
   ) {
@@ -54,7 +55,6 @@ export class ViewReservationComponent implements OnInit {
 
       this.reservationService.getReservation(params.id).subscribe(reservation => {
         this.reservation = reservation;
-        //console.log(moment(new Date(this.reservation.dateUpdated.seconds * 1000)).format());
         this.reservation.id = params.id;
         if (this.reservation.zone == null) {
           this.reservation.zone = 1;
@@ -89,7 +89,17 @@ export class ViewReservationComponent implements OnInit {
     this.spinner.show();
     this.reservation.dateUpdated = new Date();
     this.reservationService.updateReservation(this.reservation).then(() => {
-      // this.toastr.success('Reservation updated!');
+      // this.toastr.success('Reservation updated!')
+      const status = this.reservation.status === 'Pending' ? 1
+        : this.reservation.status === 'Paid' ? 2
+          : this.reservation.status === 'For Shipment' ? 3
+            : this.reservation.status === 'Completed' ? 4 : 0;
+      this.reservation.products.forEach(async product => {
+        product.status = status;
+        product.isSelected = false;
+        product.rn = this.reservation.referenceNumber;
+        await this.productService.updateProduct(product);
+      });
       this.spinner.hide();
     });
   }

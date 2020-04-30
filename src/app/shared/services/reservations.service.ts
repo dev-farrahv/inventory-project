@@ -69,6 +69,18 @@ export class ReservationService {
     );
   }
 
+  getReservationByRN(rn) {
+    return this.db.collection<Reservation>('reservations', ref => ref.where('referenceNumber', '==', rn)).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
   getReservationByStatus(status) {
     return this.db.collection<Reservation>('reservations',
       ref => ref.where('status', '==', status)).snapshotChanges().pipe(

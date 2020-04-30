@@ -9,7 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ProfitService } from 'src/app/shared/services/profit.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -33,6 +33,7 @@ export class InventoryComponent implements OnInit {
     totalPrice: 0,
     products: []
   };
+
 
   productList: Product[];
 
@@ -75,8 +76,15 @@ export class InventoryComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.productService.getproducts().pipe(takeUntil(this.destroyed$)).subscribe(res => {
+    this.productService.getAvailableProducts().pipe(takeUntil(this.destroyed$)).subscribe(res => {
       this.productList = res;
+      if (res.some(r => r.status == null)) {
+        const nostatus = res.filter(r => r.status == null);
+        nostatus.forEach(async product => {
+          product.status = 0;
+          await this.productService.updateProduct(product);
+        });
+      }
       this.spinner.hide();
     });
   }
@@ -97,6 +105,13 @@ export class InventoryComponent implements OnInit {
     this.reservation.totalWeight = 0;
     this.reservation.discount = 0;
     this.reservation.dateCreated = new Date().toDateString();
+    this.productList.filter(item => item.isSelected).forEach(async product => {
+
+      product.status = 1;
+      product.isSelected = false;
+      product.rn = this.reservation.referenceNumber;
+      await this.productService.updateProduct(product);
+    });
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
 
@@ -117,6 +132,15 @@ export class InventoryComponent implements OnInit {
       product.isSelected = false;
     });
   }
+
+  goToRerevation(rn) {
+    console.log(rn);
+
+    this.reservationService.getReservationByRN(rn).pipe(take(1)).subscribe(reservation => {
+      this.router.navigate(['/view-reservation', { id: reservation[0].id }]);
+    });
+  }
+
 
 
   getBase64ImageFromURL(url) {
@@ -246,3 +270,12 @@ export class InventoryComponent implements OnInit {
     this.destroyed$.complete();
   }
 }
+
+
+// Status value
+
+// 0 = new
+// 1 = reserved
+// 2 = paid
+// 3 = for shipping
+// 4 = completed
