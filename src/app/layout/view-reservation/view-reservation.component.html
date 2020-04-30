@@ -161,9 +161,9 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="reservation.status == 'Completed'">
+    <div class="row" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'  ">
       <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group" *ngIf="reservation.status == 'Completed'">
+        <fieldset class="form-group" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'">
           <label>Mode Of Payment</label>
           <input
             class="form-control bg-transparent"
