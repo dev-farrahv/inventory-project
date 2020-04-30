@@ -35,7 +35,8 @@ export class AddProductsComponent implements OnInit {
     itemCode: '',
     image: 'assets/images/empty.png',
     weight: 0,
-    status: 0
+    status: 0,
+    biddingCode: '',
   };
   closeResult: string;
   imageFileCompressed: any = null;

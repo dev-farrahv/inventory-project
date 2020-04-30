@@ -82,7 +82,7 @@
           </div>
           <div class="col-md-6 col-lg-6 col-xl-6">
             <fieldset class="form-group">
-              <label>Bidding Number</label>
+              <label>Serial Number</label>
               <input
                 class=" bg-transparent form-control"
                 [(ngModel)]="product.serialNumber"
@@ -118,6 +118,15 @@
               <input
                 class=" bg-transparent form-control"
                 [(ngModel)]="product.color"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Bidding Code</label>
+              <input
+                class=" bg-transparent form-control"
+                [(ngModel)]="product.biddingCode"
               />
             </fieldset>
           </div>

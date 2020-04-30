@@ -25,6 +25,7 @@ export interface Product {
   rn?: string;
   dateCreated?: Date;
   dateUpdated?: Date;
+  biddingCode?: string;
 }
 
 @Injectable({
