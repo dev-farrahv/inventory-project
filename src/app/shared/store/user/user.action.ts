@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { User } from 'src/app/models/user.model';
+import { User } from './user.model';
 
 export enum UserActionTypes {
   SetUser = '[User] Set user',
