@@ -1,6 +1,11 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Store, select } from '@ngrx/store';
+import { RootState, selectUser } from 'src/app/shared/store';
+import { SetUser } from 'src/app/shared/store/user/user.action';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/shared/store/user/user.model';
 
 @Component({
     selector: 'app-sidebar',
@@ -8,6 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+    user$: Observable<User>;
+    user: User;
     isActive: boolean;
     collapsed: boolean;
     showMenu: string;
@@ -15,7 +22,7 @@ export class SidebarComponent implements OnInit {
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(private translate: TranslateService, public router: Router) {
+    constructor(private translate: TranslateService, public router: Router, private store: Store<RootState>) {
         this.router.events.subscribe(val => {
             if (
                 val instanceof NavigationEnd &&
@@ -32,6 +39,10 @@ export class SidebarComponent implements OnInit {
         this.collapsed = false;
         this.showMenu = '';
         this.pushRightClass = 'push-right';
+        this.user$ = this.store.pipe(select(selectUser));
+        this.user$.subscribe(user => {
+            this.user = user;
+        });
     }
 
 
@@ -72,7 +83,9 @@ export class SidebarComponent implements OnInit {
     }
 
     onLoggedout() {
-        localStorage.removeItem('isLoggedin');
+        sessionStorage.removeItem('isLoggedin');
         this.router.navigate(['/login']);
+        this.store.dispatch(new SetUser(null));
+
     }
 }

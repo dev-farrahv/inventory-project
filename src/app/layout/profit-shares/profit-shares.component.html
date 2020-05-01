@@ -106,7 +106,21 @@
           <th>Purchase Price</th>
           <th>Sold Price</th>
           <th>Total Profit</th>
-          <th>-30% Profit</th>
+          <th>
+            -{{ deductionPercent }}% Profit
+            <i
+              class="fa fa-arrow-up"
+              aria-hidden="true"
+              *ngIf="deductionPercent == 30"
+              (click)="changePercent(35)"
+            ></i>
+            <i
+              class="fa fa-arrow-down"
+              aria-hidden="true"
+              *ngIf="deductionPercent == 35"
+              (click)="changePercent(30)"
+            ></i>
+          </th>
           <th>Net Profit</th>
           <th>Status</th>
         </tr>
@@ -205,7 +219,7 @@
       <tfoot class="bg-pink">
         <th>Total</th>
         <th>{{ totalPercent }} %</th>
-        <th class="text-center">{{ totalProfitPerShare }}</th>
+        <th class="text-center">{{ totalProfitPerShare.toFixed(2) }}</th>
       </tfoot>
     </table>
   </div>

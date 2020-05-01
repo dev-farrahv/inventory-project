@@ -3,12 +3,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LanguageTranslationModule } from './shared/modules/language-translation/language-translation.module'
+import { LanguageTranslationModule } from './shared/modules/language-translation/language-translation.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
-import { NgxSpinnerModule } from "ngx-spinner";
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -18,6 +18,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ToastrModule } from 'ngx-toastr';
 import { AngularFireModule } from '@angular/fire';
 
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { reducers, metaReducers } from './shared/store';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -25,6 +29,8 @@ import { AngularFireModule } from '@angular/fire';
         BrowserAnimationsModule,
         HttpClientModule,
         LanguageTranslationModule,
+        StoreModule.forRoot(reducers, { metaReducers }),
+        StoreDevtoolsModule.instrument(),
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFirestoreModule,
@@ -32,7 +38,7 @@ import { AngularFireModule } from '@angular/fire';
         AngularFireAuthModule,
         FormsModule,
         NgxSpinnerModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
     ],
     declarations: [AppComponent],
     providers: [AuthGuard],

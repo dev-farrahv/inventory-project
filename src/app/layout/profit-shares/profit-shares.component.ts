@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
 import { takeUntil } from 'rxjs/operators';
@@ -52,7 +52,8 @@ export class ProfitSharesComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private calendar: NgbCalendar,
-    public formatter: NgbDateParserFormatter
+    public formatter: NgbDateParserFormatter,
+    private zone: NgZone
   ) { }
 
   ngOnInit() {
@@ -68,19 +69,9 @@ export class ProfitSharesComponent implements OnInit {
         this.spinner.hide();
         this.loading = false;
       });
-    this.profitService.getsharer()
-      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.sharers = res;
-        this.totalPercent = res.reduce((total, r) => {
-          return total + r.percent;
-        }, 0);
-
-        this.totalProfitPerShare = res.reduce((total, r) => {
-          return total + this.calculateProfitPerShare(r.percent);
-        }, 0);
-
-      });
+    this.calculateTotalProfitPerShare();
   }
+
 
   setReservationsByWeek() {
     this.spinner.show();
@@ -229,6 +220,21 @@ export class ProfitSharesComponent implements OnInit {
     return (this.totalNetProfit * percent) / 100;
   }
 
+  calculateTotalProfitPerShare() {
+    this.profitService.getsharer()
+      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
+        this.sharers = res;
+        this.totalPercent = res.reduce((total, r) => {
+          return total + r.percent;
+        }, 0);
+
+        this.totalProfitPerShare = res.reduce((total, r) => {
+          return total + this.calculateProfitPerShare(r.percent);
+        }, 0);
+      });
+  }
+
+
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
@@ -260,6 +266,12 @@ export class ProfitSharesComponent implements OnInit {
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  changePercent(percent) {
+    this.deductionPercent = percent;
+    this.setReservationsByWeek();
+    this.calculateTotalProfitPerShare();
   }
 
   generateCsv() {
@@ -332,7 +344,7 @@ export class ProfitSharesComponent implements OnInit {
         'Sold Price',
         'Purchase Price',
         'Total Profit',
-        '-30% Profit',
+        '-' + this.deductionPercent + '% Profit',
         'Net Profit']
       // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
     };
