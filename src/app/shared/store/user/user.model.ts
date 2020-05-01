@@ -6,5 +6,5 @@ export interface User {
     status: number;
     createdAt?: string;
     updatedAt?: string;
-    type: string;
+    type: number;
 }
