@@ -32,6 +32,7 @@ export class ViewReservationComponent implements OnInit {
     previousBalance: 0
   };
   printList: any[];
+  widthsPrintList: any[];
   showDiscountInvoice: any[];
   shippingFees: ShippingFee[];
   activeZone: ShippingFee[];
@@ -299,27 +300,46 @@ export class ViewReservationComponent implements OnInit {
   async printInvoicePdf(item, printType) {
     const dateToday = new Date();
     this.printList = [];
-    const rowsHeader = [
-      { text: 'Products', style: 'tableHeader', alignment: 'left' },
-      { text: 'Amount', style: 'tableHeader', alignment: 'right' }
-    ];
-    this.printList.push(rowsHeader);
-    item.products.forEach((invoice, i) => {
-      const invoicePrintList = [];
-      invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-      invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
-      this.printList.push(invoicePrintList);
-    });
+    if(printType == 1){
+      this.widthsPrintList = ['*','*'];
+      this.printHeaderVal = 'INVOICE';
+      const rowsHeader = [
+        { text: 'Products', style: 'tableHeader', alignment: 'left' },
+        { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+      ];
+      this.printList.push(rowsHeader);
+      item.products.forEach((invoice, i) => {
+        const invoicePrintList = [];
+        invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
+        invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+  
+        this.printList.push(invoicePrintList);
+      });
+    }else{
+      this.widthsPrintList = ['*','*','*'];
+      this.printHeaderVal = 'Packing Slip'; 
+      const rowsHeader = [
+        { text: 'Products', style: 'tableHeader', alignment: 'left' },
+        { text: 'Item Code', style: 'tableHeader', alignment: 'center' },
+        { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+      ];
+      this.printList.push(rowsHeader);
+      item.products.forEach((invoice, i) => {
+        console.log(invoice);
+        const invoicePrintList = [];
+        invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
+        invoicePrintList.push({ text: invoice['itemCode'], alignment: 'center', fontSize: 12 });
+        invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+  
+        this.printList.push(invoicePrintList);
+      });
+    }
 
     this.showDiscountInvoice = [];
     if (item.discount != 0) {
       this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
     }
-    
-    if(printType == 1){
-      this.printHeaderVal = 'INVOICE';
-    }else{ this.printHeaderVal = 'Packing Slip'; }
 
     const docDefinition = {
       content: [
@@ -337,6 +357,30 @@ export class ViewReservationComponent implements OnInit {
               width: 'auto',
             },
             {
+              alignment: 'justify',
+              columns: [
+                {
+                  width: 'auto',
+                  stack: [
+                    {
+                      text: [
+                        { text: '2Nd \n', fontSize: 15, bold: true },
+                        'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
+                        'OGURISU KITA GOTO CHO 1-9-103 \n',
+                        'KYOTO, \n',
+                        'KYOTO, \n',
+                        'Japan, \n',
+                        'Mobile: 08053361176 \n',
+                        'hazeltitco@yahoo.com \n',
+                        'https://www.facebook.com/2Nd-107816430558898 \n',
+                      ]
+                    }
+                  ],
+                  style: 'superMargin'
+                }
+              ]
+            },
+            {
               style: 'invoiceNumberStyle',
               table: {
                 widths: [100,100],
@@ -350,30 +394,6 @@ export class ViewReservationComponent implements OnInit {
           ]
         },
         {
-          alignment: 'justify',
-          columns: [
-            {
-              width: 'auto',
-              stack: [
-                {
-                  text: [
-                    { text: '2Nd \n', fontSize: 15, bold: true },
-                    'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                    'OGURISU KITA GOTO CHO 1-9-103 \n',
-                    'KYOTO, \n',
-                    'KYOTO, \n',
-                    'Japan, \n',
-                    'Mobile: 08053361176 \n',
-                    'hazeltitco@yahoo.com \n',
-                    'https://www.facebook.com/2Nd-107816430558898 \n',
-                  ]
-                }
-              ],
-              style: 'superMargin'
-            }
-          ]
-        },
-        {
           text: [
             { text: ' Invoice To: \n', fontSize: 10, bold: true },
             { text: item.name + ' \n', fontSize: 10 },
@@ -384,7 +404,7 @@ export class ViewReservationComponent implements OnInit {
         {
           style: 'tableExample',
           table: {
-            widths: ['*', '*'],
+            widths: [... this.widthsPrintList],
             body: [... this.printList]
             // body: [
             //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
@@ -452,7 +472,6 @@ export class ViewReservationComponent implements OnInit {
         {
           style: 'tableExample',
           table: {
-            headerRows: 1,
             widths: ['*', '*'],
             body: [
               [{ text: "\n PAYPAL", style: 'modeofpaymentheader' }, { text: "\n BDO ", style: 'modeofpaymentheader' }],
@@ -460,18 +479,6 @@ export class ViewReservationComponent implements OnInit {
               [{ text: "METROBANK ", style: 'modeofpaymentheader' }, { text: "JP BANK ", style: 'modeofpaymentheader' }],
               [{ text: "Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ", style: 'modeOfPaymentMargin' }],
             ]
-            // body: [
-            //   [{
-
-            //       text: [
-            //         { text: "PAYPAL \n", style: 'modeofpaymentheader' }, { text: "hazeltitco@yahoo.com \n \n \n",  style: 'modeOfPaymentMargin' },
-            //         { text: "BDO \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n "},
-            //         { text: "METROBANK \n", style: 'modeofpaymentheader' }, { text:"Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n",  style: 'modeOfPaymentMargin' },
-            //         { text: "JP BANK \n", style: 'modeofpaymentheader' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ",  style: 'modeOfPaymentMargin' }
-            //       ]
-
-            //   }],
-            // ]
           },
           layout: {
             hLineWidth: function (i, node) {
@@ -510,7 +517,7 @@ export class ViewReservationComponent implements OnInit {
           color: 'black',
         },
         superMargin: {
-          margin: [0, 10, 10, 10],
+          margin: [10, 0, 0, 0],
           fontSize: 9
         },
         modeOfPaymentMargin: {
@@ -533,7 +540,7 @@ export class ViewReservationComponent implements OnInit {
         invoiceNumberStyle:{
           fontSize: 10,
           alignment: 'right',
-          margin: [200, 10, 10, 10],
+          margin: [0, 10, 10, 10],
         }
       }
     };
