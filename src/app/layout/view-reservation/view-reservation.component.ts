@@ -90,18 +90,26 @@ export class ViewReservationComponent implements OnInit {
     this.spinner.show();
     this.reservation.dateUpdated = new Date();
     this.reservationService.updateReservation(this.reservation).then(() => {
-      // this.toastr.success('Reservation updated!')
       const status = this.reservation.status === 'Pending' ? 1
         : this.reservation.status === 'Paid' ? 2
           : this.reservation.status === 'For Shipment' ? 3
             : this.reservation.status === 'Completed' ? 4 : 0;
+
       this.reservation.products.forEach(async product => {
         product.status = status;
         product.isSelected = false;
         product.rn = this.reservation.referenceNumber;
         await this.productService.updateProduct(product);
+
       });
       this.spinner.hide();
+
+      this.toastr.success('Reservation updated!');
+    }).catch(() => {
+
+      this.spinner.hide();
+      this.toastr.success('There is an error in the internet connection. Please try again!');
+
     });
   }
 
@@ -344,7 +352,7 @@ export class ViewReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: this.printHeaderVal +' \n',
+          text: this.printHeaderVal + ' \n',
           style: 'header',
           alignment: 'center'
         },
@@ -383,11 +391,11 @@ export class ViewReservationComponent implements OnInit {
             {
               style: 'invoiceNumberStyle',
               table: {
-                widths: [100,100],
+                widths: [100, 100],
                 body: [
-                  [{text: 'Invoice # ', alignment: 'left'}, item.referenceNumber.replace("RN", "2i")],
-                  [{text: 'Date ', alignment: 'left'}, new Date().toDateString()],
-                  [{text: 'Due Date ', alignment: 'left'}, new Date().toDateString()],
+                  [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace("RN", "2i")],
+                  [{ text: 'Date ', alignment: 'left' }, new Date().toDateString()],
+                  [{ text: 'Due Date ', alignment: 'left' }, new Date().toDateString()],
                 ]
               }
             },
@@ -537,7 +545,7 @@ export class ViewReservationComponent implements OnInit {
           fontSize: 12,
           margin: [10, 10, 10, 10],
         },
-        invoiceNumberStyle:{
+        invoiceNumberStyle: {
           fontSize: 10,
           alignment: 'right',
           margin: [0, 10, 10, 10],

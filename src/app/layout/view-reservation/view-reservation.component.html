@@ -4,10 +4,20 @@
     <div class="d-flex p-4">
       <div class="col" style="margin-right: 20px;">
         <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-danger" id="dropdownBasic1"  ngbDropdownToggle> <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print</button>
+          <button
+            class="btn btn-outline-danger"
+            id="dropdownBasic1"
+            ngbDropdownToggle
+          >
+            <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
+          </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button (click)="printInvoicePdf(reservation, 1)" ngbDropdownItem>Invoice</button>
-            <button (click)="printInvoicePdf(reservation, 2)" ngbDropdownItem>Packing Slip</button>
+            <button (click)="printInvoicePdf(reservation, 1)" ngbDropdownItem>
+              Invoice
+            </button>
+            <button (click)="printInvoicePdf(reservation, 2)" ngbDropdownItem>
+              Packing Slip
+            </button>
           </div>
         </div>
       </div>
@@ -164,9 +174,21 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'  ">
+    <div
+      class="row"
+      *ngIf="
+        reservation.status == 'Completed' ||
+        reservation.status == 'For Shipment'
+      "
+    >
       <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'">
+        <fieldset
+          class="form-group"
+          *ngIf="
+            reservation.status == 'Completed' ||
+            reservation.status == 'For Shipment'
+          "
+        >
           <label>Mode Of Payment</label>
           <input
             class="form-control bg-transparent"
