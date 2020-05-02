@@ -136,9 +136,10 @@ export class InventoryComponent implements OnInit {
   goToRerevation(rn) {
     console.log(rn);
 
-    // this.reservationService.getReservationByRN(rn).pipe(take(1)).subscribe(reservation => {
-    //   this.router.navigate(['/view-reservation', { id: reservation[0].id }]);
-    // });
+    this.reservationService.getReservationByRN(rn).pipe(take(1)).subscribe(reservation => {
+      this.router.navigate(['/view-reservation', { id: reservation[0].id }]);
+      // this.router.navigateByUrl(['/view-reservation', { id: reservation[0].id }]);
+    });
   }
 
 

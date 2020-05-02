@@ -275,7 +275,6 @@ export class ProfitSharesComponent implements OnInit {
   }
 
   generateCsv() {
-    console.log(this.reservationList);
     this.csvProducts = [];
     this.csvSharer = [];
 

@@ -56,7 +56,7 @@ export class AddProductsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(take(1)).subscribe(params => {
       if (params.id) {
         this.spinner.show();
         this.editMode = true;

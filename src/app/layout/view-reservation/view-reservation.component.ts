@@ -8,6 +8,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ToastrService } from 'ngx-toastr';
 import { ShippingFeeService, ShippingFee } from 'src/app/shared/services/shipping-fee.service';
 import * as moment from 'moment';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -17,6 +19,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class ViewReservationComponent implements OnInit {
   @Input() id: string;
+  private destroyed$ = new Subject();
   reservation: Reservation = {
     qty: 0,
     name: '',
@@ -49,12 +52,12 @@ export class ViewReservationComponent implements OnInit {
     private shippingService: ShippingFeeService
   ) {
     this.spinner.show();
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(take(1)).subscribe(params => {
       if (!params.id) {
         router.navigate(['/reservations']);
       }
 
-      this.reservationService.getReservation(params.id).subscribe(reservation => {
+      this.reservationService.getReservation(params.id).pipe(takeUntil(this.destroyed$)).subscribe(reservation => {
         this.reservation = reservation;
         this.reservation.id = params.id;
         if (this.reservation.zone == null) {
@@ -76,7 +79,7 @@ export class ViewReservationComponent implements OnInit {
         this.loading = false;
       });
     });
-    this.shippingService.getShippingFees().subscribe((sf: ShippingFee[]) => {
+    this.shippingService.getShippingFees().pipe(takeUntil(this.destroyed$)).subscribe((sf: ShippingFee[]) => {
       this.shippingFees = sf;
       this.setZone();
     });
@@ -309,8 +312,8 @@ export class ViewReservationComponent implements OnInit {
     const dateToday = new Date();
     this.printList = [];
 
-    if(printType == 1){
-      this.widthsPrintList = ['*','*'];
+    if (printType == 1) {
+      this.widthsPrintList = ['*', '*'];
       this.printHeaderVal = 'INVOICE';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
@@ -321,12 +324,12 @@ export class ViewReservationComponent implements OnInit {
         const invoicePrintList = [];
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
         invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
-  
+
         this.printList.push(invoicePrintList);
       });
-    }else{
-      this.widthsPrintList = ['*','*','*'];
-      this.printHeaderVal = 'Packing Slip'; 
+    } else {
+      this.widthsPrintList = ['*', '*', '*'];
+      this.printHeaderVal = 'Packing Slip';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
         { text: 'Item Code', style: 'tableHeader', alignment: 'center' },
@@ -339,7 +342,7 @@ export class ViewReservationComponent implements OnInit {
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
         invoicePrintList.push({ text: invoice['itemCode'], alignment: 'center', fontSize: 12 });
         invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
-  
+
         this.printList.push(invoicePrintList);
       });
     }
@@ -686,5 +689,11 @@ export class ViewReservationComponent implements OnInit {
     };
 
     pdfMake.createPdf(docDefinition).open();
+  }
+
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
