@@ -82,7 +82,7 @@ export class ReservationComponent implements OnInit {
     item.products.forEach((invoice, i) => {
       const invoicePrintList = [];
       invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-      invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+      invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
       this.printList.push(invoicePrintList);
     });
@@ -160,8 +160,8 @@ export class ReservationComponent implements OnInit {
             },
           }
         },
-        { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
-        { text: 'Sub Total:      ' + item.subTotal, style: 'subtotal', alignment: 'right' },
+        { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
+        { text: 'Sub Total:      ¥ ' + item.subTotal, style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {
           style: 'tableExample',
