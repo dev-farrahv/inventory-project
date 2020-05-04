@@ -109,13 +109,16 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Shipping Fee</label>
-          <input
-            class="form-control bg-transparent"
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input type="text" class="form-control bg-transparent"
             [(ngModel)]="reservation.shippingFee"
             (change)="checkIfZero()"
             type="number"
-            [readonly]="reservation.zone != 5 ? true : false"
-          />
+            [readonly]="reservation.zone != 5 ? true : false">
+          </div>
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
@@ -136,13 +139,18 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Previous Balance</label>
-          <input
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.previousBalance"
             (keyup)="calcPreviousBalance()"
             (change)="checkIfZero()"
             type="number"
           />
+          </div>
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
@@ -167,8 +175,13 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Sub Total</label>
-          <div class="form-control bg-transparent">
-            {{ loading ? 'calculating ...' : calcSubTotal() }}
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <div class="form-control bg-transparent">
+              {{ loading ? 'calculating ...' : calcSubTotal() }}
+            </div>
           </div>
         </fieldset>
       </div>
@@ -280,21 +293,25 @@
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
               <label>Price</label>
-              <input
-                class="form-control bg-transparent"
-                [(ngModel)]="product.sellingPrice"
-                type="number"
-              />
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">¥</span>
+                </div>
+                <input type="text" class="form-control bg-transparent"
+                [(ngModel)]="product.sellingPrice">
+              </div>
             </fieldset>
           </div>
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
               <label>Purchase Price</label>
-              <input
-                class="form-control bg-transparent"
-                [(ngModel)]="product.purchasePrice"
-                type="number"
-              />
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">¥</span>
+                </div>
+                <input type="text" class="form-control bg-transparent"
+                [(ngModel)]="product.purchasePrice">
+              </div>
             </fieldset>
           </div>
         </div>
