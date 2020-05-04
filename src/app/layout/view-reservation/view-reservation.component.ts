@@ -323,7 +323,7 @@ export class ViewReservationComponent implements OnInit {
       item.products.forEach((invoice, i) => {
         const invoicePrintList = [];
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-        invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+        invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
         this.printList.push(invoicePrintList);
       });
@@ -341,7 +341,7 @@ export class ViewReservationComponent implements OnInit {
         const invoicePrintList = [];
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
         invoicePrintList.push({ text: invoice['itemCode'], alignment: 'center', fontSize: 12 });
-        invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+        invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
         this.printList.push(invoicePrintList);
       });
@@ -349,7 +349,7 @@ export class ViewReservationComponent implements OnInit {
 
     this.showDiscountInvoice = [];
     if (item.discount != 0) {
-      this.showDiscountInvoice.push({ text: 'Discount:       - ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
+      this.showDiscountInvoice.push({ text: 'Discount:       - ¥ ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
     }
 
     const docDefinition = {
@@ -437,11 +437,11 @@ export class ViewReservationComponent implements OnInit {
             },
           }
         },
-        { text: 'Total:      ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
+        { text: 'Total:      ¥ ' +   item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
         [...this.showDiscountInvoice],
-        { text: 'Shipping Fee:      ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
-        { text: 'Other Charges:      ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
-        { text: 'Sub Total:      ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
+        { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
+        { text: 'Other Charges:      ¥ ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
+        { text: 'Sub Total:      ¥ ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {
           style: 'tableExample',
@@ -570,7 +570,7 @@ export class ViewReservationComponent implements OnInit {
     item.products.forEach((invoice, i) => {
       const invoicePrintList = [];
       invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-      invoicePrintList.push({ text: invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+      invoicePrintList.push({ text: '¥ '+ invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
       this.printList.push(invoicePrintList);
     });
@@ -624,7 +624,7 @@ export class ViewReservationComponent implements OnInit {
             widths: ['*', '*', '*', '*'],
             body: [
               [{ text: 'Reference Number', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Payment Type', style: 'tableHeader' }, { text: 'Amount', style: 'tableHeader' }],
-              [{ text: item.referenceNumber }, { text: item.dateCreated }, { text: item.modeOfPayment }, { text: this.calcSubTotal() }],
+              [{ text: item.referenceNumber }, { text: item.dateCreated }, { text: item.modeOfPayment }, { text: '¥ ' + this.calcSubTotal() }],
               //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
             ]
           },
