@@ -5,6 +5,12 @@
       <div class="col" style="margin-right: 20px;">
         <div ngbDropdown class="d-inline-block">
           <button
+            class="btn btn-outline-danger mr-2"
+            (click)="updateReservation()"
+          >
+            <i class="fa fa-fw fa-save" aria-hidden="true"></i> Save
+          </button>
+          <button
             class="btn btn-outline-danger"
             id="dropdownBasic1"
             ngbDropdownToggle
@@ -113,11 +119,14 @@
             <div class="input-group-prepend">
               <span class="input-group-text">¥</span>
             </div>
-            <input type="text" class="form-control bg-transparent"
-            [(ngModel)]="reservation.shippingFee"
-            (change)="checkIfZero()"
-            type="number"
-            [readonly]="reservation.zone != 5 ? true : false">
+            <input
+              type="text"
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.shippingFee"
+              (change)="checkIfZero()"
+              type="number"
+              [readonly]="reservation.zone != 5 ? true : false"
+            />
           </div>
         </fieldset>
       </div>
@@ -144,12 +153,12 @@
               <span class="input-group-text">¥</span>
             </div>
             <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.previousBalance"
-            (keyup)="calcPreviousBalance()"
-            (change)="checkIfZero()"
-            type="number"
-          />
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.previousBalance"
+              (keyup)="calcPreviousBalance()"
+              (change)="checkIfZero()"
+              type="number"
+            />
           </div>
         </fieldset>
       </div>
@@ -297,8 +306,11 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">¥</span>
                 </div>
-                <input type="text" class="form-control bg-transparent"
-                [(ngModel)]="product.sellingPrice">
+                <input
+                  type="text"
+                  class="form-control bg-transparent"
+                  [(ngModel)]="product.sellingPrice"
+                />
               </div>
             </fieldset>
           </div>
@@ -309,8 +321,11 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">¥</span>
                 </div>
-                <input type="text" class="form-control bg-transparent"
-                [(ngModel)]="product.purchasePrice">
+                <input
+                  type="text"
+                  class="form-control bg-transparent"
+                  [(ngModel)]="product.purchasePrice"
+                />
               </div>
             </fieldset>
           </div>

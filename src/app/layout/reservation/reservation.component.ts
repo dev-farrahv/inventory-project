@@ -43,7 +43,7 @@ export class ReservationComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.reservationService.getreservations().pipe(takeUntil(this.destroyed$)).subscribe(res => {
+    this.reservationService.getreservations().subscribe(res => {
       this.reservations = res;
       this.reservationList = res;
       this.spinner.hide();

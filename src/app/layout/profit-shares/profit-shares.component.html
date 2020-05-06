@@ -97,17 +97,20 @@
     </button>
   </div> -->
   <div class="card bg-transparent my-3">
-    <table class="card-body table table-hover">
+    <table class="card-body table table-bordered">
       <thead class="bg-pink">
         <tr>
           <th>Reference Number</th>
           <th>Customer Name</th>
           <th>Product Name</th>
-          <th>Purchase Price</th>
-          <th>Sold Price</th>
+          <th>Item Code</th>
+          <!-- <th>Balance</th>
+          <th>Discount</th> -->
+          <th>P. Price</th>
+          <th>S. Price</th>
           <th>Total Profit</th>
           <th>
-            -{{ deductionPercent }}% Profit
+            -{{ deductionPercent }}%
             <i
               class="fa fa-arrow-up"
               aria-hidden="true"
@@ -122,7 +125,6 @@
             ></i>
           </th>
           <th>Net Profit</th>
-          <th>Status</th>
         </tr>
       </thead>
       <tbody *ngIf="!reservationList || reservationList.length == 0">
@@ -133,24 +135,48 @@
         </tr>
       </tbody>
       <tbody *ngFor="let reservation of reservationList">
-        <tr *ngFor="let product of reservation.products">
-          <td>
-            <a [href]="getUrl(reservation.id)" target="_blank">{{
-              reservation.referenceNumber
-            }}</a>
+        <tr *ngFor="let product of reservation.products; let i = index">
+          <td [attr.rowspan]="reservation.products.length" *ngIf="i == 0">
+            <div>
+              <a [href]="getUrl(reservation.id)" target="_blank">{{
+                reservation.referenceNumber
+              }}</a>
+            </div>
+            <div>
+              {{ reservation.status }}
+            </div>
+            <div></div>
           </td>
-          <td>{{ reservation.name }}</td>
+
+          <td [attr.rowspan]="reservation.products.length" *ngIf="i == 0">
+            {{ reservation.name }}
+          </td>
           <td>{{ product.name }}</td>
-          <td>{{ product.purchasePrice | number }}</td>
-          <td>{{ product.sellingPrice | number }}</td>
+          <td>
+            {{ product.itemCode ? product.itemCode : '-' }}
+          </td>
+          <!-- <td [attr.rowspan]="reservation.products.length" *ngIf="i == 0">
+            {{ reservation.previousBalance | number }}
+          </td>
+          <td [attr.rowspan]="reservation.products.length" *ngIf="i == 0">
+            {{ reservation.discount | number }}
+          </td> -->
+          <td>
+            ¥ {{ product.purchasePrice ? (product.purchasePrice | number) : 0 }}
+          </td>
+          <td>
+            ¥ {{ product.sellingPrice ? (product.sellingPrice | number) : 0 }}
+          </td>
 
           <td>
+            ¥
             {{
               calculateTotalProfit(product.sellingPrice, product.purchasePrice)
                 | number
             }}
           </td>
           <td>
+            ¥
             {{
               calculateDeductionsByPercent(
                 product.sellingPrice,
@@ -159,13 +185,11 @@
             }}
           </td>
           <td>
+            ¥
             {{
               calculateNetProfit(product.sellingPrice, product.purchasePrice)
                 | number
             }}
-          </td>
-          <td>
-            {{ reservation.status }}
           </td>
         </tr>
       </tbody>
@@ -174,12 +198,14 @@
         <th></th>
         <th></th>
         <th></th>
-        <th>{{ totalPurchasePrice }}</th>
-        <th>{{ totalSoldPrice }}</th>
-        <th>{{ totalProfit }}</th>
-        <th>{{ totalDeductions }}</th>
-        <th>{{ totalNetProfit }}</th>
         <th></th>
+        <!-- <th></th>
+        <th></th> -->
+        <th>¥ {{ totalPurchasePrice | number }}</th>
+        <th>¥ {{ totalSoldPrice | number }}</th>
+        <th>¥ {{ totalProfit | number }}</th>
+        <th>¥ {{ totalDeductions | number }}</th>
+        <th>¥ {{ totalNetProfit | number }}</th>
       </tfoot>
     </table>
   </div>
