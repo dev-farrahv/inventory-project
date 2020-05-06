@@ -41,6 +41,7 @@ export class ProfitSharesComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
   totalPercent = 0;
   totalProfitPerShare = 0;
+  totalProductDiscount = 0;
   csvProducts: any;
   csvSharer: any;
   baseUrl: string;
@@ -88,7 +89,7 @@ export class ProfitSharesComponent implements OnInit {
     this.totalProfit = this.calculateOverAllTotalProfit();
     this.totalDeductions = this.calculateTotalDeductionsByPercent();
     this.totalNetProfit = this.calculateTotalNetProfit();
-
+    this.totalProductDiscount = this.calculateTotalItemDiscounts();
     this.spinner.hide();
   }
 
@@ -166,18 +167,18 @@ export class ProfitSharesComponent implements OnInit {
     this.destroyed$.complete();
   }
 
-  calculateTotalProfit(sellingPrice, purchasePrice) {
-    return Math.round(sellingPrice - purchasePrice);
+  calculateTotalProfit(sellingPrice, purchasePrice, discount) {
+    return Math.round((sellingPrice - purchasePrice) - (discount ? discount : 0));
   }
 
-  calculateDeductionsByPercent(sellingPrice, purchasePrice) {
-    const total = this.calculateTotalProfit(sellingPrice, purchasePrice);
+  calculateDeductionsByPercent(sellingPrice, purchasePrice, discount) {
+    const total = this.calculateTotalProfit(sellingPrice, purchasePrice, discount);
     return Math.round((total * this.deductionPercent) / 100);
   }
 
-  calculateNetProfit(sellingPrice, purchasePrice) {
-    const deduction = this.calculateDeductionsByPercent(sellingPrice, purchasePrice);
-    return Math.round(sellingPrice - deduction);
+  calculateNetProfit(sellingPrice, purchasePrice, discount) {
+    const deduction = this.calculateDeductionsByPercent(sellingPrice, purchasePrice, discount);
+    return Math.round(sellingPrice - deduction) - (discount ? discount : 0);
   }
 
   calculateTotalPrice(field) {
@@ -196,7 +197,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalDeductionsByPercent() {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice);
+        return total + this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount);
       }, 0);
       return totalPrice + amount;
     }, 0);
@@ -205,7 +206,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalNetProfit() {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + this.calculateNetProfit(product.sellingPrice, product.purchasePrice);
+        return total + this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount);
       }, 0);
       return totalPrice + amount;
     }, 0);
@@ -232,6 +233,16 @@ export class ProfitSharesComponent implements OnInit {
           return total + this.calculateProfitPerShare(r.percent);
         }, 0);
       });
+  }
+
+  calculateTotalItemDiscounts() {
+    return this.reservationList.reduce((totalPrice, reservation) => {
+      const amount = reservation.products.reduce((total, product) => {
+        const discount = product.discount ? product.discount : 0;
+        return total + discount;
+      }, 0);
+      return totalPrice + amount;
+    }, 0);
   }
 
 
@@ -286,9 +297,9 @@ export class ProfitSharesComponent implements OnInit {
           col3: product.name,
           col4: product.sellingPrice,
           col5: product.purchasePrice,
-          col6: this.calculateTotalProfit(product.sellingPrice, product.purchasePrice),
-          col7: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice),
-          col8: this.calculateNetProfit(product.sellingPrice, product.purchasePrice),
+          col6: this.calculateTotalProfit(product.sellingPrice, product.purchasePrice, product.discount),
+          col7: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount),
+          col8: this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount),
         });
       });
     });

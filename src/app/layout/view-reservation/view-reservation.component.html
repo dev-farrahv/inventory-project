@@ -132,13 +132,12 @@
       </div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Discount</label>
+          <label>Total Discount</label>
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.discount"
-            (keyup)="calcDiscount()"
-            (change)="checkIfZero()"
             type="number"
+            readonly
           />
         </fieldset>
       </div>
@@ -358,6 +357,17 @@
               <input
                 class="bg-transparent form-control"
                 [(ngModel)]="product.biddingCode"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Discount</label>
+
+              <input
+                class="bg-transparent form-control"
+                [(ngModel)]="product.discount"
+                (keyup)="calcDiscountPerItem()"
               />
             </fieldset>
           </div>

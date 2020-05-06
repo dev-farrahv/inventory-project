@@ -165,11 +165,22 @@ export class ViewReservationComponent implements OnInit {
     this.reservation.subTotal = this.calcSubTotal();
   }
 
-
   calcDiscount() {
     if (this.reservation.discount < 0) {
       this.reservation.discount = 0;
     }
+    this.reservation.subTotal = this.calcSubTotal();
+  }
+
+  calcDiscountPerItem() {
+    if (this.reservation.discount < 0) {
+      this.reservation.discount = 0;
+    }
+    this.reservation.discount = +this.reservation.products.reduce((total, data) => {
+      const discount = data.discount ? data.discount : 0;
+      return total + discount;
+    }, 0);
+
     this.reservation.subTotal = this.calcSubTotal();
   }
 
@@ -203,6 +214,14 @@ export class ViewReservationComponent implements OnInit {
 
     if (this.reservation.previousBalance == null) {
       this.reservation.previousBalance = 0;
+    }
+  }
+
+  checkIfZeroDiscount(product) {
+    if (product.discount) {
+      return;
+    } else {
+      product.discount = 0;
     }
   }
 
@@ -437,7 +456,7 @@ export class ViewReservationComponent implements OnInit {
             },
           }
         },
-        { text: 'Total:      ¥ ' +   item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
+        { text: 'Total:      ¥ ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
         [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Other Charges:      ¥ ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
@@ -570,7 +589,7 @@ export class ViewReservationComponent implements OnInit {
     item.products.forEach((invoice, i) => {
       const invoicePrintList = [];
       invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-      invoicePrintList.push({ text: '¥ '+ invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+      invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
 
       this.printList.push(invoicePrintList);
     });
