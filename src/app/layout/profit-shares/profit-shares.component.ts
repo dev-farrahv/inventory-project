@@ -295,11 +295,17 @@ export class ProfitSharesComponent implements OnInit {
           col1: reservation.referenceNumber,
           col2: reservation.name,
           col3: product.name,
-          col4: product.sellingPrice,
+          col4: product.itemCode,
           col5: product.purchasePrice,
-          col6: this.calculateTotalProfit(product.sellingPrice, product.purchasePrice, product.discount),
-          col7: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount),
-          col8: this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount),
+          col6: product.sellingPrice,
+          col7: product.discount ? (product.discount) : 0,
+          col8: this.calculateTotalProfit(
+            product.sellingPrice,
+            product.purchasePrice,
+            product.discount ? product.discount : 0
+          ),
+          col9: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount),
+          col10: this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount),
         });
       });
     });
@@ -309,18 +315,20 @@ export class ProfitSharesComponent implements OnInit {
       col1: '',
       col2: '',
       col3: '',
-      col4: this.totalSoldPrice,
-      col5: this.totalPurchasePrice,
-      col6: this.totalProfit,
-      col7: this.totalDeductions,
-      col8: this.totalNetProfit,
+      col4: '',
+      col5: '',
+      col6: this.totalSoldPrice,
+      col7: this.totalPurchasePrice,
+      col8: this.totalProfit,
+      col9: this.totalDeductions,
+      col10: this.totalNetProfit,
     });
 
     // for Sharer table
     this.csvSharer = [
-      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' },
-      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' },
-      { col1: 'SHARERS', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '' }];
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' },
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' },
+      { col1: 'SHARERS', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' }];
 
     this.sharers.forEach((sharer, p) => {
       this.csvSharer.push({
@@ -332,6 +340,8 @@ export class ProfitSharesComponent implements OnInit {
         col6: '',
         col7: '',
         col8: '',
+        col9: '',
+        col10: '',
       });
     });
 
@@ -351,8 +361,10 @@ export class ProfitSharesComponent implements OnInit {
         'Reference Number',
         'Customer Name',
         'Product Name',
-        'Sold Price',
+        'Item Code',
         'Purchase Price',
+        'Sold Price',
+        'Discount',
         'Total Profit',
         '-' + this.deductionPercent + '% Profit',
         'Net Profit']
