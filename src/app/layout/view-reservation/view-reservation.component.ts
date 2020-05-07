@@ -177,7 +177,7 @@ export class ViewReservationComponent implements OnInit {
       this.reservation.discount = 0;
     }
     this.reservation.discount = +this.reservation.products.reduce((total, data) => {
-      const discount = data.discount ? data.discount : 0;
+      const discount = Number(data.discount ? data.discount : 0);
       return total + discount;
     }, 0);
 
