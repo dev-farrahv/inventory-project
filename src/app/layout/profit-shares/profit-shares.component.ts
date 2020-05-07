@@ -238,7 +238,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalItemDiscounts() {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        const discount = product.discount ? product.discount : 0;
+        const discount = Number(product.discount ? product.discount : 0);
         return total + discount;
       }, 0);
       return totalPrice + amount;
