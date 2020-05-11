@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
@@ -33,12 +34,14 @@ export class ReservationComponent implements OnInit {
     zone: 0,
     continent: []
   };
+  deleteID: any;
 
   constructor(
     private reservationService: ReservationService,
     private shippingService: ShippingFeeService,
     public router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit() {
@@ -317,4 +320,27 @@ export class ReservationComponent implements OnInit {
     }
 
   }
+
+  async deleteReservation() {
+    this.spinner.show();
+    await this.reservationService.removeReservation(this.deleteID);
+    this.spinner.hide();
+    this.close();
+    this.setReservationsByStatus();
+  }
+
+  open(content, id) {
+    this.deleteID = id;
+    this.modalService.open(content, { size: 'sm' }).result.then((result) => {
+      // console.log(result);
+    }, (reason) => {
+      // console.log(reason);
+    });
+  }
+
+  close() {
+    this.modalService.dismissAll();
+  }
+
+
 }

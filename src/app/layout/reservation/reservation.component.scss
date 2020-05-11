@@ -1,9 +1,16 @@
 .search-input {
-    border-radius: 5px;
+  border-radius: 5px;
 }
 
 @media screen and (max-width: 992px) {
-    .sm-hidden {
-        display: none;
-    }
+  .sm-hidden {
+    display: none;
+  }
+}
+
+td,
+th {
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
 }
