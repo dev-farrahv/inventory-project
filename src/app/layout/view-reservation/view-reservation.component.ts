@@ -330,6 +330,9 @@ export class ViewReservationComponent implements OnInit {
   async printInvoicePdf(item, printType) {
     const dateToday = new Date();
     this.printList = [];
+    let getdatecreated = new Date(item.dateCreated);
+    const duedate = getdatecreated.setDate(getdatecreated.getDate() + 7);
+     
 
     if (printType == 1) {
       this.widthsPrintList = ['*', '*'];
@@ -416,8 +419,8 @@ export class ViewReservationComponent implements OnInit {
                 widths: [100, 100],
                 body: [
                   [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace("RN", "2i")],
-                  [{ text: 'Date ', alignment: 'left' }, new Date().toDateString()],
-                  [{ text: 'Due Date ', alignment: 'left' }, new Date().toDateString()],
+                  [{ text: 'Date ', alignment: 'left' }, new Date(item.dateCreated).toDateString()],
+                  [{ text: 'Due Date ', alignment: 'left' },  new Date(duedate).toDateString()],
                 ]
               }
             },
