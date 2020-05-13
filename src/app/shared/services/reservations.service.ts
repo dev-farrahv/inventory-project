@@ -26,6 +26,7 @@ export interface Reservation {
   measurement?: string;
   previousBalance?: number;
   weekId?: number;
+  partialPayment?: number;
 }
 @Injectable({
   providedIn: 'root'

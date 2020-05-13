@@ -32,7 +32,8 @@ export class ViewReservationComponent implements OnInit {
     modeOfPayment: '',
     dateCreated: '',
     measurement: '',
-    previousBalance: 0
+    previousBalance: 0,
+    partialPayment: 0
   };
   printList: any[];
   widthsPrintList: any[];
@@ -74,6 +75,9 @@ export class ViewReservationComponent implements OnInit {
         }
         if (this.reservation.previousBalance == null) {
           this.reservation.previousBalance = 0;
+        }
+        if (this.reservation.partialPayment == null) {
+          this.reservation.partialPayment = 0;
         }
         this.spinner.hide();
         this.loading = false;

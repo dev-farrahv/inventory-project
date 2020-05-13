@@ -193,6 +193,21 @@
           </div>
         </fieldset>
       </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Partial Payment</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.partialPayment"
+              type="number"
+            />
+          </div>
+        </fieldset>
+      </div>
     </div>
 
     <div
