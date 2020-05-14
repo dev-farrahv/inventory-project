@@ -42,6 +42,7 @@ export class ViewReservationComponent implements OnInit {
   activeZone: ShippingFee[];
   loading = true;
   printHeaderVal = '';
+  packingSlipAddr: any[];
 
   constructor(
     public router: Router,
@@ -336,7 +337,7 @@ export class ViewReservationComponent implements OnInit {
     this.printList = [];
     let getdatecreated = new Date(item.dateCreated);
     const duedate = getdatecreated.setDate(getdatecreated.getDate() + 7);
-     
+    this.packingSlipAddr = [];
 
     if (printType == 1) {
       this.widthsPrintList = ['*', '*'];
@@ -350,7 +351,6 @@ export class ViewReservationComponent implements OnInit {
         const invoicePrintList = [];
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
         invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
-
         this.printList.push(invoicePrintList);
       });
     } else {
@@ -368,9 +368,10 @@ export class ViewReservationComponent implements OnInit {
         invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
         invoicePrintList.push({ text: invoice['itemCode'], alignment: 'center', fontSize: 12 });
         invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
-
         this.printList.push(invoicePrintList);
       });
+      this.packingSlipAddr = [{ text: ' Address : \n', fontSize: 10, bold: true },
+      { text: item.address + ' \n', fontSize: 10 }];
     }
 
     this.showDiscountInvoice = [];
@@ -434,6 +435,7 @@ export class ViewReservationComponent implements OnInit {
           text: [
             { text: ' Invoice To: \n', fontSize: 10, bold: true },
             { text: item.name + ' \n', fontSize: 10 },
+            ...this.packingSlipAddr,
             { text: ' Date: \n', fontSize: 10, bold: true },
             { text: dateToday + ' \n', fontSize: 10 }
           ]
