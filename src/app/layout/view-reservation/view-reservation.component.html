@@ -22,7 +22,7 @@
               Invoice
             </button>
             <button (click)="printInvoicePdf(reservation, 2)" ngbDropdownItem>
-              Packing Slip
+              Shipped To
             </button>
           </div>
         </div>
@@ -202,6 +202,7 @@
             </div>
             <input
               class="form-control bg-transparent"
+              (keyup)="calcPartialPayment()"
               [(ngModel)]="reservation.partialPayment"
               type="number"
             />

@@ -142,7 +142,7 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    return ((this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount) + this.reservation.previousBalance;
+    return (((this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount) + this.reservation.previousBalance) - this.reservation.partialPayment;
   }
 
   calcShippingFee() {
@@ -192,6 +192,14 @@ export class ViewReservationComponent implements OnInit {
   calcPreviousBalance() {
     if (this.reservation.previousBalance < 0) {
       this.reservation.previousBalance = 0;
+    }
+    this.reservation.subTotal = this.calcSubTotal();
+  }
+
+
+  calcPartialPayment() {
+    if (this.reservation.partialPayment < 0) {
+      this.reservation.partialPayment = 0;
     }
     this.reservation.subTotal = this.calcSubTotal();
   }
@@ -355,7 +363,7 @@ export class ViewReservationComponent implements OnInit {
       });
     } else {
       this.widthsPrintList = ['*', '*', '*'];
-      this.printHeaderVal = 'Packing Slip';
+      this.printHeaderVal = 'Shipped To';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
         { text: 'Item Code', style: 'tableHeader', alignment: 'center' },
@@ -469,6 +477,7 @@ export class ViewReservationComponent implements OnInit {
         [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Other Charges:      ¥ ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
+        { text: 'Partial Payment:      - ¥ ' + item.partialPayment, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ¥ ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {
@@ -605,7 +614,7 @@ export class ViewReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: 'Payment Receipt \n',
+          text: 'Shipping To \n',
           style: 'header',
           alignment: 'center'
         },
