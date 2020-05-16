@@ -94,14 +94,17 @@ export class ViewReservationComponent implements OnInit {
   }
 
 
-  updateReservation() {
+  updateReservation(onChange = true) {
     this.spinner.show();
-    this.reservation.dateUpdated = new Date();
+    if (this.reservation.status == 'Paid' && onChange) {
+      this.reservation.dateUpdated = new Date();
+    }
     this.reservationService.updateReservation(this.reservation).then(() => {
       const status = this.reservation.status === 'Pending' ? 1
-        : this.reservation.status === 'Paid' ? 2
-          : this.reservation.status === 'For Shipment' ? 3
-            : this.reservation.status === 'Completed' ? 4 : 0;
+        : this.reservation.status === 'Partial Payment' ? 1
+          : this.reservation.status === 'Paid' ? 2
+            : this.reservation.status === 'For Shipment' ? 3
+              : this.reservation.status === 'Completed' ? 4 : 0;
 
       this.reservation.products.forEach(async product => {
         product.status = status;
@@ -436,7 +439,7 @@ export class ViewReservationComponent implements OnInit {
                 body: [
                   [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace("RN", "2i")],
                   [{ text: 'Date ', alignment: 'left' }, new Date(item.dateCreated).toDateString()],
-                  [{ text: 'Due Date ', alignment: 'left' },  new Date(duedate).toDateString()],
+                  [{ text: 'Due Date ', alignment: 'left' }, new Date(duedate).toDateString()],
                 ]
               }
             },
@@ -729,6 +732,24 @@ export class ViewReservationComponent implements OnInit {
     };
 
     pdfMake.createPdf(docDefinition).open();
+  }
+
+  getOptions(status): any[] {
+
+    switch (status) {
+      case 'Pending':
+        return ['Pending', 'Partial Payment', 'Paid', 'Canceled'];
+      case 'Partial Payment':
+        return ['Partial Payment', 'Paid', 'Canceled'];
+      case 'Paid':
+        return ['Paid', 'For Shipment', 'Canceled'];
+      case 'For Shipment':
+        return ['For Shipment', 'Completed', 'Canceled'];
+      case 'Completed':
+        return ['Completed'];
+      case 'Canceled':
+        return ['Canceled'];
+    }
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
