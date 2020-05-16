@@ -346,10 +346,12 @@ export class ViewReservationComponent implements OnInit {
     let getdatecreated = new Date(item.dateCreated);
     const duedate = getdatecreated.setDate(getdatecreated.getDate() + 7);
     this.packingSlipAddr = [];
+    let changeLabelInvoiceTo = '';
 
     if (printType == 1) {
       this.widthsPrintList = ['*', '*'];
       this.printHeaderVal = 'INVOICE';
+      changeLabelInvoiceTo = ' Invoice To: ';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
         { text: 'Amount', style: 'tableHeader', alignment: 'right' }
@@ -363,7 +365,8 @@ export class ViewReservationComponent implements OnInit {
       });
     } else {
       this.widthsPrintList = ['*', '*', '*'];
-      this.printHeaderVal = 'Shipped To';
+      this.printHeaderVal = 'Packing slip';
+      changeLabelInvoiceTo = ' Shipped To: ';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
         { text: 'Item Code', style: 'tableHeader', alignment: 'center' },
@@ -441,7 +444,7 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Invoice To: \n', fontSize: 10, bold: true },
+            { text:  changeLabelInvoiceTo + ' \n', fontSize: 10, bold: true },
             { text: item.name + ' \n', fontSize: 10 },
             ...this.packingSlipAddr,
             { text: ' Date: \n', fontSize: 10, bold: true },
@@ -614,7 +617,7 @@ export class ViewReservationComponent implements OnInit {
     const docDefinition = {
       content: [
         {
-          text: 'Shipping To \n',
+          text: 'Payment Receipt \n',
           style: 'header',
           alignment: 'center'
         },
@@ -649,7 +652,7 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text: ' Shipped to: \n', bold: true },
+            { text: ' Shipping To: \n', bold: true },
             { text: item.name + ' \n \n' },
             { text: ' Address: \n', bold: true },
             { text: item.address + ' \n \n' }
