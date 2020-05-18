@@ -222,7 +222,9 @@
       class="row"
       *ngIf="
         reservation.status == 'Completed' ||
-        reservation.status == 'For Shipment'
+        reservation.status == 'For Shipment' ||
+        reservation.status == 'For Paid' ||
+        reservation.status == 'Partial Payment'
       "
     >
       <div class="col-xl-6 col-lg-6">
@@ -230,7 +232,9 @@
           class="form-group"
           *ngIf="
             reservation.status == 'Completed' ||
-            reservation.status == 'For Shipment'
+            reservation.status == 'For Shipment' ||
+            reservation.status == 'For Paid' ||
+            reservation.status == 'Partial Payment'
           "
         >
           <label>Mode Of Payment</label>
