@@ -110,6 +110,19 @@ export class ViewReservationComponent implements OnInit {
         product.status = status;
         product.isSelected = false;
         product.rn = this.reservation.referenceNumber;
+
+        if (product.sellingPrice) {
+          product.sellingPrice = +product.sellingPrice;
+        }
+
+        if (product.purchasePrice) {
+          product.purchasePrice = +product.purchasePrice;
+        }
+
+        if (product.discount) {
+          product.discount = +product.discount;
+        }
+
         await this.productService.updateProduct(product);
 
       });
@@ -293,7 +306,10 @@ export class ViewReservationComponent implements OnInit {
                 { text: 'Owner: \n' + this.reservation.name, bold: true, alignment: 'left', style: 'col' },
               ],
               [
-                { text: 'Price: \n' + this.reservation.products[i].sellingPrice, bold: true, fontSize: 10, alignment: 'left', style: 'col' },
+                {
+                  text: 'Price: \n' + this.reservation.products[i].sellingPrice,
+                  bold: true, fontSize: 10, alignment: 'left', style: 'col'
+                },
               ],
               [
                 { text: 'Remarks: \n' + this.reservation.products[i].remarks, bold: true, alignment: 'left', style: 'col' },
@@ -346,7 +362,7 @@ export class ViewReservationComponent implements OnInit {
   async printInvoicePdf(item, printType) {
     const dateToday = new Date();
     this.printList = [];
-    let getdatecreated = new Date(item.dateCreated);
+    const getdatecreated = new Date(item.dateCreated);
     const duedate = getdatecreated.setDate(getdatecreated.getDate() + 7);
     this.packingSlipAddr = [];
     let changeLabelInvoiceTo = '';
@@ -437,7 +453,7 @@ export class ViewReservationComponent implements OnInit {
               table: {
                 widths: [100, 100],
                 body: [
-                  [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace("RN", "2i")],
+                  [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace('RN', '2i')],
                   [{ text: 'Date ', alignment: 'left' }, new Date(item.dateCreated).toDateString()],
                   [{ text: 'Due Date ', alignment: 'left' }, new Date(duedate).toDateString()],
                 ]
@@ -447,7 +463,7 @@ export class ViewReservationComponent implements OnInit {
         },
         {
           text: [
-            { text:  changeLabelInvoiceTo + ' \n', fontSize: 10, bold: true },
+            { text: changeLabelInvoiceTo + ' \n', fontSize: 10, bold: true },
             { text: item.name + ' \n', fontSize: 10 },
             ...this.packingSlipAddr,
             { text: ' Date: \n', fontSize: 10, bold: true },
@@ -494,12 +510,12 @@ export class ViewReservationComponent implements OnInit {
               [{
                 stack: [{
                   text: [
-                    { text: "Terms and conditions \n \n", style: 'modeofpaymentheader' },
+                    { text: 'Terms and conditions \n \n', style: 'modeofpaymentheader' },
                     {
-                      text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. " +
-                        "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
-                        "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n" +
-                        "It takes 3 days for the bank to process the payment transaction.",
+                      text: 'Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. ' +
+                        'We provide a wide range of shipping options for our JAPAN customers. \n \n' +
+                        'Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n' +
+                        'It takes 3 days for the bank to process the payment transaction.',
                     }
                   ]
                 }],
@@ -528,10 +544,22 @@ export class ViewReservationComponent implements OnInit {
           table: {
             widths: ['*', '*'],
             body: [
-              [{ text: "\n PAYPAL", style: 'modeofpaymentheader' }, { text: "\n BDO ", style: 'modeofpaymentheader' }],
-              [{ text: "hazeltitco@yahoo.com \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ", style: 'modeOfPaymentMargin' }],
-              [{ text: "METROBANK ", style: 'modeofpaymentheader' }, { text: "JP BANK ", style: 'modeofpaymentheader' }],
-              [{ text: "Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ", style: 'modeOfPaymentMargin' }],
+              [
+                { text: '\n PAYPAL', style: 'modeofpaymentheader' },
+                { text: '\n BDO ', style: 'modeofpaymentheader' }
+              ],
+              [
+                { text: 'hazeltitco@yahoo.com \n \n \n', style: 'modeOfPaymentMargin' },
+                { text: 'Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ', style: 'modeOfPaymentMargin' }
+              ],
+              [
+                { text: 'METROBANK ', style: 'modeofpaymentheader' },
+                { text: 'JP BANK ', style: 'modeofpaymentheader' }
+              ],
+              [
+                { text: 'Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n', style: 'modeOfPaymentMargin' },
+                { text: 'Hazel Joyce Titco Kojima \n \n  1448043110571 ', style: 'modeOfPaymentMargin' }
+              ],
             ]
           },
           layout: {

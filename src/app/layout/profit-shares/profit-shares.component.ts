@@ -184,7 +184,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalPrice(field) {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + product[field];
+        return total + Number(product[field]);
       }, 0);
       return totalPrice + amount;
     }, 0);
