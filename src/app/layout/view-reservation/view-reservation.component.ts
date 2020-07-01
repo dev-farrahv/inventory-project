@@ -545,7 +545,7 @@ export class ViewReservationComponent implements OnInit {
             widths: ['*', '*'],
             body: [
               [
-                { text: '\n PAYPAL', style: 'modeofpaymentheader' },
+                { text: '\n PAYPAL (With 3.6% charge)', style: 'modeofpaymentheader' },
                 { text: '\n BDO ', style: 'modeofpaymentheader' }
               ],
               [
