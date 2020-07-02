@@ -1,13 +1,32 @@
 <div class="main">
   <div class="px-3 d-flex justify-content-between">
     <h2>Reservations</h2>
-    <div class="d-flex p-2">
-      <button
-        class="btn bg-dark-pink text-white"
-        (click)="printInvoicePdf(reservation)"
-      >
-        <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print Invoice
-      </button>
+    <div class="d-flex p-4">
+      <div class="col" style="margin-right: 20px;">
+        <div ngbDropdown class="d-inline-block">
+          <button
+            class="btn btn-outline-danger mr-2"
+            (click)="updateReservation(false)"
+          >
+            <i class="fa fa-fw fa-save" aria-hidden="true"></i> Save
+          </button>
+          <button
+            class="btn btn-outline-danger"
+            id="dropdownBasic1"
+            ngbDropdownToggle
+          >
+            <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="printInvoicePdf(reservation, 1)" ngbDropdownItem>
+              Invoice
+            </button>
+            <button (click)="printInvoicePdf(reservation, 2)" ngbDropdownItem>
+              Packing slip
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <hr />
@@ -96,24 +115,29 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Shipping Fee</label>
-          <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.shippingFee"
-            (change)="checkIfZero()"
-            type="number"
-            [readonly]="reservation.zone != 5 ? true : false"
-          />
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input
+              type="text"
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.shippingFee"
+              (change)="checkIfZero()"
+              type="number"
+              [readonly]="reservation.zone != 5 ? true : false"
+            />
+          </div>
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Discount</label>
+          <label>Total Discount</label>
           <input
             class="form-control bg-transparent"
             [(ngModel)]="reservation.discount"
-            (keyup)="calcDiscount()"
-            (change)="checkIfZero()"
             type="number"
+            readonly
           />
         </fieldset>
       </div>
@@ -123,28 +147,34 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Previous Balance</label>
-          <input
-            class="form-control bg-transparent"
-            [(ngModel)]="reservation.previousBalance"
-            (keyup)="calcPreviousBalance()"
-            (change)="checkIfZero()"
-            type="number"
-          />
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input
+              class="form-control bg-transparent"
+              [(ngModel)]="reservation.previousBalance"
+              (keyup)="calcPreviousBalance()"
+              (change)="checkIfZero()"
+              type="number"
+            />
+          </div>
         </fieldset>
       </div>
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
-          <label>Status</label>
-          <select
-            [(ngModel)]="reservation.status"
-            class="text-dark w-100 bg-transparent form-control"
-            (change)="updateReservation()"
-          >
-            <option value="Pending">Pending</option>
-            <option value="For Shipment">For Shipment</option>
-            <option value="Completed">Completed</option>
-            <option value="Canceled">Canceled</option>
-          </select>
+          <label>Partial Payment</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <input
+              class="form-control bg-transparent"
+              (keyup)="calcPartialPayment()"
+              [(ngModel)]="reservation.partialPayment"
+              type="number"
+            />
+          </div>
         </fieldset>
       </div>
     </div>
@@ -153,16 +183,60 @@
       <div class="col-xl-6 col-lg-6">
         <fieldset class="form-group">
           <label>Sub Total</label>
-          <div class="form-control bg-transparent">
-            {{ loading ? 'calculating ...' : calcSubTotal() }}
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">¥</span>
+            </div>
+            <div class="form-control bg-transparent">
+              {{ loading ? 'calculating ...' : calcSubTotal() }}
+            </div>
           </div>
+        </fieldset>
+      </div>
+      <div class="col-xl-6 col-lg-6">
+        <fieldset class="form-group">
+          <label>Status</label>
+          <select
+            [(ngModel)]="reservation.status"
+            class="text-dark w-100 bg-pink form-control"
+            (change)="updateReservation()"
+          >
+            <option
+              *ngFor="let value of getOptions(reservation.status)"
+              [value]="value"
+              [disabled]="
+                value == 'Partial Payment'
+                  ? reservation.partialPayment > 0
+                    ? false
+                    : true
+                  : false
+              "
+              >{{ value }}</option
+            >
+          </select>
         </fieldset>
       </div>
     </div>
 
-    <div class="row" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'  ">
+    <div
+      class="row"
+      *ngIf="
+        reservation.status == 'Completed' ||
+        reservation.status == 'For Shipment' ||
+        reservation.status == 'For Paid' ||
+        reservation.status == 'Partial Payment'
+      "
+    >
       <div class="col-xl-6 col-lg-6">
-        <fieldset class="form-group" *ngIf="reservation.status == 'Completed' || reservation.status == 'For Shipment'">
+        <fieldset
+          class="form-group"
+          *ngIf="
+            reservation.status == 'Completed' ||
+            reservation.status == 'For Shipment' ||
+            reservation.status == 'For Paid' ||
+            reservation.status == 'Partial Payment'
+          "
+        >
           <label>Mode Of Payment</label>
           <input
             class="form-control bg-transparent"
@@ -254,21 +328,31 @@
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
               <label>Price</label>
-              <input
-                class="form-control bg-transparent"
-                [(ngModel)]="product.sellingPrice"
-                type="number"
-              />
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">¥</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control bg-transparent"
+                  [(ngModel)]="product.sellingPrice"
+                />
+              </div>
             </fieldset>
           </div>
           <div class="col-xl-6 col-lg-6">
             <fieldset class="form-group">
               <label>Purchase Price</label>
-              <input
-                class="form-control bg-transparent"
-                [(ngModel)]="product.purchasePrice"
-                type="number"
-              />
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">¥</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control bg-transparent"
+                  [(ngModel)]="product.purchasePrice"
+                />
+              </div>
             </fieldset>
           </div>
         </div>
@@ -293,7 +377,27 @@
               />
             </fieldset>
           </div>
-          <div class="col-xl-6 col-lg-6"></div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Bidding Code</label>
+
+              <input
+                class="bg-transparent form-control"
+                [(ngModel)]="product.biddingCode"
+              />
+            </fieldset>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <fieldset class="form-group">
+              <label>Discount</label>
+
+              <input
+                class="bg-transparent form-control"
+                [(ngModel)]="product.discount"
+                (keyup)="calcDiscountPerItem()"
+              />
+            </fieldset>
+          </div>
         </div>
       </div>
       <hr />

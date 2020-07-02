@@ -19,9 +19,11 @@
       >
         <option value="All">All</option>
         <option value="Pending">Pending</option>
+        <option value="Partial Payment">Partial Payment</option>
+        <option value="Paid">Paid</option>
         <option value="For Shipment">For Shipment</option>
         <option value="Completed">Completed</option>
-        <option value="Canceled">Canceled</option>
+        <option value="Canceled">Cancelled</option>
       </select>
     </div>
   </div>
@@ -35,11 +37,12 @@
           <th class="sm-hidden">Address</th>
           <th class="sm-hidden">Amount</th>
           <th>Status</th>
+          <th>Date Reserved</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="reservationList.length == 0">
+        <tr *ngIf="reservationList?.length == 0">
           <td colspan="13" class="text-center">No Reservation</td>
         </tr>
         <tr
@@ -52,12 +55,22 @@
           <td class="sm-hidden">{{ item.address }}</td>
           <td class="sm-hidden">{{ item.totalPrice }}</td>
           <td>{{ item.status }}</td>
+          <td>{{ item.dateCreated }}</td>
           <td>
             <button
               class="btn bg-dark-pink text-white btn-sm rounded-circle"
               (click)="printPdf(item)"
+              *ngIf="item.status != 'Canceled'"
             >
               <i class="fa fa-print" aria-hidden="true"></i>
+            </button>
+
+            <button
+              class="btn bg-danger text-white btn-sm rounded-circle"
+              (click)="open(edit, item.id)"
+              *ngIf="item.status == 'Canceled'"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
           </td>
         </tr>
@@ -66,6 +79,36 @@
   </div>
 </div>
 
+<ng-template #edit let-c="close" let-d="dismiss">
+  <div class="modal-header bg-pink">
+    <h4 class="modal-title">Confirm</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fieldset class="form-group">
+      <label>Delete this reservation?</label>
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn bg-dark-pink text-white"
+      (click)="deleteReservation()"
+    >
+      Delete
+    </button>
+  </div>
+</ng-template>
 <ngx-spinner
   bdColor="rgba(0,0,0,0.2)"
   size="default"

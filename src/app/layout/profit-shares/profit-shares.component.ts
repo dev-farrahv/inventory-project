@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
 import { takeUntil } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { ExportToCsv } from 'export-to-csv';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profit-shares',
@@ -39,6 +41,10 @@ export class ProfitSharesComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
   totalPercent = 0;
   totalProfitPerShare = 0;
+  totalProductDiscount = 0;
+  csvProducts: any;
+  csvSharer: any;
+  baseUrl: string;
 
   constructor(
     private modalService: NgbModal,
@@ -47,34 +53,26 @@ export class ProfitSharesComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private calendar: NgbCalendar,
-    public formatter: NgbDateParserFormatter
+    public formatter: NgbDateParserFormatter,
+    private zone: NgZone
   ) { }
 
   ngOnInit() {
+    this.baseUrl = environment.baseUrl;
     this.toDate = this.calendar.getToday();
     this.fromDate = this.calendar.getPrev(this.calendar.getToday(), 'd', 7);
     this.loading = true;
     this.spinner.show();
-    this.reservationService.getReservationByStatus('Completed')
+    this.reservationService.getreservations()
       .pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.reservations = res;
+        this.reservations = res.filter(r => r.status !== 'Canceled' && r.status !== 'Pending');
         this.setReservationsByWeek();
         this.spinner.hide();
         this.loading = false;
       });
-    this.profitService.getsharer()
-      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
-        this.sharers = res;
-        this.totalPercent = res.reduce((total, r) => {
-          return total + r.percent;
-        }, 0);
-
-        this.totalProfitPerShare = res.reduce((total, r) => {
-          return total + this.calculateProfitPerShare(r.percent);
-        }, 0);
-
-      });
+    this.calculateTotalProfitPerShare();
   }
+
 
   setReservationsByWeek() {
     this.spinner.show();
@@ -91,7 +89,7 @@ export class ProfitSharesComponent implements OnInit {
     this.totalProfit = this.calculateOverAllTotalProfit();
     this.totalDeductions = this.calculateTotalDeductionsByPercent();
     this.totalNetProfit = this.calculateTotalNetProfit();
-
+    this.totalProductDiscount = this.calculateTotalItemDiscounts();
     this.spinner.hide();
   }
 
@@ -169,24 +167,24 @@ export class ProfitSharesComponent implements OnInit {
     this.destroyed$.complete();
   }
 
-  calculateTotalProfit(sellingPrice, purchasePrice) {
-    return Math.round(sellingPrice - purchasePrice);
+  calculateTotalProfit(sellingPrice, purchasePrice, discount) {
+    return Math.round((sellingPrice - purchasePrice) - (discount ? discount : 0));
   }
 
-  calculateDeductionsByPercent(sellingPrice, purchasePrice) {
-    const total = this.calculateTotalProfit(sellingPrice, purchasePrice);
+  calculateDeductionsByPercent(sellingPrice, purchasePrice, discount) {
+    const total = this.calculateTotalProfit(sellingPrice, purchasePrice, discount);
     return Math.round((total * this.deductionPercent) / 100);
   }
 
-  calculateNetProfit(sellingPrice, purchasePrice) {
-    const deduction = this.calculateDeductionsByPercent(sellingPrice, purchasePrice);
-    return Math.round(sellingPrice - deduction);
+  calculateNetProfit(sellingPrice, purchasePrice, discount) {
+    const deduction = this.calculateDeductionsByPercent(sellingPrice, purchasePrice, discount);
+    return Math.round(sellingPrice - deduction) - (discount ? discount : 0);
   }
 
   calculateTotalPrice(field) {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + product[field];
+        return total + Number(product[field]);
       }, 0);
       return totalPrice + amount;
     }, 0);
@@ -199,7 +197,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalDeductionsByPercent() {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice);
+        return total + this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount);
       }, 0);
       return totalPrice + amount;
     }, 0);
@@ -208,7 +206,7 @@ export class ProfitSharesComponent implements OnInit {
   calculateTotalNetProfit() {
     return this.reservationList.reduce((totalPrice, reservation) => {
       const amount = reservation.products.reduce((total, product) => {
-        return total + this.calculateNetProfit(product.sellingPrice, product.purchasePrice);
+        return total + this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount);
       }, 0);
       return totalPrice + amount;
     }, 0);
@@ -222,6 +220,31 @@ export class ProfitSharesComponent implements OnInit {
 
     return (this.totalNetProfit * percent) / 100;
   }
+
+  calculateTotalProfitPerShare() {
+    this.profitService.getsharer()
+      .pipe(takeUntil(this.destroyed$)).subscribe(res => {
+        this.sharers = res;
+        this.totalPercent = res.reduce((total, r) => {
+          return total + r.percent;
+        }, 0);
+
+        this.totalProfitPerShare = res.reduce((total, r) => {
+          return total + this.calculateProfitPerShare(r.percent);
+        }, 0);
+      });
+  }
+
+  calculateTotalItemDiscounts() {
+    return this.reservationList.reduce((totalPrice, reservation) => {
+      const amount = reservation.products.reduce((total, product) => {
+        const discount = Number(product.discount ? product.discount : 0);
+        return total + discount;
+      }, 0);
+      return totalPrice + amount;
+    }, 0);
+  }
+
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -254,5 +277,106 @@ export class ProfitSharesComponent implements OnInit {
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  changePercent(percent) {
+    this.deductionPercent = percent;
+    this.setReservationsByWeek();
+    this.calculateTotalProfitPerShare();
+  }
+
+  generateCsv() {
+    this.csvProducts = [];
+    this.csvSharer = [];
+
+    this.reservationList.forEach((reservation, r) => {
+      reservation.products.forEach((product, p) => {
+        this.csvProducts.push({
+          col1: reservation.referenceNumber,
+          col2: reservation.name,
+          col3: product.name,
+          col4: product.itemCode,
+          col5: product.purchasePrice,
+          col6: product.sellingPrice,
+          col7: product.discount ? (product.discount) : 0,
+          col8: this.calculateTotalProfit(
+            product.sellingPrice,
+            product.purchasePrice,
+            product.discount ? product.discount : 0
+          ),
+          col9: this.calculateDeductionsByPercent(product.sellingPrice, product.purchasePrice, product.discount),
+          col10: this.calculateNetProfit(product.sellingPrice, product.purchasePrice, product.discount),
+        });
+      });
+    });
+
+    // footer total
+    this.csvProducts.push({
+      col1: '',
+      col2: '',
+      col3: '',
+      col4: '',
+      col5: '',
+      col6: this.totalSoldPrice,
+      col7: this.totalPurchasePrice,
+      col8: this.totalProfit,
+      col9: this.totalDeductions,
+      col10: this.totalNetProfit,
+    });
+
+    // for Sharer table
+    this.csvSharer = [
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' },
+      { col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' },
+      { col1: 'SHARERS', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '', col8: '', col9: '', col10: '' }];
+
+    this.sharers.forEach((sharer, p) => {
+      this.csvSharer.push({
+        col1: sharer.name,
+        col2: sharer.percent,
+        col3: this.calculateProfitPerShare(sharer.percent),
+        col4: '',
+        col5: '',
+        col6: '',
+        col7: '',
+        col8: '',
+        col9: '',
+        col10: '',
+      });
+    });
+
+    const data = [... this.csvProducts, ... this.csvSharer];
+
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: '2nd Bags and Clothing co.',
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: false,
+      headers: [
+        'Reference Number',
+        'Customer Name',
+        'Product Name',
+        'Item Code',
+        'Purchase Price',
+        'Sold Price',
+        'Discount',
+        'Total Profit',
+        '-' + this.deductionPercent + '% Profit',
+        'Net Profit']
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const csvExporter = new ExportToCsv(options);
+
+    csvExporter.generateCsv(data);
+  }
+
+  getUrl(id) {
+    return `${this.baseUrl}/view-reservation;id=${id}`;
   }
 }

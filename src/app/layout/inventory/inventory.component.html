@@ -32,17 +32,30 @@
           <div class="row">
             <div
               class="col-xl-4 col-lg-12 col-md-12 mb-3 relative"
-              (click)="item.isSelected = !item.isSelected"
+              (click)="
+                item.status == 0 || !item.status
+                  ? (item.isSelected = !item.isSelected)
+                  : null
+              "
             >
               <img
                 class="img-thumbnail w-100 cursor"
                 [src]="item.image"
                 alt=""
               />
+
               <div class="p-2">
+                <div
+                  class="status mx-3 px-2"
+                  *ngIf="item.status > 0"
+                  (click)="goToRerevation(item.rn)"
+                >
+                  {{ item.rn }}
+                </div>
                 <button
                   class="btn btn-primary btn-sm w-100"
                   (click)="router.navigate(['/add-products', { id: item.id }])"
+                  *ngIf="item.status == 0"
                 >
                   Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </button>
@@ -50,48 +63,48 @@
               <i
                 class="fa fa-check-square-o check text-success"
                 aria-hidden="true"
-                *ngIf="item.isSelected"
+                *ngIf="item.isSelected && (item.status == 0 || !item.status)"
               ></i>
               <i
                 class="fa fa-square-o check text-success"
                 aria-hidden="true"
-                *ngIf="!item.isSelected"
+                *ngIf="!item.isSelected && (item.status == 0 || !item.status)"
               ></i>
             </div>
             <div class="col-xl-8 col-lg-12 col-md-12">
               <fieldset class="form-group">
-                <p>
-                  <span>Product Name</span> <br />
-                  <span class="text-muted"> {{ item.name }}</span>
-                </p>
+                <p class="mb-0">Product Name</p>
+                <div class="text-muted bg-light p-1 rounded">
+                  {{ item.name }}
+                </div>
               </fieldset>
               <fieldset class="form-group">
-                <p>
-                  <span>Price</span> <br />
-                  <span class="text-muted">{{ item.sellingPrice }}</span>
-                </p>
+                <p class="mb-0">Price</p>
+                <div class="text-muted bg-light p-1 rounded">
+                  {{ item.sellingPrice }}
+                </div>
               </fieldset>
               <fieldset class="form-group">
-                <p>
-                  <span>Description</span> <br />
-                  <span class="text-muted">{{ item.description }}</span>
-                </p>
+                <p class="mb-0">Description</p>
+                <div class="text-muted bg-light p-1 rounded">
+                  {{ item.description }}
+                </div>
               </fieldset>
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <p>
-                      <span>Serial Number</span> <br />
-                      <span class="text-muted">{{ item.serialNumber }}</span>
-                    </p>
+                    <p class="mb-0">Serial Number</p>
+                    <div class="text-muted bg-light p-1 rounded">
+                      {{ item.serialNumber }}
+                    </div>
                   </fieldset>
                 </div>
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <p>
-                      <span>Item Code</span> <br />
-                      <span class="text-muted">{{ item.itemCode }}</span>
-                    </p>
+                    <p class="mb-0">Item Code</p>
+                    <div class="text-muted bg-light p-1 rounded">
+                      {{ item.itemCode }}
+                    </div>
                   </fieldset>
                 </div>
               </div>
@@ -99,18 +112,29 @@
               <div class="row">
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <p>
-                      <span>Color</span> <br />
-                      <span class="text-muted">{{ item.color }}</span>
-                    </p>
+                    <p class="mb-0">Color</p>
+                    <div class="text-muted bg-light p-1 rounded">
+                      {{ item.color }}
+                    </div>
                   </fieldset>
                 </div>
                 <div class="col-xl-6 col-lg-6">
                   <fieldset class="form-group">
-                    <p>
-                      <span>Remarks</span> <br />
-                      <span class="text-muted">{{ item.remarks }}</span>
-                    </p>
+                    <p class="mb-0">Remarks</p>
+                    <div class="text-muted bg-light p-1 rounded">
+                      {{ item.remarks }}
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="item.biddingCode">
+                <div class="col-xl-6 col-lg-6">
+                  <fieldset class="form-group">
+                    <p class="mb-0">Bidding Code</p>
+                    <div class="text-muted bg-light p-1 rounded">
+                      {{ item.biddingCode }}
+                    </div>
                   </fieldset>
                 </div>
               </div>
@@ -119,7 +143,7 @@
                 <div class="col-xl-6 col-lg-6"></div>
                 <div class="col-xl-6 col-lg-6">
                   <button
-                    class="btn bg-dark-pink text-white"
+                    class="btn bg-dark-pink text-white w-100"
                     (click)="printItemPdf(item)"
                   >
                     <i class="fa fa-fw fa-print" aria-hidden="true"></i> Print

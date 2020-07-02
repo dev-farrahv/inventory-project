@@ -35,6 +35,8 @@ export class AddProductsComponent implements OnInit {
     itemCode: '',
     image: 'assets/images/empty.png',
     weight: 0,
+    status: 0,
+    biddingCode: '',
   };
   closeResult: string;
   imageFileCompressed: any = null;
@@ -54,7 +56,7 @@ export class AddProductsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(take(1)).subscribe(params => {
       if (params.id) {
         this.spinner.show();
         this.editMode = true;
@@ -94,7 +96,8 @@ export class AddProductsComponent implements OnInit {
       } else {
         return this.toastr.warning('Please upload an image!');
       }
-
+      this.product.dateCreated = new Date();
+      this.product.dateUpdated = new Date();
       this.productService.addProduct(this.product).then(() => {
         this.toastr.success('Product Added!');
         this.product = {
@@ -110,6 +113,7 @@ export class AddProductsComponent implements OnInit {
           itemCode: '',
           image: 'assets/images/empty.png',
           weight: 0,
+          status: 0
         };
         this.fileData = null;
         this.previewUrl = null;
@@ -121,6 +125,7 @@ export class AddProductsComponent implements OnInit {
         await this.compressImage();
         this.product.image = await this.productService.uploadFile(this.imageFileCompressed, this.fileUpload[0].name);
       }
+      this.product.dateUpdated = new Date();
       this.productService.updateProduct(this.product).then(() => {
         this.toastr.success('Product Updated!');
         this.router.navigate(['/inventory']);

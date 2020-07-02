@@ -26,6 +26,7 @@ export interface Reservation {
   measurement?: string;
   previousBalance?: number;
   weekId?: number;
+  partialPayment?: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,18 @@ export class ReservationService {
 
   getReservationByWeekId(weekId) {
     return this.db.collection<Reservation>('reservations', ref => ref.where('status', '==', 'Completed').where('weekId', '==', weekId)).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
+  getReservationByRN(rn) {
+    return this.db.collection<Reservation>('reservations', ref => ref.where('referenceNumber', '==', rn)).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data();

@@ -9,6 +9,7 @@
     top: -1px;
     left: 0;
     background-color: rgba(255, 192, 203);
+    font-size: 12px;
   }
 }
 
@@ -35,4 +36,11 @@
 }
 .custom-day.faded {
   background-color: rgba(2, 117, 216, 0.5);
+}
+
+td,
+th {
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
 }

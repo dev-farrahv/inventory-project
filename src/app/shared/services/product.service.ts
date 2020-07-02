@@ -21,6 +21,12 @@ export interface Product {
   image: string;
   weight: number;
   isSelected?: boolean;
+  status?: number;
+  rn?: string;
+  dateCreated?: Date;
+  dateUpdated?: Date;
+  biddingCode?: string;
+  discount?: number;
 }
 
 @Injectable({
@@ -48,7 +54,7 @@ export class ProductService {
   //Uploaded Image List
   images: Observable<any[]>;
 
-  constructor(db: AngularFirestore, private storage: AngularFireStorage, private database: AngularFirestore) {
+  constructor(private db: AngularFirestore, private storage: AngularFireStorage, private database: AngularFirestore) {
     this.productsCollection = db.collection<Product>('products');
 
     this.products = this.productsCollection.snapshotChanges().pipe(
@@ -68,6 +74,18 @@ export class ProductService {
 
   getProduct(id) {
     return this.productsCollection.doc<Product>(id).valueChanges();
+  }
+
+  getAvailableProducts() {
+    return this.db.collection<Product>('products', ref => ref.where('status', '<', 4)).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
   }
 
   updateProduct(product: Product) {
