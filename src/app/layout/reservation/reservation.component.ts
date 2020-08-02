@@ -23,6 +23,7 @@ export class ReservationComponent implements OnInit {
   search = '';
   reservations: Reservation[];
   reservationList: Reservation[];
+  showDiscountInvoice: any[];
   printList = [];
   shippingFeeData = [];
   filterStatus = 'All';
@@ -77,6 +78,8 @@ export class ReservationComponent implements OnInit {
   async printPdf(item) {
     const dateToday = new Date();
     this.printList = [];
+    const getdatecreated = new Date(item.dateCreated);
+    const duedate = getdatecreated.setDate(getdatecreated.getDate() + 3);
     const rowsHeader = [
       { text: 'Products', style: 'tableHeader', alignment: 'left' },
       { text: 'Amount', style: 'tableHeader', alignment: 'right' }
@@ -89,6 +92,10 @@ export class ReservationComponent implements OnInit {
 
       this.printList.push(invoicePrintList);
     });
+    this.showDiscountInvoice = [];
+    if (item.discount != 0) {
+      this.showDiscountInvoice.push({ text: 'Discount:       - ¥ ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
+    }
     // const subtotal = [
     //   { text: 'SUB TOTAL: ' + item.subTotal, style: 'tableHeader', alignment: 'left' }
     // ];
@@ -110,24 +117,40 @@ export class ReservationComponent implements OnInit {
               width: 'auto',
             },
             {
-              width: 'auto',
-              stack: [
+              alignment: 'justify',
+              columns: [
                 {
-                  text: [
-                    { text: '   2Nd \n', fontSize: 15, bold: true },
-                    'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                    'OGURISU KITA GOTO CHO 1-9-103 \n',
-                    'KYOTO, \n',
-                    'KYOTO, \n',
-                    'Japan, \n',
-                    'Mobile: 08053361176 \n',
-                    'hazeltitco@yahoo.com \n',
-                    'https://www.facebook.com/2Nd-107816430558898 \n',
-                  ]
+                  width: 'auto',
+                  stack: [
+                    {
+                      text: [
+                        { text: '2Nd \n', fontSize: 15, bold: true },
+                        'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
+                        'OGURISU KITA GOTO CHO 1-9-103 \n',
+                        'KYOTO, \n',
+                        'KYOTO, \n',
+                        'Japan, \n',
+                        'Mobile: 08053361176 \n',
+                        'hazeltitco@yahoo.com \n',
+                        'https://www.facebook.com/2Nd-107816430558898 \n',
+                      ]
+                    }
+                  ],
+                  style: 'superMargin'
                 }
-              ],
-              style: 'superMargin'
-            }
+              ]
+            },
+            {
+              style: 'invoiceNumberStyle',
+              table: {
+                widths: [100, 100],
+                body: [
+                  [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace('RN', '2i')],
+                  [{ text: 'Date ', alignment: 'left' }, new Date(item.dateCreated).toDateString()],
+                  [{ text: 'Due Date ', alignment: 'left' }, new Date(duedate).toDateString()],
+                ]
+              }
+            },
           ]
         },
         {
@@ -163,7 +186,11 @@ export class ReservationComponent implements OnInit {
             },
           }
         },
+        { text: 'Total:      ¥ ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
+        [...this.showDiscountInvoice],
         { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
+        { text: 'Other Charges:      ¥ ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
+        { text: 'Partial Payment:      - ¥ ' + item.partialPayment, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ¥ ' + item.subTotal, style: 'subtotal', alignment: 'right' },
         { text: '\n' },
         {
@@ -174,11 +201,12 @@ export class ReservationComponent implements OnInit {
               [{
                 stack: [{
                   text: [
-                    { text: "Terms and conditions \n \n", style: 'modeofpaymentheader' },
+                    { text: 'Terms and conditions \n \n', style: 'modeofpaymentheader' },
                     {
-                      text: "Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. " +
-                        "We provide a wide range of shipping options for our JAPAN customers. \n \n" +
-                        "Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED"
+                      text: 'Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. ' +
+                        'We provide a wide range of shipping options for our JAPAN customers. \n \n' +
+                        'Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n' +
+                        'It takes 3 days for the bank to process the payment transaction.',
                     }
                   ]
                 }],
@@ -263,7 +291,7 @@ export class ReservationComponent implements OnInit {
           color: 'black',
         },
         superMargin: {
-          margin: [10, 10, 10, 10],
+          margin: [10, 0, 0, 0],
           fontSize: 9
         },
         modeOfPaymentMargin: {
@@ -282,6 +310,11 @@ export class ReservationComponent implements OnInit {
         termsAndCondition: {
           fontSize: 12,
           margin: [10, 10, 10, 10],
+        },
+        invoiceNumberStyle: {
+          fontSize: 10,
+          alignment: 'right',
+          margin: [0, 10, 10, 10],
         }
       }
     };
