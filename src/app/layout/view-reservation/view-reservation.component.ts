@@ -272,7 +272,7 @@ export class ViewReservationComponent implements OnInit {
                 {
                   text: [
                     { text: '   2Nd \n', fontSize: 9, bold: true },
-                    { text: ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OGURISU KITA GOTO CHO 1-9-103 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ', fontSize: 9 },
+                    { text: ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  Landline: 613-0844 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ', fontSize: 9 },
                   ]
                 }
               ],
@@ -434,11 +434,12 @@ export class ViewReservationComponent implements OnInit {
                       text: [
                         { text: '2Nd \n', fontSize: 15, bold: true },
                         'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                        'OGURISU KITA GOTO CHO 1-9-103 \n',
+                        'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n',
                         'KYOTO, \n',
                         'KYOTO, \n',
                         'Japan, \n',
                         'Mobile: 08053361176 \n',
+                        'Landline: 613-0844 \n',
                         'hazeltitco@yahoo.com \n',
                         'https://www.facebook.com/2Nd-107816430558898 \n',
                       ]
@@ -667,11 +668,12 @@ export class ViewReservationComponent implements OnInit {
                   text: [
                     { text: '   2Nd \n', fontSize: 15, bold: true },
                     'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                    'OGURISU KITA GOTO CHO 1-9-103 \n',
+                    'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n',
                     'KYOTO, \n',
                     'KYOTO, \n',
                     'Japan, \n',
                     'Mobile: 08053361176 \n',
+                    'Landline: 613-0844 \n',
                     'hazeltitco@yahoo.com \n',
                     'https://www.facebook.com/2Nd-107816430558898 \n',
                   ]
