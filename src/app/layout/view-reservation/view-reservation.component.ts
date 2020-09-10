@@ -1,12 +1,21 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Product, ProductService } from 'src/app/shared/services/product.service';
+import {
+  Product,
+  ProductService,
+} from 'src/app/shared/services/product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
+import {
+  Reservation,
+  ReservationService,
+} from 'src/app/shared/services/reservations.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ToastrService } from 'ngx-toastr';
-import { ShippingFeeService, ShippingFee } from 'src/app/shared/services/shipping-fee.service';
+import {
+  ShippingFeeService,
+  ShippingFee,
+} from 'src/app/shared/services/shipping-fee.service';
 import * as moment from 'moment';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -15,7 +24,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
   selector: 'app-view-reservation',
   templateUrl: './view-reservation.component.html',
-  styleUrls: ['./view-reservation.component.scss']
+  styleUrls: ['./view-reservation.component.scss'],
 })
 export class ViewReservationComponent implements OnInit {
   @Input() id: string;
@@ -33,7 +42,7 @@ export class ViewReservationComponent implements OnInit {
     dateCreated: '',
     measurement: '',
     previousBalance: 0,
-    partialPayment: 0
+    partialPayment: 0,
   };
   printList: any[];
   widthsPrintList: any[];
@@ -54,87 +63,100 @@ export class ViewReservationComponent implements OnInit {
     private shippingService: ShippingFeeService
   ) {
     this.spinner.show();
-    this.route.params.pipe(take(1)).subscribe(params => {
+    this.route.params.pipe(take(1)).subscribe((params) => {
       if (!params.id) {
         router.navigate(['/reservations']);
       }
 
-      this.reservationService.getReservation(params.id).pipe(takeUntil(this.destroyed$)).subscribe(reservation => {
-        this.reservation = reservation;
-        this.reservation.id = params.id;
-        if (this.reservation.zone == null) {
-          this.reservation.zone = 1;
-        }
-        if (this.reservation.discount == null) {
-          this.reservation.discount = 0;
-        }
-        if (this.reservation.measurement == null) {
-          this.reservation.measurement = 'g';
-        }
-        if (this.reservation.dateCreated == null) {
-          this.reservation.dateCreated = new Date().toDateString();
-        }
-        if (this.reservation.previousBalance == null) {
-          this.reservation.previousBalance = 0;
-        }
-        if (this.reservation.partialPayment == null) {
-          this.reservation.partialPayment = 0;
-        }
-        this.spinner.hide();
-        this.loading = false;
+      this.reservationService
+        .getReservation(params.id)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((reservation) => {
+          this.reservation = reservation;
+          this.reservation.id = params.id;
+          if (this.reservation.zone == null) {
+            this.reservation.zone = 1;
+          }
+          if (this.reservation.discount == null) {
+            this.reservation.discount = 0;
+          }
+          if (this.reservation.measurement == null) {
+            this.reservation.measurement = 'g';
+          }
+          if (this.reservation.dateCreated == null) {
+            this.reservation.dateCreated = new Date().toDateString();
+          }
+          if (this.reservation.previousBalance == null) {
+            this.reservation.previousBalance = 0;
+          }
+          if (this.reservation.partialPayment == null) {
+            this.reservation.partialPayment = 0;
+          }
+          this.spinner.hide();
+          this.loading = false;
+        });
+    });
+    this.shippingService
+      .getShippingFees()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((sf: ShippingFee[]) => {
+        this.shippingFees = sf;
+        this.setZone();
       });
-    });
-    this.shippingService.getShippingFees().pipe(takeUntil(this.destroyed$)).subscribe((sf: ShippingFee[]) => {
-      this.shippingFees = sf;
-      this.setZone();
-    });
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 
   updateReservation(onChange = true) {
     this.spinner.show();
     if (this.reservation.status == 'Paid' && onChange) {
       this.reservation.dateUpdated = new Date();
     }
-    this.reservationService.updateReservation(this.reservation).then(() => {
-      const status = this.reservation.status === 'Pending' ? 1
-        : this.reservation.status === 'Partial Payment' ? 1
-          : this.reservation.status === 'Paid' ? 2
-            : this.reservation.status === 'For Shipment' ? 3
-              : this.reservation.status === 'Completed' ? 4 : 0;
+    this.reservationService
+      .updateReservation(this.reservation)
+      .then(() => {
+        const status =
+          this.reservation.status === 'Pending'
+            ? 1
+            : this.reservation.status === 'Partial Payment'
+            ? 1
+            : this.reservation.status === 'Paid'
+            ? 2
+            : this.reservation.status === 'For Shipment'
+            ? 3
+            : this.reservation.status === 'Completed'
+            ? 4
+            : 0;
 
-      this.reservation.products.forEach(async product => {
-        product.status = status;
-        product.isSelected = false;
-        product.rn = this.reservation.referenceNumber;
+        this.reservation.products.forEach(async (product) => {
+          product.status = status;
+          product.isSelected = false;
+          product.rn = this.reservation.referenceNumber;
 
-        if (product.sellingPrice) {
-          product.sellingPrice = +product.sellingPrice;
-        }
+          if (product.sellingPrice) {
+            product.sellingPrice = +product.sellingPrice;
+          }
 
-        if (product.purchasePrice) {
-          product.purchasePrice = +product.purchasePrice;
-        }
+          if (product.purchasePrice) {
+            product.purchasePrice = +product.purchasePrice;
+          }
 
-        if (product.discount) {
-          product.discount = +product.discount;
-        }
+          if (product.discount) {
+            product.discount = +product.discount;
+          }
 
-        await this.productService.updateProduct(product);
+          await this.productService.updateProduct(product);
+        });
+        this.spinner.hide();
 
+        this.toastr.success('Reservation updated!');
+      })
+      .catch(() => {
+        this.spinner.hide();
+        this.toastr.success(
+          'There is an error in the internet connection. Please try again!'
+        );
       });
-      this.spinner.hide();
-
-      this.toastr.success('Reservation updated!');
-    }).catch(() => {
-
-      this.spinner.hide();
-      this.toastr.success('There is an error in the internet connection. Please try again!');
-
-    });
   }
 
   getBase64ImageFromURL(url) {
@@ -150,7 +172,7 @@ export class ViewReservationComponent implements OnInit {
         const dataURL = canvas.toDataURL('image/png');
         resolve(dataURL);
       };
-      img.onerror = error => {
+      img.onerror = (error) => {
         reject(error);
       };
       img.src = url;
@@ -158,7 +180,13 @@ export class ViewReservationComponent implements OnInit {
   }
 
   calcSubTotal() {
-    return (((this.reservation.totalPrice + this.reservation.shippingFee) - this.reservation.discount) + this.reservation.previousBalance) - this.reservation.partialPayment;
+    return (
+      this.reservation.totalPrice +
+      this.reservation.shippingFee -
+      this.reservation.discount +
+      this.reservation.previousBalance -
+      this.reservation.partialPayment
+    );
   }
 
   calcShippingFee() {
@@ -178,9 +206,8 @@ export class ViewReservationComponent implements OnInit {
     if (this.reservation.zone == 5) {
       this.reservation.shippingFee = 0;
     } else {
-      const amount = this.activeZone.find(sf => weight <= sf.max).amount;
+      const amount = this.activeZone.find((sf) => weight <= sf.max).amount;
       this.reservation.shippingFee = amount;
-
     }
 
     this.reservation.subTotal = this.calcSubTotal();
@@ -197,10 +224,13 @@ export class ViewReservationComponent implements OnInit {
     if (this.reservation.discount < 0) {
       this.reservation.discount = 0;
     }
-    this.reservation.discount = +this.reservation.products.reduce((total, data) => {
-      const discount = Number(data.discount ? data.discount : 0);
-      return total + discount;
-    }, 0);
+    this.reservation.discount = +this.reservation.products.reduce(
+      (total, data) => {
+        const discount = Number(data.discount ? data.discount : 0);
+        return total + discount;
+      },
+      0
+    );
 
     this.reservation.subTotal = this.calcSubTotal();
   }
@@ -212,7 +242,6 @@ export class ViewReservationComponent implements OnInit {
     this.reservation.subTotal = this.calcSubTotal();
   }
 
-
   calcPartialPayment() {
     if (this.reservation.partialPayment < 0) {
       this.reservation.partialPayment = 0;
@@ -221,9 +250,11 @@ export class ViewReservationComponent implements OnInit {
   }
 
   setZone() {
-    this.activeZone = this.shippingFees.filter(item => item.zone === +this.reservation.zone).sort((a, b) => {
-      return a.min - b.min;
-    });
+    this.activeZone = this.shippingFees
+      .filter((item) => item.zone === +this.reservation.zone)
+      .sort((a, b) => {
+        return a.min - b.min;
+      });
 
     this.calcShippingFee();
   }
@@ -261,7 +292,9 @@ export class ViewReservationComponent implements OnInit {
           alignment: 'justify',
           columns: [
             {
-              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              image: await this.getBase64ImageFromURL(
+                'assets/images/company_logo.jpg'
+              ),
               fit: [100, 100],
               margin: [5, 5, 5, 5],
               width: 'auto',
@@ -272,13 +305,17 @@ export class ViewReservationComponent implements OnInit {
                 {
                   text: [
                     { text: '   2Nd \n', fontSize: 9, bold: true },
-                    { text: ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  Landline: 613-0844 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ', fontSize: 9 },
-                  ]
-                }
+                    {
+                      text:
+                        ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OOKAME DANI HIGASHI FURUGOKOCHO  96-2 613-0844 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ',
+                      fontSize: 9,
+                    },
+                  ],
+                },
               ],
-              style: 'superMargin'
-            }
-          ]
+              style: 'superMargin',
+            },
+          ],
         },
         {
           style: 'tableExample',
@@ -287,49 +324,83 @@ export class ViewReservationComponent implements OnInit {
             widths: [100, 150],
             body: [
               [
-                { text: 'Item Code: \n' + this.reservation.products[i].itemCode, bold: true, alignment: 'left', style: 'col' },
                 {
-                  image: await this.getBase64ImageFromURL(this.reservation.products[i].image),
+                  text: 'Item Code: \n' + this.reservation.products[i].itemCode,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
+                {
+                  image: await this.getBase64ImageFromURL(
+                    this.reservation.products[i].image
+                  ),
                   width: 100,
                   alignment: 'center',
                   margin: [10, 10, 10, 10],
-                  rowSpan: 6
+                  rowSpan: 6,
                 },
               ],
               [
-                { text: 'Ref. No: \n' + this.reservation.referenceNumber, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Ref. No: \n' + this.reservation.referenceNumber,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
-                { text: 'Name: \n' + this.reservation.products[i].name, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Name: \n' + this.reservation.products[i].name,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
-                { text: 'Owner: \n' + this.reservation.name, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Owner: \n' + this.reservation.name,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
                 {
                   text: 'Price: \n' + this.reservation.products[i].sellingPrice,
-                  bold: true, fontSize: 10, alignment: 'left', style: 'col'
+                  bold: true,
+                  fontSize: 10,
+                  alignment: 'left',
+                  style: 'col',
                 },
               ],
               [
-                { text: 'Remarks: \n' + this.reservation.products[i].remarks, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Remarks: \n' + this.reservation.products[i].remarks,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
-            ]
+            ],
           },
           layout: {
             hLineWidth: function (index, node) {
-              return (index === 0 || index === node.table.body.length) ? 2 : 1;
+              return index === 0 || index === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (index, node) {
-              return (index === 0 || index === node.table.widths.length) ? 2 : 1;
+              return index === 0 || index === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (index, node) {
-              return (index === 0 || index === node.table.body.length) ? 'black' : 'gray';
+              return index === 0 || index === node.table.body.length
+                ? 'black'
+                : 'gray';
             },
             vLineColor: function (index, node) {
-              return (index === 0 || index === node.table.widths.length) ? 'black' : 'gray';
+              return index === 0 || index === node.table.widths.length
+                ? 'black'
+                : 'gray';
             },
-          }
+          },
         },
         // {
         //   qr: this.reservation.products[i].purchasePrice.toString(),
@@ -342,18 +413,18 @@ export class ViewReservationComponent implements OnInit {
       styles: {
         tableExample: {
           fontSize: 14,
-          margin: [0, 0, 0, 0]
+          margin: [0, 0, 0, 0],
         },
         col: {
           fontSize: 10,
-          margin: [0, 0, 0, 0]
+          margin: [0, 0, 0, 0],
         },
         header: {
           fontSize: 16,
           bold: true,
-          alignment: 'justify'
-        }
-      }
+          alignment: 'justify',
+        },
+      },
     };
 
     pdfMake.createPdf(docDefinition).open();
@@ -373,13 +444,21 @@ export class ViewReservationComponent implements OnInit {
       changeLabelInvoiceTo = ' Invoice To: ';
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
-        { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+        { text: 'Amount', style: 'tableHeader', alignment: 'right' },
       ];
       this.printList.push(rowsHeader);
       item.products.forEach((invoice, i) => {
         const invoicePrintList = [];
-        invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-        invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+        invoicePrintList.push({
+          text: `${i + 1}. ${invoice['name']}`,
+          alignment: 'left',
+          fontSize: 12,
+        });
+        invoicePrintList.push({
+          text: '¥ ' + invoice['sellingPrice'],
+          alignment: 'right',
+          fontSize: 12,
+        });
         this.printList.push(invoicePrintList);
       });
     } else {
@@ -389,24 +468,42 @@ export class ViewReservationComponent implements OnInit {
       const rowsHeader = [
         { text: 'Products', style: 'tableHeader', alignment: 'left' },
         { text: 'Item Code', style: 'tableHeader', alignment: 'center' },
-        { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+        { text: 'Amount', style: 'tableHeader', alignment: 'right' },
       ];
       this.printList.push(rowsHeader);
       item.products.forEach((invoice, i) => {
         console.log(invoice);
         const invoicePrintList = [];
-        invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-        invoicePrintList.push({ text: invoice['itemCode'], alignment: 'center', fontSize: 12 });
-        invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+        invoicePrintList.push({
+          text: `${i + 1}. ${invoice['name']}`,
+          alignment: 'left',
+          fontSize: 12,
+        });
+        invoicePrintList.push({
+          text: invoice['itemCode'],
+          alignment: 'center',
+          fontSize: 12,
+        });
+        invoicePrintList.push({
+          text: '¥ ' + invoice['sellingPrice'],
+          alignment: 'right',
+          fontSize: 12,
+        });
         this.printList.push(invoicePrintList);
       });
-      this.packingSlipAddr = [{ text: ' Address : \n', fontSize: 10, bold: true },
-      { text: item.address + ' \n', fontSize: 10 }];
+      this.packingSlipAddr = [
+        { text: ' Address : \n', fontSize: 10, bold: true },
+        { text: item.address + ' \n', fontSize: 10 },
+      ];
     }
 
     this.showDiscountInvoice = [];
     if (item.discount != 0) {
-      this.showDiscountInvoice.push({ text: 'Discount:       - ¥ ' + item.discount + '', style: 'shippingFee', alignment: 'right' });
+      this.showDiscountInvoice.push({
+        text: 'Discount:       - ¥ ' + item.discount + '',
+        style: 'shippingFee',
+        alignment: 'right',
+      });
     }
 
     const docDefinition = {
@@ -414,13 +511,15 @@ export class ViewReservationComponent implements OnInit {
         {
           text: this.printHeaderVal + ' \n',
           style: 'header',
-          alignment: 'center'
+          alignment: 'center',
         },
         {
           alignment: 'justify',
           columns: [
             {
-              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              image: await this.getBase64ImageFromURL(
+                'assets/images/company_logo.jpg'
+              ),
               fit: [100, 100],
               width: 'auto',
             },
@@ -434,33 +533,41 @@ export class ViewReservationComponent implements OnInit {
                       text: [
                         { text: '2Nd \n', fontSize: 15, bold: true },
                         'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                        'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n',
+                        'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 613-0844\n',
                         'KYOTO, \n',
                         'KYOTO, \n',
                         'Japan, \n',
                         'Mobile: 08053361176 \n',
-                        'Landline: 613-0844 \n',
                         'hazeltitco@yahoo.com \n',
                         'https://www.facebook.com/2Nd-107816430558898 \n',
-                      ]
-                    }
+                      ],
+                    },
                   ],
-                  style: 'superMargin'
-                }
-              ]
+                  style: 'superMargin',
+                },
+              ],
             },
             {
               style: 'invoiceNumberStyle',
               table: {
                 widths: [100, 100],
                 body: [
-                  [{ text: 'Invoice # ', alignment: 'left' }, item.referenceNumber.replace('RN', '2i')],
-                  [{ text: 'Date ', alignment: 'left' }, new Date(item.dateCreated).toDateString()],
-                  [{ text: 'Due Date ', alignment: 'left' }, new Date(duedate).toDateString()],
-                ]
-              }
+                  [
+                    { text: 'Invoice # ', alignment: 'left' },
+                    item.referenceNumber.replace('RN', '2i'),
+                  ],
+                  [
+                    { text: 'Date ', alignment: 'left' },
+                    new Date(item.dateCreated).toDateString(),
+                  ],
+                  [
+                    { text: 'Due Date ', alignment: 'left' },
+                    new Date(duedate).toDateString(),
+                  ],
+                ],
+              },
             },
-          ]
+          ],
         },
         {
           text: [
@@ -468,14 +575,14 @@ export class ViewReservationComponent implements OnInit {
             { text: item.name + ' \n', fontSize: 10 },
             ...this.packingSlipAddr,
             { text: ' Date: \n', fontSize: 10, bold: true },
-            { text: dateToday + ' \n', fontSize: 10 }
-          ]
+            { text: dateToday + ' \n', fontSize: 10 },
+          ],
         },
         {
           style: 'tableExample',
           table: {
-            widths: [... this.widthsPrintList],
-            body: [... this.printList]
+            widths: [...this.widthsPrintList],
+            body: [...this.printList],
             // body: [
             //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
             //   //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
@@ -483,61 +590,94 @@ export class ViewReservationComponent implements OnInit {
           },
           layout: {
             hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+              return i === 0 || i === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+              return i === 0 || i === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+              return i === 0 || i === node.table.body.length ? 'black' : 'gray';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              return i === 0 || i === node.table.widths.length
+                ? 'black'
+                : 'gray';
             },
-          }
+          },
         },
-        { text: 'Total:      ¥ ' + item.totalPrice, style: 'shippingFee', alignment: 'right', bold: true },
+        {
+          text: 'Total:      ¥ ' + item.totalPrice,
+          style: 'shippingFee',
+          alignment: 'right',
+          bold: true,
+        },
         [...this.showDiscountInvoice],
-        { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
-        { text: 'Other Charges:      ¥ ' + item.previousBalance, style: 'shippingFee', alignment: 'right' },
-        { text: 'Partial Payment:      - ¥ ' + item.partialPayment, style: 'shippingFee', alignment: 'right' },
-        { text: 'Sub Total:      ¥ ' + this.calcSubTotal(), style: 'subtotal', alignment: 'right' },
+        {
+          text: 'Shipping Fee:      ¥ ' + item.shippingFee,
+          style: 'shippingFee',
+          alignment: 'right',
+        },
+        {
+          text: 'Other Charges:      ¥ ' + item.previousBalance,
+          style: 'shippingFee',
+          alignment: 'right',
+        },
+        {
+          text: 'Partial Payment:      - ¥ ' + item.partialPayment,
+          style: 'shippingFee',
+          alignment: 'right',
+        },
+        {
+          text: 'Sub Total:      ¥ ' + this.calcSubTotal(),
+          style: 'subtotal',
+          alignment: 'right',
+        },
         { text: '\n' },
         {
           style: 'tableExample',
           table: {
             headerRows: 1,
             body: [
-              [{
-                stack: [{
-                  text: [
-                    { text: 'Terms and conditions \n \n', style: 'modeofpaymentheader' },
+              [
+                {
+                  stack: [
                     {
-                      text: 'Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. ' +
-                        'We provide a wide range of shipping options for our JAPAN customers. \n \n' +
-                        'Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n' +
-                        'It takes 3 days for the bank to process the payment transaction.',
-                    }
-                  ]
-                }],
-                style: 'termsAndCondition'
-              }],
-            ]
+                      text: [
+                        {
+                          text: 'Terms and conditions \n \n',
+                          style: 'modeofpaymentheader',
+                        },
+                        {
+                          text:
+                            'Terms and conditions Orders are usually processed and shipped within 3 business days (Monday-Friday) Excluding JAPAN holidays. Once your order is shipped, you will be notified via fb messenger along with your tracking number. You can easily track it through EMS website https://www.post.japanpost.jp/int/ems/index_en.html. ' +
+                            'We provide a wide range of shipping options for our JAPAN customers. \n \n' +
+                            'Please note that PABITBIT LOCAL SHIP IS NOT INCLUDED. \n \n' +
+                            'It takes 3 days for the bank to process the payment transaction.',
+                        },
+                      ],
+                    },
+                  ],
+                  style: 'termsAndCondition',
+                },
+              ],
+            ],
           },
           layout: {
             hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+              return i === 0 || i === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+              return i === 0 || i === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+              return i === 0 || i === node.table.body.length ? 'black' : 'gray';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+              return i === 0 || i === node.table.widths.length
+                ? 'black'
+                : 'gray';
             },
-          }
+          },
         },
         { text: '\n' },
         {
@@ -546,52 +686,71 @@ export class ViewReservationComponent implements OnInit {
             widths: ['*', '*'],
             body: [
               [
-                { text: '\n PAYPAL (With 3.6% charge)', style: 'modeofpaymentheader' },
-                { text: '\n BDO ', style: 'modeofpaymentheader' }
+                {
+                  text: '\n PAYPAL (With 3.6% charge)',
+                  style: 'modeofpaymentheader',
+                },
+                { text: '\n BDO ', style: 'modeofpaymentheader' },
               ],
               [
-                { text: 'hazeltitco@yahoo.com \n \n \n', style: 'modeOfPaymentMargin' },
-                { text: 'Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ', style: 'modeOfPaymentMargin' }
+                {
+                  text: 'hazeltitco@yahoo.com \n \n \n',
+                  style: 'modeOfPaymentMargin',
+                },
+                {
+                  text: 'Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ',
+                  style: 'modeOfPaymentMargin',
+                },
               ],
               [
                 { text: 'METROBANK ', style: 'modeofpaymentheader' },
-                { text: 'JP BANK ', style: 'modeofpaymentheader' }
+                { text: 'JP BANK ', style: 'modeofpaymentheader' },
               ],
               [
-                { text: 'Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n', style: 'modeOfPaymentMargin' },
-                { text: 'Hazel Joyce Titco Kojima \n \n  1448043110571 ', style: 'modeOfPaymentMargin' }
+                {
+                  text: 'Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n',
+                  style: 'modeOfPaymentMargin',
+                },
+                {
+                  text: 'Hazel Joyce Titco Kojima \n \n  1448043110571 ',
+                  style: 'modeOfPaymentMargin',
+                },
               ],
-            ]
+            ],
           },
           layout: {
             hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+              return i === 0 || i === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+              return i === 0 || i === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'white';
+              return i === 0 || i === node.table.body.length
+                ? 'black'
+                : 'white';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
+              return i === 0 || i === node.table.widths.length
+                ? 'black'
+                : 'white';
             },
-          }
-        }
+          },
+        },
       ],
       styles: {
         tableExample: {
-          fontSize: 14
+          fontSize: 14,
         },
         header: {
           fontSize: 18,
           bold: true,
-          alignment: 'justify'
+          alignment: 'justify',
         },
         tableHeader: {
           bold: true,
           fontSize: 13,
-          color: 'black'
+          color: 'black',
         },
         modeofpaymentheader: {
           margin: [10, 0, 10, 0],
@@ -601,11 +760,11 @@ export class ViewReservationComponent implements OnInit {
         },
         superMargin: {
           margin: [10, 0, 0, 0],
-          fontSize: 9
+          fontSize: 9,
         },
         modeOfPaymentMargin: {
           margin: [10, 0, 10, 0],
-          fontSize: 9
+          fontSize: 9,
         },
         subtotal: {
           fontSize: 13,
@@ -624,8 +783,8 @@ export class ViewReservationComponent implements OnInit {
           fontSize: 10,
           alignment: 'right',
           margin: [0, 10, 10, 10],
-        }
-      }
+        },
+      },
     };
 
     pdfMake.createPdf(docDefinition).open();
@@ -636,13 +795,21 @@ export class ViewReservationComponent implements OnInit {
     this.printList = [];
     const rowsHeader = [
       { text: 'Products', style: 'tableHeader', alignment: 'left' },
-      { text: 'Amount', style: 'tableHeader', alignment: 'right' }
+      { text: 'Amount', style: 'tableHeader', alignment: 'right' },
     ];
     this.printList.push(rowsHeader);
     item.products.forEach((invoice, i) => {
       const invoicePrintList = [];
-      invoicePrintList.push({ text: `${(i + 1)}. ${invoice['name']}`, alignment: 'left', fontSize: 12 });
-      invoicePrintList.push({ text: '¥ ' + invoice['sellingPrice'], alignment: 'right', fontSize: 12 });
+      invoicePrintList.push({
+        text: `${i + 1}. ${invoice['name']}`,
+        alignment: 'left',
+        fontSize: 12,
+      });
+      invoicePrintList.push({
+        text: '¥ ' + invoice['sellingPrice'],
+        alignment: 'right',
+        fontSize: 12,
+      });
 
       this.printList.push(invoicePrintList);
     });
@@ -651,13 +818,15 @@ export class ViewReservationComponent implements OnInit {
         {
           text: 'Payment Receipt \n',
           style: 'header',
-          alignment: 'center'
+          alignment: 'center',
         },
         {
           alignment: 'justify',
           columns: [
             {
-              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              image: await this.getBase64ImageFromURL(
+                'assets/images/company_logo.jpg'
+              ),
               fit: [100, 100],
               width: 'auto',
             },
@@ -668,68 +837,81 @@ export class ViewReservationComponent implements OnInit {
                   text: [
                     { text: '   2Nd \n', fontSize: 15, bold: true },
                     'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                    'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 \n',
+                    'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 613-0844\n',
                     'KYOTO, \n',
                     'KYOTO, \n',
                     'Japan, \n',
                     'Mobile: 08053361176 \n',
-                    'Landline: 613-0844 \n',
                     'hazeltitco@yahoo.com \n',
                     'https://www.facebook.com/2Nd-107816430558898 \n',
-                  ]
-                }
+                  ],
+                },
               ],
-              style: 'superMargin'
-            }
-          ]
+              style: 'superMargin',
+            },
+          ],
         },
         {
           text: [
             { text: ' Shipping To: \n', bold: true },
             { text: item.name + ' \n \n' },
             { text: ' Address: \n', bold: true },
-            { text: item.address + ' \n \n' }
-          ]
+            { text: item.address + ' \n \n' },
+          ],
         },
         {
           style: 'tableExample',
           table: {
             widths: ['*', '*', '*', '*'],
             body: [
-              [{ text: 'Reference Number', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Payment Type', style: 'tableHeader' }, { text: 'Amount', style: 'tableHeader' }],
-              [{ text: item.referenceNumber }, { text: item.dateCreated }, { text: item.modeOfPayment }, { text: '¥ ' + this.calcSubTotal() }],
+              [
+                { text: 'Reference Number', style: 'tableHeader' },
+                { text: 'Date', style: 'tableHeader' },
+                { text: 'Payment Type', style: 'tableHeader' },
+                { text: 'Amount', style: 'tableHeader' },
+              ],
+              [
+                { text: item.referenceNumber },
+                { text: item.dateCreated },
+                { text: item.modeOfPayment },
+                { text: '¥ ' + this.calcSubTotal() },
+              ],
               //[{text: 'Products', style: 'tableHeader', alignment: 'center'}, {text: 'Amount', style: 'tableHeader', alignment: 'center'}],
-            ]
+            ],
           },
           layout: {
             hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 2 : 1;
+              return i === 0 || i === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+              return i === 0 || i === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+              return i === 0 || i === node.table.body.length
+                ? 'black'
+                : 'black';
             },
             vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+              return i === 0 || i === node.table.widths.length
+                ? 'black'
+                : 'black';
             },
-          }
+          },
         },
       ],
       styles: {
         tableExample: {
-          fontSize: 14
+          fontSize: 14,
         },
         header: {
           fontSize: 18,
           bold: true,
-          alignment: 'justify'
+          alignment: 'justify',
         },
         tableHeader: {
           bold: true,
           fontSize: 13,
-          color: 'black'
+          color: 'black',
         },
         modeofpaymentheader: {
           margin: [10, 0, 10, 0],
@@ -739,11 +921,11 @@ export class ViewReservationComponent implements OnInit {
         },
         superMargin: {
           margin: [10, 10, 10, 10],
-          fontSize: 9
+          fontSize: 9,
         },
         modeOfPaymentMargin: {
           margin: [10, 0, 10, 0],
-          fontSize: 9
+          fontSize: 9,
         },
         subtotal: {
           fontSize: 13,
@@ -757,15 +939,14 @@ export class ViewReservationComponent implements OnInit {
         termsAndCondition: {
           fontSize: 12,
           margin: [10, 10, 10, 10],
-        }
-      }
+        },
+      },
     };
 
     pdfMake.createPdf(docDefinition).open();
   }
 
   getOptions(status): any[] {
-
     switch (status) {
       case 'Pending':
         return ['Pending', 'Partial Payment', 'Paid', 'Canceled'];
