@@ -434,7 +434,7 @@ export class ViewReservationComponent implements OnInit {
     const dateToday = new Date();
     this.printList = [];
     const getdatecreated = new Date(item.dateCreated);
-    const duedate = getdatecreated.setDate(getdatecreated.getDate() + 7);
+    const duedate = getdatecreated.setDate(getdatecreated.getDate() + 3);
     this.packingSlipAddr = [];
     let changeLabelInvoiceTo = '';
 
