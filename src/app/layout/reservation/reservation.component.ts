@@ -131,7 +131,7 @@ export class ReservationComponent implements OnInit {
                   text: [
                     { text: '   2Nd \n', fontSize: 15, bold: true },
                     'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
-                    'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 613-0844 \n',
+                    'OOKAME DANI HIGASHI FURUGOKOCHO  96-2 612-0844 \n',
                     'KYOTO, \n',
                     'KYOTO, \n',
                     'Japan, \n',
