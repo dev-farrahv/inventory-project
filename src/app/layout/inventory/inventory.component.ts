@@ -97,7 +97,7 @@ export class InventoryComponent implements OnInit {
       return total + price;
     }, 0);
 
-    this.reservation.referenceNumber = 'RN-2020' + (Math.random() * 1000000).toFixed();
+    this.reservation.referenceNumber = 'RN-2021' + (Math.random() * 1000000).toFixed();
     this.reservation.products = this.productList.filter(item => item.isSelected);
     this.reservation.status = 'Pending';
     this.reservation.subTotal = this.reservation.totalPrice;

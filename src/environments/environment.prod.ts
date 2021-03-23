@@ -10,7 +10,8 @@ export const environment = {
     appId: '1:822754006392:web:acf6d2bdca99103e72248d',
     measurementId: 'G-TQDWNVKY2B'
   },
-  baseUrl: 'http://2nd-inventory.s3-website.us-east-2.amazonaws.com'
+  baseUrl: 'http://2nd-production.s3-website-ap-southeast-1.amazonaws.com/'
+  // baseUrl: 'http://2nd-inventory.s3-website.us-east-2.amazonaws.com'
   // firebase: {
   //   apiKey: "AIzaSyBksI7tWJcu7qeMPtgbYtpHi7QTBJVuf9Q",
   //   authDomain: "project-inventory-dev.firebaseapp.com",
