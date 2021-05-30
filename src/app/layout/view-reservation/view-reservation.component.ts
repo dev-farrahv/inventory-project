@@ -432,7 +432,7 @@ export class ViewReservationComponent implements OnInit {
                   stack: [
                     {
                       text: [
-                        { text: '2Nd \n', fontSize: 15, bold: true },
+                        { text: 'RYSINH Co. Limited \n', fontSize: 15, bold: true },
                         'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
                         'OGURISU KITA GOTO CHO 1-9-103 \n',
                         'KYOTO, \n',

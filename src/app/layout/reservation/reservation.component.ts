@@ -114,7 +114,7 @@ export class ReservationComponent implements OnInit {
               stack: [
                 {
                   text: [
-                    { text: '   2Nd \n', fontSize: 15, bold: true },
+                    { text: '   RYSINH Co. Limited \n', fontSize: 15, bold: true },
                     'KYOTO FU  KYOTO SHI FUSHIMI KU, \n',
                     'OGURISU KITA GOTO CHO 1-9-103 \n',
                     'KYOTO, \n',
@@ -135,7 +135,7 @@ export class ReservationComponent implements OnInit {
             { text: ' Invoice To: \n', fontSize: 10, bold: true },
             { text: item.name + ' \n', fontSize: 10 },
             { text: ' Date: \n', fontSize: 10, bold: true },
-            { text: dateToday + ' \n', fontSize: 10 }
+            { text: dateToday + ' \n', fontSize: 10 }            
           ]
         },
         {
@@ -165,6 +165,7 @@ export class ReservationComponent implements OnInit {
         },
         { text: 'Shipping Fee:      ¥ ' + item.shippingFee, style: 'shippingFee', alignment: 'right' },
         { text: 'Sub Total:      ¥ ' + item.subTotal, style: 'subtotal', alignment: 'right' },
+        { text: '*Note: Value declaration is for customs purposes only.', fontSize: 10, bold: true },
         { text: '\n' },
         {
           style: 'tableExample',
@@ -209,7 +210,7 @@ export class ReservationComponent implements OnInit {
             widths: ['*', '*'],
             body: [
               [{ text: "\n PAYPAL (With 3.6% charge)", style: 'modeofpaymentheader' }, { text: "\n BDO ", style: 'modeofpaymentheader' }],
-              [{ text: "hazeltitco@yahoo.com \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  007570086691 \n \n ", style: 'modeOfPaymentMargin' }],
+              [{ text: "hazeltitco@yahoo.com \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce T. Kojima \n \n  007570086691 \n \n ", style: 'modeOfPaymentMargin' }],
               [{ text: "METROBANK ", style: 'modeofpaymentheader' }, { text: "JP BANK ", style: 'modeofpaymentheader' }],
               [{ text: "Hazel Joyce Titco Kojima \n \n 0663728040735 \n \n \n", style: 'modeOfPaymentMargin' }, { text: "Hazel Joyce Titco Kojima \n \n  1448043110571 ", style: 'modeOfPaymentMargin' }],
             ]

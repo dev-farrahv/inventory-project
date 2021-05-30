@@ -183,7 +183,7 @@ export class InventoryComponent implements OnInit {
               stack: [
                 {
                   text: [
-                    { text: '   2Nd \n', fontSize: 9, bold: true },
+                    { text: '   RYSINH Co. Limited \n', fontSize: 9, bold: true },
                     { text: ' KYOTO FU  KYOTO SHI FUSHIMI KU, \n  OGURISU KITA GOTO CHO 1-9-103 \n  KYOTO, \n  KYOTO, \n  Japan, \n  Mobile: 08053361176 \n  hazeltitco@yahoo.com \n  https://www.facebook.com \n/2Nd-107816430558898  ', fontSize: 9 },
                   ]
                 }
