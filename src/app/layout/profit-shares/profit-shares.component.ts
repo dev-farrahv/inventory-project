@@ -23,7 +23,7 @@ export class ProfitSharesComponent implements OnInit {
   reservations: Reservation[];
   reservationList: Reservation[];
   reservation$: any;
-  deductionPercent = 30;
+  deductionPercent = 50;
   loading: boolean;
   totalSoldPrice: number;
   totalPurchasePrice: number;

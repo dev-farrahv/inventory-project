@@ -2,8 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from 'src/app/router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { Reservation, ReservationService } from 'src/app/shared/services/reservations.service';
-import { Product, ProductService } from 'src/app/shared/services/product.service';
+import {
+  Reservation,
+  ReservationService,
+} from 'src/app/shared/services/reservations.service';
+import {
+  Product,
+  ProductService,
+} from 'src/app/shared/services/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -17,7 +23,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss'],
-  animations: [routerTransition()]
+  animations: [routerTransition()],
 })
 export class InventoryComponent implements OnInit {
   private destroyed$ = new Subject();
@@ -31,9 +37,8 @@ export class InventoryComponent implements OnInit {
     address: '',
     referenceNumber: '',
     totalPrice: 0,
-    products: []
+    products: [],
   };
-
 
   productList: Product[];
 
@@ -46,18 +51,21 @@ export class InventoryComponent implements OnInit {
     private reservationService: ReservationService,
     private productService: ProductService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
-  ) { }
+    private spinner: NgxSpinnerService
+  ) {}
 
   open(content) {
-    if (!this.productList.some(item => item.isSelected)) {
+    if (!this.productList.some((item) => item.isSelected)) {
       return this.toastr.warning('Please select atleast one item!');
     }
-    this.modalService.open(content).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.modalService.open(content).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      }
+    );
   }
 
   private getDismissReason(reason: any): string {
@@ -76,42 +84,51 @@ export class InventoryComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.productService.getAvailableProducts().pipe(takeUntil(this.destroyed$)).subscribe(res => {
-      this.productList = res;
-      if (res.some(r => r.status == null)) {
-        const nostatus = res.filter(r => r.status == null);
-        nostatus.forEach(async product => {
-          product.status = 0;
-          await this.productService.updateProduct(product);
-        });
-      }
-      this.spinner.hide();
-    });
+    this.productService
+      .getAvailableProducts()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((res) => {
+        this.productList = res;
+        if (res.some((r) => r.status == null)) {
+          const nostatus = res.filter((r) => r.status == null);
+          nostatus.forEach(async (product) => {
+            product.status = 0;
+            await this.productService.updateProduct(product);
+          });
+        }
+        this.spinner.hide();
+      });
   }
 
   saveReservation() {
     this.loading = true;
     this.spinner.show();
-    this.reservation.totalPrice = this.productList.filter(item => item.isSelected).reduce((total, product) => {
-      const price = product.sellingPrice * product.qty;
-      return total + price;
-    }, 0);
+    this.reservation.totalPrice = this.productList
+      .filter((item) => item.isSelected)
+      .reduce((total, product) => {
+        const price = product.sellingPrice * product.qty;
+        return total + price;
+      }, 0);
 
-    this.reservation.referenceNumber = 'RN-2021' + (Math.random() * 1000000).toFixed();
-    this.reservation.products = this.productList.filter(item => item.isSelected);
+    this.reservation.referenceNumber =
+      'RN-2020' + (Math.random() * 1000000).toFixed();
+    this.reservation.products = this.productList.filter(
+      (item) => item.isSelected
+    );
     this.reservation.status = 'Pending';
     this.reservation.subTotal = this.reservation.totalPrice;
     this.reservation.shippingFee = 0;
     this.reservation.totalWeight = 0;
     this.reservation.discount = 0;
     this.reservation.dateCreated = new Date().toDateString();
-    this.productList.filter(item => item.isSelected).forEach(async product => {
-
-      product.status = 1;
-      product.isSelected = false;
-      product.rn = this.reservation.referenceNumber;
-      await this.productService.updateProduct(product);
-    });
+    this.productList
+      .filter((item) => item.isSelected)
+      .forEach(async (product) => {
+        product.status = 1;
+        product.isSelected = false;
+        product.rn = this.reservation.referenceNumber;
+        await this.productService.updateProduct(product);
+      });
     this.reservationService.addReservation(this.reservation).then(() => {
       this.toastr.success('Product reserved!');
 
@@ -119,16 +136,15 @@ export class InventoryComponent implements OnInit {
       this.loading = false;
       this.resetSelectedList();
       this.spinner.hide();
-
     });
   }
 
   getSelectedProduct() {
-    return this.productList.filter(item => item.isSelected);
+    return this.productList.filter((item) => item.isSelected);
   }
 
   resetSelectedList() {
-    this.productList.forEach(product => {
+    this.productList.forEach((product) => {
       product.isSelected = false;
     });
   }
@@ -136,13 +152,14 @@ export class InventoryComponent implements OnInit {
   goToRerevation(rn) {
     console.log(rn);
 
-    this.reservationService.getReservationByRN(rn).pipe(take(1)).subscribe(reservation => {
-      this.router.navigate(['/view-reservation', { id: reservation[0].id }]);
-      // this.router.navigateByUrl(['/view-reservation', { id: reservation[0].id }]);
-    });
+    this.reservationService
+      .getReservationByRN(rn)
+      .pipe(take(1))
+      .subscribe((reservation) => {
+        this.router.navigate(['/view-reservation', { id: reservation[0].id }]);
+        // this.router.navigateByUrl(['/view-reservation', { id: reservation[0].id }]);
+      });
   }
-
-
 
   getBase64ImageFromURL(url) {
     return new Promise((resolve, reject) => {
@@ -157,13 +174,12 @@ export class InventoryComponent implements OnInit {
         const dataURL = canvas.toDataURL('image/png');
         resolve(dataURL);
       };
-      img.onerror = error => {
+      img.onerror = (error) => {
         reject(error);
       };
       img.src = url;
     });
   }
-
 
   async printItemPdf(item) {
     console.log(item);
@@ -173,7 +189,9 @@ export class InventoryComponent implements OnInit {
           alignment: 'justify',
           columns: [
             {
-              image: await this.getBase64ImageFromURL('assets/images/company_logo.jpg'),
+              image: await this.getBase64ImageFromURL(
+                'assets/images/company_logo.jpg'
+              ),
               fit: [100, 100],
               margin: [5, 5, 5, 5],
               width: 'auto',
@@ -188,9 +206,9 @@ export class InventoryComponent implements OnInit {
                   ]
                 }
               ],
-              style: 'superMargin'
-            }
-          ]
+              style: 'superMargin',
+            },
+          ],
         },
         {
           style: 'tableExample',
@@ -199,43 +217,73 @@ export class InventoryComponent implements OnInit {
             widths: [100, 150],
             body: [
               [
-                { text: 'Item Code: \n' + item.itemCode, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Item Code: \n' + item.itemCode,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
                 {
                   image: await this.getBase64ImageFromURL(item.image),
                   width: 100,
                   alignment: 'center',
                   margin: [10, 10, 10, 10],
-                  rowSpan: 5
+                  rowSpan: 5,
                 },
               ],
               [
-                { text: 'Serial No: \n' + item.serialNumber, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Serial No: \n' + item.serialNumber,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
-                { text: 'Name: \n' + item.name, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Name: \n' + item.name,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
-                { text: 'Price: \n' + item.sellingPrice, bold: true, fontSize: 10, alignment: 'left', style: 'col' },
+                {
+                  text: 'Price: \n' + item.sellingPrice,
+                  bold: true,
+                  fontSize: 10,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
               [
-                { text: 'Remarks: \n' + item.remarks, bold: true, alignment: 'left', style: 'col' },
+                {
+                  text: 'Remarks: \n' + item.remarks,
+                  bold: true,
+                  alignment: 'left',
+                  style: 'col',
+                },
               ],
-            ]
+            ],
           },
           layout: {
             hLineWidth: function (index, node) {
-              return (index === 0 || index === node.table.body.length) ? 2 : 1;
+              return index === 0 || index === node.table.body.length ? 2 : 1;
             },
             vLineWidth: function (index, node) {
-              return (index === 0 || index === node.table.widths.length) ? 2 : 1;
+              return index === 0 || index === node.table.widths.length ? 2 : 1;
             },
             hLineColor: function (index, node) {
-              return (index === 0 || index === node.table.body.length) ? 'black' : 'gray';
+              return index === 0 || index === node.table.body.length
+                ? 'black'
+                : 'gray';
             },
             vLineColor: function (index, node) {
-              return (index === 0 || index === node.table.widths.length) ? 'black' : 'gray';
+              return index === 0 || index === node.table.widths.length
+                ? 'black'
+                : 'gray';
             },
-          }
+          },
         },
         // {
         //   qr: this.reservation.products[i].purchasePrice.toString(),
@@ -248,18 +296,18 @@ export class InventoryComponent implements OnInit {
       styles: {
         tableExample: {
           fontSize: 14,
-          margin: [0, 0, 0, 0]
+          margin: [0, 0, 0, 0],
         },
         col: {
           fontSize: 10,
-          margin: [0, 0, 0, 0]
+          margin: [0, 0, 0, 0],
         },
         header: {
           fontSize: 16,
           bold: true,
-          alignment: 'justify'
-        }
-      }
+          alignment: 'justify',
+        },
+      },
     };
 
     pdfMake.createPdf(docDefinition).open();
@@ -271,7 +319,6 @@ export class InventoryComponent implements OnInit {
     this.destroyed$.complete();
   }
 }
-
 
 // Status value
 
