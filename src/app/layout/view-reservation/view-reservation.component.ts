@@ -632,6 +632,7 @@ export class ViewReservationComponent implements OnInit {
           style: 'subtotal',
           alignment: 'right',
         },
+        { text: '*Note: Value declaration is for customs purposes only.', fontSize: 10, bold: true },
         { text: '\n' },
         {
           style: 'tableExample',
@@ -698,7 +699,7 @@ export class ViewReservationComponent implements OnInit {
                   style: 'modeOfPaymentMargin',
                 },
                 {
-                  text: 'Hazel Kojima \n \n  007570086691 \n \n ',
+                  text: 'Hazel T. Kojima \n \n  007570086691 \n \n ',
                   style: 'modeOfPaymentMargin',
                 },
               ],
