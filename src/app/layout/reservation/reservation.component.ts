@@ -259,7 +259,7 @@ export class ReservationComponent implements OnInit {
               ],
               [
                 {
-                  text: 'Hazel Kojima \n \n 0663728040735 \n \n \n',
+                  text: 'Hazel T. Kojima \n \n 0663728040735 \n \n \n',
                   style: 'modeOfPaymentMargin',
                 },
                 {
