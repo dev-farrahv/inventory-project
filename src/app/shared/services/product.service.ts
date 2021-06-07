@@ -104,7 +104,7 @@ export class ProductService {
 
     return new Promise<string>((res, reject) => {
       const path = `compressed/image${new Date().getTime()}_${filename}`;
-      const customMetadata = { app: '2nd Image Upload Demo' };
+      const customMetadata = { app: 'RYSINH Co. Limited Image Upload Demo' };
       const fileRef = this.storage.ref(path);
       this.storage.upload(path, file, { customMetadata }).then(async result => {
         const url = await result.ref.getDownloadURL();

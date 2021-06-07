@@ -353,7 +353,7 @@ export class ProfitSharesComponent implements OnInit {
       decimalSeparator: '.',
       showLabels: true,
       showTitle: true,
-      title: '2nd Bags and Clothing co.',
+      title: 'RYSINH Co. Limited',
       useTextFile: false,
       useBom: true,
       useKeysAsHeaders: false,
