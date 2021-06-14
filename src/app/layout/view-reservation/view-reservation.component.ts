@@ -699,7 +699,7 @@ export class ViewReservationComponent implements OnInit {
                   style: 'modeOfPaymentMargin',
                 },
                 {
-                  text: 'Hazel T. Kojima \n \n  007570086691 \n \n ',
+                  text: 'Hazel Joyce T. Kojima \n \n  007570086691 \n \n ',
                   style: 'modeOfPaymentMargin',
                 },
               ],
@@ -709,7 +709,7 @@ export class ViewReservationComponent implements OnInit {
               ],
               [
                 {
-                  text: 'Hazel T. Kojima \n \n 0663728040735 \n \n \n',
+                  text: 'Hazel Joyce T. Kojima \n \n 0663728040735 \n \n \n',
                   style: 'modeOfPaymentMargin',
                 },
                 {
